@@ -1,13 +1,12 @@
-package GetOpt::Alt;
+package GetOpt::Alt::Option;
 
-# Created on: 2009-07-17 07:40:56
+# Created on: 2009-07-17 14:52:26
 # Create by:  Ivan Wills
 # $Id$
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
 use Moose;
-use warnings;
 use version;
 use Carp;
 use Scalar::Util;
@@ -15,13 +14,31 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use base qw/Exporter/;
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
+has opt => (
+	is       => 'ro',
+	required => 1,
+);
+has names => (
+	is  => 'rw',
+	isa => 'ArrayRef',
+);
+has increment => (
+	is  => 'rw',
+	isa => 'Bool',
+);
+
+sub parse {
+	my ($self, @argv) = @_;
+	my %got;
+
+	return %got;
+}
 
 1;
 
@@ -29,16 +46,16 @@ __END__
 
 =head1 NAME
 
-GetOpt::Alt - <One-line description of module's purpose>
+GetOpt::Alt::Option - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to GetOpt::Alt version 0.1.
+This documentation refers to GetOpt::Alt::Option version 0.1.
 
 
 =head1 SYNOPSIS
 
-   use GetOpt::Alt;
+   use GetOpt::Alt::Option;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as
@@ -67,15 +84,6 @@ form "An object of this class represents ...") to give the reader a high-level
 context to help them understand the methods that are subsequently described.
 
 
-=head3 C<new ( $search, )>
-
-Param: C<$search> - type (detail) - description
-
-Return: GetOpt::Alt -
-
-Description:
-
-=cut
 
 
 =head1 DIAGNOSTICS
