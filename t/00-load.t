@@ -1,9 +1,12 @@
-#!perl -T
+#!/usr/bin/perl
 
-use Test::More tests => 1;
+use strict;
+use warnings;
+use Test::More tests => 1 + 1;
+use Test::NoWarnings;
 
 BEGIN {
-	use_ok( 'GetOpt::Alt' );
+	use_ok( 'module' );
 }
 
-diag( "Testing GetOpt::Alt $GetOpt::Alt::VERSION, Perl $], $^X" );
+diag( "Testing module $module::VERSION, Perl $], $^X" );
