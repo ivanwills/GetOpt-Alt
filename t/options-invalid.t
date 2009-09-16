@@ -9,11 +9,19 @@ use Test::More;
 use Test::NoWarnings;
 use GetOpt::Alt::Option;
 
-my @invalid => qw(
+my @invalid = qw(
 	|test
+	test=q
 );
 
-plan test => @invalid + 1;
+plan tests => @invalid + 1;
 
+for my $args (@invalid) {
+	my $opt;
+	eval {
+		$opt = GetOpt::Alt::Option->new( opt => $args );
+	};
 
+	ok( $@ || !$opt, "'$args' should fail" );
+}
 

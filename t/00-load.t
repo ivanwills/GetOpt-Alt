@@ -2,11 +2,12 @@
 
 use strict;
 use warnings;
-use Test::More tests => 1 + 1;
+use Test::More tests => 2 + 1;
 use Test::NoWarnings;
 
 BEGIN {
-	use_ok( 'module' );
+	use_ok( 'GetOpt::Alt' );
+	use_ok( 'GetOpt::Alt::Option' );
 }
 
-diag( "Testing module $module::VERSION, Perl $], $^X" );
+diag( "Testing module $GetOpt::Alt::VERSION, Perl $], $^X" );

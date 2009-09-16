@@ -9,14 +9,14 @@ use Test::More;
 use Test::NoWarnings;
 use GetOpt::Alt::Option;
 
-my %miss_matching => {
+my %miss_matching = {
 	test => [
 		[qw/--test/],
 		[qw/-t/],
 	],
 };
 
-plan test => sum map {} %miss_matching + 1;
+plan tests => sum map {} %miss_matching + 1;
 
 
 

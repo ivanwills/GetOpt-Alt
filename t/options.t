@@ -33,7 +33,7 @@ my %matching => {
 	],
 };
 
-plan test => sum map {} keys %valid
+plan tests => sum map {} keys %valid
 	+ @invalid
 	+ sum map {} %matching
 	+ 1;
