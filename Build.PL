@@ -8,7 +8,9 @@ my $builder = Module::Build->new(
 	dist_author         => 'Ivan Wills <ivan.wills@gmail.com>',
 	dist_version_from   => 'lib/GetOpt/Alt.pm',
 	requires => {
-		'version' => 0,
+		'version'     => 0,
+		'Config::Any' => 0,
+		'Moose'       => 0,
 	},
 	build_requires => {
 		'Test::More' => 0,
