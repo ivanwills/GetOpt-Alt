@@ -9,7 +9,7 @@ use Test::More;
 use Test::NoWarnings;
 use GetOpt::Alt::Option;
 
-my %valid => (
+my %valid = (
 	'test' => {
 		names => [qw/test tes te t/],
 	},
@@ -23,19 +23,20 @@ my %valid => (
 		increment => 1,
 	}
 );
-my @invalid => qw(
+my @invalid = qw(
 	|test
 );
-my %matching => {
+my %matching = (
 	test => [
 		[qw/--test/],
 		[qw/-t/],
 	],
-};
+);
 
-plan tests => sum map {} keys %valid
+plan tests =>
+	  (sum map { scalar keys %{ $valid{$_} } } keys %valid)
 	+ @invalid
-	+ sum map {} %matching
+	+ (sum map { scalar @{ $matching{$_} } } keys %matching)
 	+ 1;
 
 

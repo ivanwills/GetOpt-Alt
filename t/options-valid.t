@@ -6,8 +6,9 @@ use strict;
 use warnings;
 use List::Util qw/sum/;
 use Test::More;
-use Test::NoWarnings;
+#use Test::NoWarnings;
 use GetOpt::Alt::Option;
+use Data::Dumper qw/Dumper/;
 
 my @valid = (
 	'test' => {
@@ -31,7 +32,7 @@ plan tests => $tests + 1;
 for ( my $i = 0; $i < @valid; $i += 2 ) {
 	diag my $args  = $valid[$i];
 	my $tests = $valid[$i+1];
-	my $opt   = GetOpt::Alt::Option->new( opt => $args );
+	my $opt   = GetOpt::Alt::Option->new( $args );
 
 	for my $key ( keys %{ $tests } ) {
 		is_deeply( $opt->$key(), $tests->{$key}, "$args -> $tests->{$key}" );

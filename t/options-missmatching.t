@@ -16,7 +16,7 @@ my %miss_matching = {
 	],
 };
 
-plan tests => sum map {} %miss_matching + 1;
+plan tests => sum map { scalar @{ $miss_matching{$_} } } keys %miss_matching + 1;
 
 
 

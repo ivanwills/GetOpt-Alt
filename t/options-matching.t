@@ -16,7 +16,7 @@ my %matching = {
 	],
 };
 
-plan tests => sum map {} %matching + 1;
+plan tests => sum map { scalar @{ $matching{$_} } } keys %matching + 1;
 
 
 
