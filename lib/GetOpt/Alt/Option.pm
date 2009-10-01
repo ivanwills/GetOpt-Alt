@@ -7,6 +7,7 @@ package GetOpt::Alt::Option;
 # $Revision$, $Source$, $Date$
 
 use Moose;
+use warnings;
 use version;
 use Carp;
 use Scalar::Util;
@@ -15,30 +16,78 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
+our $VERSION = version->new('0.0.1');
 
 has opt => (
 	is       => 'ro',
 	required => 1,
 );
+has name => (
+	is  => 'rw',
+	isa => 'Str',
+);
 has names => (
 	is  => 'rw',
-	isa => 'ArrayRef',
+	isa => 'ArrayRef[Str]',
 );
 has increment => (
 	is  => 'rw',
 	isa => 'Bool',
 );
+has config => (
+	is  => 'ro',
+	isa => 'Bool',
+);
+has project => (
+	is  => 'ro',
+	isa => 'Bool',
+);
 
-sub parse {
-	my ($self, @argv) = @_;
-	my %got;
+# calling new => ->new( 'test|t' )
+#                ->new( name => 'text', names => [qw/test tes te t/], ... )
+#                ->new({ name => 'text', names => [qw/test tes te t/], ... )
+around new => sub {
+	my ($new, $class, @params) = @_;
 
-	return %got;
-}
+	if (@params == 1 && ref $params[0]) {
+		@params =
+			  ref $params[0] == 'ARRAY' ? @{ $params[0] }
+			: ref $params[0] == 'HASH'  ? %{ $params[0] }
+			:                             confess "Can't supply a " . (ref $params[0]) . " ref to new!";
+	}
+	if (@params == 1 && !ref $params[0]) {
+		my $spec = pop @params;
+		push @params, (opt => $spec);
+
+		my ($names,$options) = split /(?=[=;])/, $spec, 2;
+		my @names = split /\|/, $names;
+		push @params, 'names', \@names;
+		push @params, 'name', $names[0];
+
+		if ($options) {
+			my ($type, $extra);
+			if ($options =~ /^=/) {
+				($type, $extra) = split /;/, $options;
+			}
+			else {
+				($extra) = $options =~ /^;(.*)/xms;
+			}
+
+			if ($type) {
+				my ($text, $ref);
+				if ( length $type == 1 ) {
+					($text) = $type =~ /^ [ifsd] $/xms;
+					croak "Bad spec $spec, Unknown type $type" if !$text;
+				}
+				elsif ( length $type == 2 ) {
+					($text, $ref) = $type =~ /^ [ifsd] [@%] $/xms;
+				}
+			}
+		}
+	}
+
+	return $new->($class, @params);
+};
 
 1;
 
@@ -46,7 +95,7 @@ __END__
 
 =head1 NAME
 
-GetOpt::Alt::Option - <One-line description of module's purpose>
+GetOpt::Alt::Option - Sets up a particular command line option
 
 =head1 VERSION
 
