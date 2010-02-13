@@ -15,4 +15,6 @@ t/kwalitee.t
 t/options-invalid.t
 t/options-valid.t
 t/spelling.t
-
+Makefile.PL
+META.yml
+MYMETA.yml

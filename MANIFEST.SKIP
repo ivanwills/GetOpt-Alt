@@ -1,3 +1,4 @@
 .git
 Debian_CPANTS.txt
 .sw[po]$
+^MYMETA.yml$
