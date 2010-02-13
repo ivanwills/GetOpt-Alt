@@ -6,3 +6,13 @@ lib/GetOpt/Alt.pm
 t/00-load.t
 t/pod-coverage.t
 t/pod.t
+lib/GetOpt/Alt/Option.pm
+MANIFEST.SKIP
+options.t
+t/boilerplate.t
+t/critic.t
+t/kwalitee.t
+t/options-invalid.t
+t/options-valid.t
+t/spelling.t
+
