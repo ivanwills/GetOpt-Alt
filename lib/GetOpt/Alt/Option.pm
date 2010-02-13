@@ -34,6 +34,10 @@ has increment => (
 	is  => 'rw',
 	isa => 'Bool',
 );
+has negatable => (
+	is  => 'rw',
+	isa => 'Bool',
+);
 has config => (
 	is  => 'ro',
 	isa => 'Bool',
@@ -59,22 +63,32 @@ around new => sub {
 		my $spec = pop @params;
 		push @params, (opt => $spec);
 
-		my ($names,$options) = split /(?=[=;])/, $spec, 2;
+		my ($names,$options) = split /(?=[=;+!])/, $spec, 2;
 		my @names = split /\|/, $names;
+		die "Invalid option spec '$spec'\n" if grep {!defined $_ || $_ eq ''} @names;
 		push @params, 'names', \@names;
 		push @params, 'name', $names[0];
 
 		if ($options) {
 			my ($type, $extra);
-			if ($options =~ /^=/) {
-				($type, $extra) = split /;/, $options;
-			}
-			else {
-				($extra) = $options =~ /^;(.*)/xms;
+			if ( my ($option) = $options =~ /^ ( [=+!] ) /xms) {
+				if ($option eq '=') {
+					($type, $extra) = split /;/, $options;
+				}
+				else {
+					($extra) = $options =~ /^;(.*)/xms;
+					if ($option eq '+') {
+						push @params, 'increment' => 1;
+					}
+					elsif ($option eq '!') {
+						push @params, 'negatable' => 1;
+					}
+				}
 			}
 
 			if ($type) {
 				my ($text, $ref);
+				die "Unknown type in option spec '$spec'\n" if $type !~ /^ [ifs] [@%]? $/xms;
 				if ( length $type == 1 ) {
 					($text) = $type =~ /^ [ifsd] $/xms;
 					croak "Bad spec $spec, Unknown type $type" if !$text;
