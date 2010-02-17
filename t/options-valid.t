@@ -20,9 +20,13 @@ my @valid = (
 	},
 	'test|other|o' => {
 		names => [qw/test other o /],
+		name  => 'name',
 	},
 	'inc+' => {
 		increment => 1,
+	}
+	'neg!' => {
+		negatable => 1,
 	}
 );
 
