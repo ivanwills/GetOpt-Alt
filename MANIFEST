@@ -11,6 +11,7 @@ MANIFEST.SKIP
 options.t
 t/boilerplate.t
 t/critic.t
+t/perlcriticrc
 t/kwalitee.t
 t/options-invalid.t
 t/options-valid.t
