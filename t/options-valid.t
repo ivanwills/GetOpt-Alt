@@ -20,20 +20,20 @@ my @valid = (
 	},
 	'test|other|o' => {
 		names => [qw/test other o /],
-		name  => 'name',
+		name  => 'test',
 	},
 	'test|t=s' => {
-		type => 's',
+		type => 'Str',
 	},
 	'test|t=i' => {
-		type => 'i',
+		type => 'Int',
 	},
 	'test|t=f' => {
-		type => 'f',
+		type => 'Num',
 	},
 	'inc+' => {
 		increment => 1,
-	}
+	},
 	'neg!' => {
 		negatable => 1,
 	}
