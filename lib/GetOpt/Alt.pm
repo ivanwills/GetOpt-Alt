@@ -165,6 +165,15 @@ Return: GetOpt::Alt -
 
 Description:
 
+=head3 C<get_options (@options | $setup, $options)>
+
+=head3 C<process ()>
+
+=head3 C<best_option ()>
+
+=head3 C<get_files ()>
+
+
 =head1 DIAGNOSTICS
 
 =head1 CONFIGURATION AND ENVIRONMENT
