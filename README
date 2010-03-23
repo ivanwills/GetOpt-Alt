@@ -3,15 +3,14 @@ GetOpt-Alt
 This module provides a similar interface to GetOpt::Long with some extra
 extensions and syntax modernisations.
 
-
 INSTALLATION
 
 To install this module, run the following commands:
 
-	perl Build.PL
-	./Build
-	./Build test
-	./Build install
+    perl Build.PL
+    ./Build
+    ./Build test
+    ./Build install
 
 SUPPORT AND DOCUMENTATION
 
@@ -34,11 +33,16 @@ You can also look for information at:
     Search CPAN
         http://search.cpan.org/dist/GetOpt-Alt/
 
+    Source Code
+        git://github.com/ivanwills/GetOpt-Alt.git
 
 COPYRIGHT AND LICENCE
 
 Copyright (C) 2009 Ivan Wills
 
 This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
 
