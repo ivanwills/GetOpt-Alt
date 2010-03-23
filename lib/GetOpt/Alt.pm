@@ -19,12 +19,11 @@ use base qw/Exporter/;
 use GetOpt::Alt::Option;
 
 use overload (
-#	'%{}' => \&get_options,
 	'@{}' => \&get_files,
 );
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
+our @EXPORT_OK   = qw/get_options/;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
@@ -33,12 +32,14 @@ has options => (
 	isa   => 'ArrayRef[GetOpt::Alt::Option]',
 );
 has opt => (
-	is    => 'rw',
-	isa   => 'HashRef[]',
+	is      => 'rw',
+	isa     => 'HashRef',
+	default => sub { {} },
 );
 has files => (
-	is    => 'rw',
-	isa   => 'ArrayRef[Str]',
+	is      => 'rw',
+	isa     => 'ArrayRef[Str]',
+	default => sub {[]},
 );
 has argv => (
 	is      => 'rw',
@@ -56,8 +57,8 @@ has ignore_case => (
 	default => 1,
 );
 
-around new => sub {
-	my ($new, $class, @params) = @_;
+around BUILDARGS => sub {
+	my ($orig, $class, @params) = @_;
 	my %param;
 
 	if (ref $params[0] eq 'HASH' && ref $params[1] eq 'ARRAY') {
@@ -71,10 +72,12 @@ around new => sub {
 		push @{ $param{options} }, GetOpt::Alt::Option->new($option);
 	}
 
-	my $self = $new->($class, %param);
-
-	return $self->process;
+	return $class->$orig(%param);
 };
+
+sub get_options {
+	return __PACKAGE__->new(@_)->process;
+}
 
 sub process {
 	my ($self, @args) = @_;
@@ -98,11 +101,11 @@ sub process {
 
 		my $opt = $self->best_option( $long, $short );
 
-		# TODO Implement bundling checks
-		$opt->process($data);
+		my $value = $opt->process( $long, $short, $data, \@args );
+		$self->opt->{$opt->name} = $value;
 	}
 
-	if (!@{ $self->argv }) {
+	if (!@{ $self->argv } && $self->files) {
 		@ARGV = @{ $self->files };
 	}
 

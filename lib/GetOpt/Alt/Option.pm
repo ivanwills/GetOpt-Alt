@@ -54,12 +54,20 @@ has type => (
 	is  => 'ro',
 	isa => 'Str',
 );
+has ref => (
+	is  => 'ro',
+	isa => 'Str',
+);
+has value => (
+	is  => 'rw',
+	isa => 'Any',
+);
 
 # calling new => ->new( 'test|t' )
 #                ->new( name => 'text', names => [qw/test tes te t/], ... )
 #                ->new({ name => 'text', names => [qw/test tes te t/], ... )
-around new => sub {
-	my ($new, $class, @params) = @_;
+around BUILDARGS => sub {
+	my ($orig, $class, @params) = @_;
 
 	if (@params == 1 && ref $params[0]) {
 		@params =
@@ -99,25 +107,78 @@ around new => sub {
 				$type =~ s/^=//;
 				die "Unknown type in option spec '$spec' ($type)\n" if $type !~ /^ [ifsd] [@%]? $/xms;
 				if ( length $type == 1 ) {
-					($text) = $type =~ /^ [ifsd] $/xms;
+					($text) = $type =~ /^ ([ifsd]) $/xms;
 					croak "Bad spec $spec, Unknown type $type" if !$text;
 				}
 				elsif ( length $type == 2 ) {
 					($text, $ref) = $type =~ /^ ([ifsd]) ([@%]) $/xms;
-					push @params, type => $text;
+					push @params, ref => $ref;
 				}
+				push @params,
+					type =>
+						  $text eq 's' ? 'Str'
+						: $text eq 'd' ? 'Int'
+						: $text eq 'i' ? 'Int'
+						: $text eq 'f' ? 'Num'
+						:                confess "Unknown type spec '$type' in ";
 			}
 		}
 	}
 
-	return $new->($class, @params);
+	return $class->$orig(@params);
 };
 
 sub process {
-	my ($self, $long, $short, $data) = @_;
+	my ($self, $long, $short, $data, $args) = @_;
 
-	# TODO validation code here
+	my $name = $long ? "--$long" : "-$short";
+	my $value;
+	if ($self->type) {
+		if (length $data == 0) {
+			die "No " . $self->type . " passed for $name\n" if !$args->[0] || $args->[0] =~ /^-/;
 
+			$data = shift @$args;
+		}
+		my $key;
+		if ($self->ref && $self->ref eq 'HashRef') {
+			($key, $data) = split /=/, $data, 2;
+		}
+
+		$value =
+			  $self->type eq 'Int' && $data =~ /^\d+$/                           ? $data
+			: $self->type eq 'Num' && $data =~ /^(?: \d* (?: [.]\d+ )? | \d+ )$/ ? $data
+			: $self->type eq 'Str' && length $data > 0                           ? $data
+			:                                                                      confess "The value '$data' is not of type '".$self->type."'\n";
+
+		if ($self->ref) {
+			my $old;
+			if ($self->ref eq 'ArrayRef') {
+				$old = $self->value || [];
+				push @$old, $value;
+			}
+			elsif ($self->ref eq 'HashRef') {
+				$old = $self->value || {};
+				$old->{$key} = $value;
+			}
+			else {
+				confess "Unknown reference type '" . $self->ref . "'\n";
+			}
+			$value = $old;
+		}
+	}
+	elsif ($self->increment) {
+		$value = ($self->value || 0) + 1;
+	}
+	elsif ($self->negatable) {
+		$value = $long && $long =~ /^--no-/ ? 0 : 1;
+	}
+	else {
+		$value = 1;
+	}
+
+	$self->value($value);
+
+	return $self->value;
 }
 
 1;
