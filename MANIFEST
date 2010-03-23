@@ -18,3 +18,4 @@ t/perlcriticrc
 t/spelling.t
 t/options-invalid.t
 t/options-valid.t
+eg/simple.pl
