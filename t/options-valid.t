@@ -22,6 +22,15 @@ my @valid = (
 		names => [qw/test other o /],
 		name  => 'name',
 	},
+	'test|t=s' => {
+		type => 's',
+	},
+	'test|t=i' => {
+		type => 'i',
+	},
+	'test|t=f' => {
+		type => 'f',
+	},
 	'inc+' => {
 		increment => 1,
 	}
