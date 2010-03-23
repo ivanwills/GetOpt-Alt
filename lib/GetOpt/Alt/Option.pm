@@ -12,9 +12,13 @@ use version;
 use Carp;
 use Scalar::Util;
 use List::Util;
-#use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
+
+#use overload (
+#	'%{}' => &get_options,
+#	'@{}' => &get_files,
+#);
 
 our $VERSION = version->new('0.0.1');
 
@@ -45,6 +49,10 @@ has config => (
 has project => (
 	is  => 'ro',
 	isa => 'Bool',
+);
+has type => (
+	is  => 'ro',
+	isa => 'Str',
 );
 
 # calling new => ->new( 'test|t' )
@@ -88,13 +96,15 @@ around new => sub {
 
 			if ($type) {
 				my ($text, $ref);
-				die "Unknown type in option spec '$spec'\n" if $type !~ /^ [ifs] [@%]? $/xms;
+				$type =~ s/^=//;
+				die "Unknown type in option spec '$spec' ($type)\n" if $type !~ /^ [ifsd] [@%]? $/xms;
 				if ( length $type == 1 ) {
 					($text) = $type =~ /^ [ifsd] $/xms;
 					croak "Bad spec $spec, Unknown type $type" if !$text;
 				}
 				elsif ( length $type == 2 ) {
-					($text, $ref) = $type =~ /^ [ifsd] [@%] $/xms;
+					($text, $ref) = $type =~ /^ ([ifsd]) ([@%]) $/xms;
+					push @params, type => $text;
 				}
 			}
 		}
@@ -102,6 +112,13 @@ around new => sub {
 
 	return $new->($class, @params);
 };
+
+sub process {
+	my ($self, $long, $short, $data) = @_;
+
+	# TODO validation code here
+
+}
 
 1;
 
