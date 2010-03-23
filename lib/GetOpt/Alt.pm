@@ -16,12 +16,119 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use base qw/Exporter/;
+use GetOpt::Alt::Option;
+
+use overload (
+#	'%{}' => \&get_options,
+	'@{}' => \&get_files,
+);
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
+has options => (
+	is    => 'rw',
+	isa   => 'ArrayRef[GetOpt::Alt::Option]',
+);
+has opt => (
+	is    => 'rw',
+	isa   => 'HashRef[]',
+);
+has files => (
+	is    => 'rw',
+	isa   => 'ArrayRef[Str]',
+);
+has argv => (
+	is      => 'rw',
+	isa     => 'ArrayRef[Str]',
+	default => sub {[]},
+);
+has bundle => (
+	is      => 'rw',
+	isa     => 'Bool',
+	default => 0,
+);
+has ignore_case => (
+	is      => 'rw',
+	isa     => 'Bool',
+	default => 1,
+);
+
+around new => sub {
+	my ($new, $class, @params) = @_;
+	my %param;
+
+	if (ref $params[0] eq 'HASH' && ref $params[1] eq 'ARRAY') {
+		%param = shift @params;
+		@params = @{ $params[1] };
+	}
+	$param{options} ||= [];
+
+	while (@params) {
+		my $option = shift @params;
+		push @{ $param{options} }, GetOpt::Alt::Option->new($option);
+	}
+
+	my $self = $new->($class, %param);
+
+	return $self->process;
+};
+
+sub process {
+	my ($self, @args) = @_;
+	@args = @{ $self->argv } ? @{ $self->argv } : @ARGV;
+
+	ARG:
+	while (my $arg = shift @args) {
+		my ($long, $short, $data);
+		if ($arg =~ /^-- (\w+) (?:= (.*) )?/xms) {
+			$long = $1;
+			$data = $2;
+		}
+		elsif ($arg =~ /^- (\w) (.*)/xms) {
+			$short = $1;
+			$data  = $2;
+		}
+		else {
+			push @{ $self->files }, $arg;
+			next ARG;
+		}
+
+		my $opt = $self->best_option( $long, $short );
+
+		# TODO Implement bundling checks
+		$opt->process($data);
+	}
+
+	if (!@{ $self->argv }) {
+		@ARGV = @{ $self->files };
+	}
+
+	return $self;
+}
+
+sub best_option {
+	my ($self, $long, $short) = @_;
+
+	for my $opt (@{ $self->options }) {
+		return $opt if $long && $opt->name eq $long;
+
+		for my $name (@{ $opt->names }) {
+			return $opt if $long && $name eq $long;
+			return $opt if $short && $name eq $short;
+		}
+	}
+
+	die "Unknown option '" . ($long ? "--$long" : "-$short") . "'\n";
+}
+
+sub get_files {
+	my ($self) = @_;
+
+	return $self->files;
+}
 
 1;
 
@@ -29,12 +136,11 @@ __END__
 
 =head1 NAME
 
-GetOpt::Alt - <One-line description of module's purpose>
+GetOpt::Alt - Alternate method of processing command line arguments
 
 =head1 VERSION
 
 This documentation refers to GetOpt::Alt version 0.1.
-
 
 =head1 SYNOPSIS
 
@@ -44,28 +150,9 @@ This documentation refers to GetOpt::Alt version 0.1.
    # This section will be as far as many users bother reading, so make it as
    # educational and exemplary as possible.
 
-
 =head1 DESCRIPTION
 
-A full description of the module and its features.
-
-May include numerous subsections (i.e., =head2, =head3, etc.).
-
-
 =head1 SUBROUTINES/METHODS
-
-A separate section listing the public components of the module's interface.
-
-These normally consist of either subroutines that may be exported, or methods
-that may be called on objects belonging to the classes that the module
-provides.
-
-Name the section accordingly.
-
-In an object-oriented module, this section should begin with a sentence (of the
-form "An object of this class represents ...") to give the reader a high-level
-context to help them understand the methods that are subsequently described.
-
 
 =head3 C<new ( $search, )>
 
@@ -75,46 +162,15 @@ Return: GetOpt::Alt -
 
 Description:
 
-=cut
-
 =head1 DIAGNOSTICS
-
-A list of every error and warning message that the module can generate (even
-the ones that will "never happen"), with a full explanation of each problem,
-one or more likely causes, and any suggested remedies.
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
-A full explanation of any configuration system(s) used by the module, including
-the names and locations of any configuration files, and the meaning of any
-environment variables or properties that can be set. These descriptions must
-also include details of any configuration language used.
-
 =head1 DEPENDENCIES
-
-A list of all of the other modules that this module relies upon, including any
-restrictions on versions, and an indication of whether these required modules
-are part of the standard Perl distribution, part of the module's distribution,
-or must be installed separately.
 
 =head1 INCOMPATIBILITIES
 
-A list of any modules that this module cannot be used in conjunction with.
-This may be due to name conflicts in the interface, or competition for system
-or program resources, or due to internal limitations of Perl (for example, many
-modules that use source code filters are mutually incompatible).
-
 =head1 BUGS AND LIMITATIONS
-
-A list of known problems with the module, together with some indication of
-whether they are likely to be fixed in an upcoming release.
-
-Also, a list of restrictions on the features the module does provide: data types
-that cannot be handled, performance issues and the circumstances in which they
-may arise, practical limitations on the size of data sets, special cases that
-are not (yet) handled, etc.
-
-The initial template usually just has:
 
 There are no known bugs in this module.
 
@@ -125,7 +181,6 @@ Patches are welcome.
 =head1 AUTHOR
 
 Ivan Wills - (ivan.wills@gmail.com)
-<Author name(s)>  (<contact address>)
 
 =head1 LICENSE AND COPYRIGHT
 
