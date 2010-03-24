@@ -167,6 +167,8 @@ Description:
 
 =head3 C<get_options (@options | $setup, $options)>
 
+This is the equivalent of calling new(...)->process
+
 =head3 C<process ()>
 
 =head3 C<best_option ()>

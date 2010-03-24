@@ -27,12 +27,14 @@ has opt => (
 	required => 1,
 );
 has name => (
-	is  => 'rw',
-	isa => 'Str',
+	is       => 'rw',
+	isa      => 'Str',
+	required => 1,
 );
 has names => (
-	is  => 'rw',
-	isa => 'ArrayRef[Str]',
+	is       => 'rw',
+	isa      => 'ArrayRef[Str]',
+	required => 1,
 );
 has increment => (
 	is  => 'rw',
@@ -63,6 +65,16 @@ has value => (
 	isa => 'Any',
 );
 
+my $r_name     = qr/ \w+ /xms;
+my $r_alt_name = qr/ $r_name | \\d /xms;
+my $r_names    = qr/ $r_name (?: [|] $r_alt_name)* /xms;
+my $r_type     = qr/ [ifsd] /xms;
+my $r_ref      = qr/ [%@] /xms;
+my $r_type_ref = qr/ = $r_type $r_ref? /xms;
+my $r_inc      = qr/ [+] /xms;
+my $r_neg      = qr/ [!] /xms;
+my $r_spec     = qr/^ ( $r_names ) ( $r_inc | $r_neg | $r_type_ref )? $/xms;
+
 # calling new => ->new( 'test|t' )
 #                ->new( name => 'text', names => [qw/test tes te t/], ... )
 #                ->new({ name => 'text', names => [qw/test tes te t/], ... )
@@ -79,9 +91,11 @@ around BUILDARGS => sub {
 		my $spec = pop @params;
 		push @params, (opt => $spec);
 
-		my ($names,$options) = split /(?=[=;+!])/, $spec, 2;
+		confess "$spec doesn't match the definition!" if $spec !~ /$r_spec/;
+
+		my ($names,$options) = $spec =~ /$r_spec/;
 		my @names = split /\|/, $names;
-		die "Invalid option spec '$spec'\n" if grep {!defined $_ || $_ eq ''} @names;
+		confess "Invalid option spec '$spec'\n" if !@names || grep {!defined $_ || length $_ == 0 || /\W/} @names;
 		push @params, 'names', \@names;
 		push @params, 'name', $names[0];
 
