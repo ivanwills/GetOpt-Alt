@@ -56,6 +56,11 @@ has ignore_case => (
 	isa     => 'Bool',
 	default => 1,
 );
+has cmds => (
+	is      => 'rw',
+	isa     => 'HashRef',
+	default => sub { {} },
+);
 
 around BUILDARGS => sub {
 	my ($orig, $class, @params) = @_;
@@ -74,6 +79,11 @@ around BUILDARGS => sub {
 
 	return $class->$orig(%param);
 };
+
+sub BUILD {
+	my ($self) = @_;
+
+}
 
 sub get_options {
 	return __PACKAGE__->new(@_)->process;
