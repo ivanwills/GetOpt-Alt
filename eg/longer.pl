@@ -11,10 +11,15 @@ main();
 sub main {
 
 	my $opt = get_options(
-		'test|t',
-		'inc|i+',
-		'str|s=s',
-		'verbose|v+',
+		{
+			cmds => { map {} qw// }
+		},
+		[
+			'test|t',
+			'inc|i+',
+			'str|s=s',
+			'verbose|v+',
+		],
 	);
 
 	if ($opt->opt->{test}) {

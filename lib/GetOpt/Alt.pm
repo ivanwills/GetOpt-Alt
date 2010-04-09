@@ -58,8 +58,8 @@ has ignore_case => (
 );
 has cmds => (
 	is      => 'rw',
-	isa     => 'HashRef',
-	default => sub { {} },
+	isa     => 'ArrayRef[GetOpt::Alt::Command]',
+	default => sub { [] },
 );
 
 around BUILDARGS => sub {
