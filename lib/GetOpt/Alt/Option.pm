@@ -68,7 +68,7 @@ has value => (
 my $r_name     = qr/ \w+ /xms;
 my $r_alt_name = qr/ $r_name | \\d /xms;
 my $r_names    = qr/ $r_name (?: [|] $r_alt_name)* /xms;
-my $r_type     = qr/ [ifsd] /xms;
+my $r_type     = qr/ [nifsd] /xms;
 my $r_ref      = qr/ [%@] /xms;
 my $r_type_ref = qr/ = $r_type $r_ref? /xms;
 my $r_inc      = qr/ [+] /xms;
@@ -119,13 +119,13 @@ around BUILDARGS => sub {
 			if ($type) {
 				my ($text, $ref);
 				$type =~ s/^=//;
-				die "Unknown type in option spec '$spec' ($type)\n" if $type !~ /^ [ifsd] [@%]? $/xms;
+				die "Unknown type in option spec '$spec' ($type)\n" if $type !~ /^ [nifsd] [@%]? $/xms;
 				if ( length $type == 1 ) {
-					($text) = $type =~ /^ ([ifsd]) $/xms;
+					($text) = $type =~ /^ ([nifsd]) $/xms;
 					croak "Bad spec $spec, Unknown type $type" if !$text;
 				}
 				elsif ( length $type == 2 ) {
-					($text, $ref) = $type =~ /^ ([ifsd]) ([@%]) $/xms;
+					($text, $ref) = $type =~ /^ ([nifsd]) ([@%]) $/xms;
 					push @params, ref => $ref;
 				}
 				push @params,
@@ -134,6 +134,7 @@ around BUILDARGS => sub {
 						: $text eq 'd' ? 'Int'
 						: $text eq 'i' ? 'Int'
 						: $text eq 'f' ? 'Num'
+						: $text eq 'n' ? 'Num'
 						:                confess "Unknown type spec '$type' in ";
 			}
 		}
