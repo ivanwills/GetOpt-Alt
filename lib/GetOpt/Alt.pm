@@ -179,6 +179,10 @@ Description:
 
 This is the equivalent of calling new(...)->process
 
+=head3 C<BUILD ()>
+
+internal method
+
 =head3 C<process ()>
 
 =head3 C<best_option ()>
