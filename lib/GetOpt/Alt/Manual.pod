@@ -14,11 +14,11 @@ There are three different usage cases for GetOpt::Alt:
 
 Simple option list, ie a simple replacement of GetOpt::Long
 
-=item 1
+=item 2
 
 Simple command & option list for running commands (as subs) in the calling file
 
-=item 1
+=item 3
 
 More complex commands & option list where each command is a method of different modules.
 
