@@ -12,7 +12,7 @@ There are three different usage cases for GetOpt::Alt:
 
 =item 1
 
-Simple option list, ie a simple replacement of GetOpt::Long
+Simple option list, i.e. a simple replacement of GetOpt::Long
 
 =item 2
 
