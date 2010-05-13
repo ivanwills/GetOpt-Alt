@@ -52,7 +52,7 @@ around BUILDARGS => sub {
 		:                                           @params;
 
 	return $class->$orig(%param);
-}
+};
 
 1;
 
