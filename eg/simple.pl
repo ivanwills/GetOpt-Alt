@@ -10,25 +10,25 @@ main();
 
 sub main {
 
-	my $opt = get_options(
-		'test|t',
-		'inc|i+',
-		'str|s=s',
-		'verbose|v+',
-	);
+    my $opt = get_options(
+        'test|t',
+        'inc|i+',
+        'str|s=s',
+        'verbose|v+',
+    );
 
-	if ($opt->opt->{test}) {
-		print "In test mode!\n";
-		}
-		if ($opt->opt->{inc}) {
-		print "Inc\n" x $opt->opt->{inc};
-	}
-	if ($opt->opt->{str}) {
-		print "You said: " . $opt->opt->{str} . "\n";
-	}
-	if ($opt->opt->{verbose}) {
-		print Dumper $opt->opt->{verbose} > 1 ? $opt : $opt->opt;
-	}
+    if ($opt->opt->{test}) {
+        print "In test mode!\n";
+        }
+        if ($opt->opt->{inc}) {
+        print "Inc\n" x $opt->opt->{inc};
+    }
+    if ($opt->opt->{str}) {
+        print "You said: " . $opt->opt->{str} . "\n";
+    }
+    if ($opt->opt->{verbose}) {
+        print Dumper $opt->opt->{verbose} > 1 ? $opt : $opt->opt;
+    }
 }
 
 __DATA__

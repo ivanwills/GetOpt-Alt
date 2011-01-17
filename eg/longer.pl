@@ -10,42 +10,42 @@ main();
 
 sub main {
 
-	my $opt = get_options(
-		{
-			cmds => { map {} qw// }
-		},
-		[
-			'test|t',
-			'inc|i+',
-			'str|s=s',
-			'verbose|v+',
-		],
-	);
+    my $opt = get_options(
+        {
+            cmds => { map {} qw// }
+        },
+        [
+            'test|t',
+            'inc|i+',
+            'str|s=s',
+            'verbose|v+',
+        ],
+    );
 
-	if ($opt->opt->{test}) {
-		print "In test mode!\n";
-		}
-		if ($opt->opt->{inc}) {
-		print "Inc\n" x $opt->opt->{inc};
-	}
-	if ($opt->opt->{str}) {
-		print "You said: " . $opt->opt->{str} . "\n";
-	}
-	if ($opt->opt->{verbose}) {
-		print Dumper $opt->opt->{verbose} > 1 ? $opt : $opt->opt;
-	}
+    if ($opt->opt->{test}) {
+        print "In test mode!\n";
+        }
+        if ($opt->opt->{inc}) {
+        print "Inc\n" x $opt->opt->{inc};
+    }
+    if ($opt->opt->{str}) {
+        print "You said: " . $opt->opt->{str} . "\n";
+    }
+    if ($opt->opt->{verbose}) {
+        print Dumper $opt->opt->{verbose} > 1 ? $opt : $opt->opt;
+    }
 }
 
 __DATA__
 
 =head1 NAME
 
-simple.pl - a simple example file using GetOpt::Alt
+longer.pl - a longer example file using GetOpt::Alt
 
 =head1 SYNOPSIS
 
-  simple.pl --help
-  simple.pl [-t | --test] [--inc num |-inum] [--str str | -s str]
+  longer.pl --help
+  longer.pl [-t | --test] [--inc num |-inum] [--str str | -s str]
 
   OPTION:
    -t --test     Test mode

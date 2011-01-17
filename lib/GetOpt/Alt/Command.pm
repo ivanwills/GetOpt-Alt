@@ -22,36 +22,36 @@ our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
 has cmd => (
-	is       => 'ro',
-	isa      => 'Str',
-	required => 1,
+    is       => 'ro',
+    isa      => 'Str',
+    required => 1,
 );
 has module => (
-	is  => 'ro',
-	isa => 'Str',
+    is  => 'ro',
+    isa => 'Str',
 );
 has method => (
-	is      => 'ro',
-	isa     => 'Str',
-	default => 'run',
+    is      => 'ro',
+    isa     => 'Str',
+    default => 'run',
 );
 has run => (
-	is  => 'ro',
-	isa => 'CodeRef',
+    is  => 'ro',
+    isa => 'CodeRef',
 );
 has options => (
-	is  => 'rw',
-	isa => 'ArrayRef[GetOpt::Alt::Option]',
+    is  => 'rw',
+    isa => 'ArrayRef[GetOpt::Alt::Option]',
 );
 
 around BUILDARGS => sub {
-	my ($orig, $class, @params) = @_;
-	my %param =
-		  @params == 1 && ref $param[0] eq 'HASH' ? %{ $params[0] }
-		: @params == 1 && ref $param[0] ne 'HASH' ? cmd => $params[0]
-		:                                           @params;
+    my ($orig, $class, @params) = @_;
+    my %param =
+          @params == 1 && ref $param[0] eq 'HASH' ? %{ $params[0] }
+        : @params == 1 && ref $param[0] ne 'HASH' ? cmd => $params[0]
+        :                                           @params;
 
-	return $class->$orig(%param);
+    return $class->$orig(%param);
 };
 
 1;

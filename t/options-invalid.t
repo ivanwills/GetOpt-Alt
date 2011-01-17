@@ -10,22 +10,22 @@ use Test::NoWarnings;
 use GetOpt::Alt::Option;
 
 my @invalid = qw(
-	|test
-	test=q
-	test=q?
-	test=i?
-	a||b
+    |test
+    test=q
+    test=q?
+    test=i?
+    a||b
 );
 
 plan tests => @invalid + 1;
 
 for my $args (@invalid) {
-	my $opt;
-	eval {
-		$opt = GetOpt::Alt::Option->new( $args );
-	};
+    my $opt;
+    eval {
+        $opt = GetOpt::Alt::Option->new( $args );
+    };
 
-	ok( $@ || !$opt, "'$args' should fail" );
-	diag Dumper $opt if $opt;
+    ok( $@ || !$opt, "'$args' should fail" );
+    diag Dumper $opt if $opt;
 }
 

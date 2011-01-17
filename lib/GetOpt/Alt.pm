@@ -19,7 +19,7 @@ use base qw/Exporter/;
 use GetOpt::Alt::Option;
 
 use overload (
-	'@{}' => \&get_files,
+    '@{}' => \&get_files,
 );
 
 our $VERSION     = version->new('0.0.1');
@@ -28,119 +28,119 @@ our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
 has options => (
-	is    => 'rw',
-	isa   => 'ArrayRef[GetOpt::Alt::Option]',
+    is    => 'rw',
+    isa   => 'ArrayRef[GetOpt::Alt::Option]',
 );
 has opt => (
-	is      => 'rw',
-	isa     => 'HashRef',
-	default => sub { {} },
+    is      => 'rw',
+    isa     => 'HashRef',
+    default => sub { {} },
 );
 has files => (
-	is      => 'rw',
-	isa     => 'ArrayRef[Str]',
-	default => sub {[]},
+    is      => 'rw',
+    isa     => 'ArrayRef[Str]',
+    default => sub {[]},
 );
 has argv => (
-	is      => 'rw',
-	isa     => 'ArrayRef[Str]',
-	default => sub {[]},
+    is      => 'rw',
+    isa     => 'ArrayRef[Str]',
+    default => sub {[]},
 );
 has bundle => (
-	is      => 'rw',
-	isa     => 'Bool',
-	default => 0,
+    is      => 'rw',
+    isa     => 'Bool',
+    default => 0,
 );
 has ignore_case => (
-	is      => 'rw',
-	isa     => 'Bool',
-	default => 1,
+    is      => 'rw',
+    isa     => 'Bool',
+    default => 1,
 );
 has cmds => (
-	is      => 'rw',
-	isa     => 'ArrayRef[GetOpt::Alt::Command]',
-	default => sub { [] },
+    is      => 'rw',
+    isa     => 'ArrayRef[GetOpt::Alt::Command]',
+    default => sub { [] },
 );
 
 around BUILDARGS => sub {
-	my ($orig, $class, @params) = @_;
-	my %param;
+    my ($orig, $class, @params) = @_;
+    my %param;
 
-	if (ref $params[0] eq 'HASH' && ref $params[1] eq 'ARRAY') {
-		%param = shift @params;
-		@params = @{ $params[1] };
-	}
-	$param{options} ||= [];
+    if (ref $params[0] eq 'HASH' && ref $params[1] eq 'ARRAY') {
+        %param = shift @params;
+        @params = @{ $params[1] };
+    }
+    $param{options} ||= [];
 
-	while (@params) {
-		my $option = shift @params;
-		push @{ $param{options} }, GetOpt::Alt::Option->new($option);
-	}
+    while (@params) {
+        my $option = shift @params;
+        push @{ $param{options} }, GetOpt::Alt::Option->new($option);
+    }
 
-	return $class->$orig(%param);
+    return $class->$orig(%param);
 };
 
 sub BUILD {
-	my ($self) = @_;
+    my ($self) = @_;
 
 }
 
 sub get_options {
-	return __PACKAGE__->new(@_)->process;
+    return __PACKAGE__->new(@_)->process;
 }
 
 sub process {
-	my ($self, @args) = @_;
-	@args = @{ $self->argv } ? @{ $self->argv } : @ARGV;
+    my ($self, @args) = @_;
+    @args = @{ $self->argv } ? @{ $self->argv } : @ARGV;
 
-	ARG:
-	while (my $arg = shift @args) {
-		my ($long, $short, $data);
-		if ($arg =~ /^-- (\w+) (?:= (.*) )?/xms) {
-			$long = $1;
-			$data = $2;
-		}
-		elsif ($arg =~ /^- (\w) (.*)/xms) {
-			$short = $1;
-			$data  = $2;
-		}
-		else {
-			push @{ $self->files }, $arg;
-			next ARG;
-		}
+    ARG:
+    while (my $arg = shift @args) {
+        my ($long, $short, $data);
+        if ($arg =~ /^-- (\w+) (?:= (.*) )?/xms) {
+            $long = $1;
+            $data = $2;
+        }
+        elsif ($arg =~ /^- (\w) (.*)/xms) {
+            $short = $1;
+            $data  = $2;
+        }
+        else {
+            push @{ $self->files }, $arg;
+            next ARG;
+        }
 
-		my $opt = $self->best_option( $long, $short );
+        my $opt = $self->best_option( $long, $short );
 
-		my $value = $opt->process( $long, $short, $data, \@args );
-		$self->opt->{$opt->name} = $value;
-	}
+        my $value = $opt->process( $long, $short, $data, \@args );
+        $self->opt->{$opt->name} = $value;
+    }
 
-	if (!@{ $self->argv } && $self->files) {
-		@ARGV = @{ $self->files };
-	}
+    if (!@{ $self->argv } && $self->files) {
+        @ARGV = @{ $self->files };
+    }
 
-	return $self;
+    return $self;
 }
 
 sub best_option {
-	my ($self, $long, $short) = @_;
+    my ($self, $long, $short) = @_;
 
-	for my $opt (@{ $self->options }) {
-		return $opt if $long && $opt->name eq $long;
+    for my $opt (@{ $self->options }) {
+        return $opt if $long && $opt->name eq $long;
 
-		for my $name (@{ $opt->names }) {
-			return $opt if $long && $name eq $long;
-			return $opt if $short && $name eq $short;
-		}
-	}
+        for my $name (@{ $opt->names }) {
+            return $opt if $long && $name eq $long;
+            return $opt if $short && $name eq $short;
+        }
+    }
 
-	die "Unknown option '" . ($long ? "--$long" : "-$short") . "'\n";
+    die "Unknown option '" . ($long ? "--$long" : "-$short") . "'\n";
 }
 
 sub get_files {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return $self->files;
+    return $self->files;
 }
 
 1;
