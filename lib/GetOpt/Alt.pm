@@ -19,7 +19,8 @@ use base qw/Exporter/;
 use GetOpt::Alt::Option;
 
 use overload (
-    '@{}' => \&get_files,
+    '@{}'  => \&get_files,
+    'bool' => sub { 1 },
 );
 
 our $VERSION     = version->new('0.0.1');
