@@ -47,9 +47,9 @@ has options => (
 around BUILDARGS => sub {
     my ($orig, $class, @params) = @_;
     my %param =
-          @params == 1 && ref $param[0] eq 'HASH' ? %{ $params[0] }
-        : @params == 1 && ref $param[0] ne 'HASH' ? cmd => $params[0]
-        :                                           @params;
+          @params == 1 && ref $params[0] eq 'HASH' ? %{ $params[0] }
+        : @params == 1 && ref $params[0] ne 'HASH' ? ( cmd => $params[0] )
+        :                                            @params;
 
     return $class->$orig(%param);
 };
