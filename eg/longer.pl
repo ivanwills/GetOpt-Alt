@@ -5,14 +5,23 @@ use warnings;
 use Data::Dumper qw/Dumper/;
 
 use GetOpt::Alt qw/get_options/;
+use GetOpt::Alt::Command;
 
 main();
+
+our $VERSION = 1.0;
+my %default = (
+    inc => 1,
+    str => 'string',
+);
 
 sub main {
 
     my $opt = get_options(
         {
-            cmds => { map {} qw// }
+            cmds    => [ map { GetOpt::Alt::Command->new( cmd => $_ ) } qw/sub/ ],
+            opt     => { %default },
+            default => 1,
         },
         [
             'test|t',
@@ -54,6 +63,8 @@ longer.pl - a longer example file using GetOpt::Alt
 
    -v --verbose  Out put dump of GetOpt::Alt object use twice for more details
       --help     Should display this message and is defined in GetOpt::Alt itself
+      --man      Should display the whole POD documentation
+      --VERSION  Should show this script's verion number
 
 =head1 REST
 

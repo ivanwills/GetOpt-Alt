@@ -17,6 +17,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use base qw/Exporter/;
 use GetOpt::Alt::Option;
+use Pod::Usage;
 
 use overload (
     '@{}'  => \&get_files,
@@ -57,6 +58,10 @@ has ignore_case => (
     isa     => 'Bool',
     default => 1,
 );
+has help => (
+    is      => 'rw',
+    isa     => 'Str',
+);
 has cmds => (
     is      => 'rw',
     isa     => 'ArrayRef[GetOpt::Alt::Command]',
@@ -73,6 +78,15 @@ around BUILDARGS => sub {
     }
     $param{options} ||= [];
 
+    if ( exists $param{default} ) {
+        push @params, (
+            'help',
+            'man',
+            'VERSION',
+        );
+        delete $param{default};
+    }
+
     while ( my $option = shift @params ) {
         push @{ $param{options} }, GetOpt::Alt::Option->new($option);
     }
@@ -86,7 +100,15 @@ sub BUILD {
 }
 
 sub get_options {
-    return __PACKAGE__->new(@_)->process;
+    my $caller = caller;
+
+    my $self = __PACKAGE__->new(@_);
+
+    $self->help($caller) if !$self->help || $self->help eq __PACKAGE__;
+
+    $self->process();
+
+    return $self;
 }
 
 sub process {
@@ -119,6 +141,22 @@ sub process {
 
     if (!@{ $self->argv } && $self->files) {
         @ARGV = @{ $self->files };
+    }
+
+    if ( $self->help ) {
+         if ( $self->opt->{VERSION} ) {
+             my ($name)  = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
+             my $version = eval '$' . $self->help . '::VERSION';  ## no critic
+             $version ||= 'undef';
+             print "$name Version = $version\n";
+             exit 1;
+         }
+         elsif ( $self->opt->{man} ) {
+             pod2usage( -verbose => 2 );
+         }
+         elsif ( $self->opt->{help} ) {
+             pod2usage( -verbose => 1 );
+         }
     }
 
     return $self;
