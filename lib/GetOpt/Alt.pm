@@ -68,13 +68,12 @@ around BUILDARGS => sub {
     my %param;
 
     if (ref $params[0] eq 'HASH' && ref $params[1] eq 'ARRAY') {
-        %param = shift @params;
+        %param  = %{ $params[0] };
         @params = @{ $params[1] };
     }
     $param{options} ||= [];
 
-    while (@params) {
-        my $option = shift @params;
+    while ( my $option = shift @params ) {
         push @{ $param{options} }, GetOpt::Alt::Option->new($option);
     }
 
@@ -92,7 +91,9 @@ sub get_options {
 
 sub process {
     my ($self, @args) = @_;
-    @args = @{ $self->argv } ? @{ $self->argv } : @ARGV;
+    if ( !@args ) {
+        @args = @{ $self->argv } ? @{ $self->argv } : @ARGV;
+    }
 
     ARG:
     while (my $arg = shift @args) {
