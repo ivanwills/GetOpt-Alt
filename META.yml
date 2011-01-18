@@ -7,7 +7,7 @@ build_requires:
   Test::NoWarnings: 0
 configure_requires:
   Module::Build: 0.36
-generated_by: 'Module::Build version 0.3603'
+generated_by: 'Module::Build version 0.3607'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -16,6 +16,9 @@ name: GetOpt-Alt
 provides:
   GetOpt::Alt:
     file: lib/GetOpt/Alt.pm
+    version: v0.0.1
+  GetOpt::Alt::Command:
+    file: lib/GetOpt/Alt/Command.pm
     version: v0.0.1
   GetOpt::Alt::Option:
     file: lib/GetOpt/Alt/Option.pm
@@ -28,5 +31,5 @@ requires:
 resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=GetOpt-Alt
   license: http://dev.perl.org/licenses/
-  repository: git://github.com/ivanwills/GetOpt-Alt.git
+  repository: http://github.com/ivanwills/GetOpt-Alt
 version: v0.0.1
