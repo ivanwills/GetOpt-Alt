@@ -61,3 +61,6 @@ Debian_CPANTS.txt
 
 # Avoid archives of this distribution
 \bGetOpt-Alt-[\d\.\_]+
+
+.vimtagsdisplay
+tags

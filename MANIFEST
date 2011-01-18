@@ -7,8 +7,12 @@ META.yml
 Makefile.PL
 README
 lib/GetOpt/Alt.pm
+lib/GetOpt/Alt/Command.pm
+lib/GetOpt/Alt/Manual.pod
 lib/GetOpt/Alt/Option.pm
 t/00-load.t
+t/argv-invalid.t
+t/argv-valid.t
 t/boilerplate.t
 t/critic.t
 t/kwalitee.t
@@ -18,4 +22,6 @@ t/perlcriticrc
 t/spelling.t
 t/options-invalid.t
 t/options-valid.t
+eg/longer.pl
 eg/simple.pl
+
