@@ -162,10 +162,10 @@ sub process {
         }
 
         $value =
-              $self->type eq 'Int' && $data =~ /^\d+$/                           ? $data
-            : $self->type eq 'Num' && $data =~ /^(?: \d* (?: [.]\d+ )? | \d+ )$/ ? $data
-            : $self->type eq 'Str' && length $data > 0                           ? $data
-            :                                                                      confess "The value '$data' is not of type '".$self->type."'\n";
+              $self->type eq 'Int' && $data =~ /^\d+$/xms                           ? $data
+            : $self->type eq 'Num' && $data =~ /^(?: \d* (?: [.]\d+ )? | \d+ )$/xms ? $data
+            : $self->type eq 'Str' && length $data > 0                              ? $data
+            :                                                                         confess "The value '$data' is not of type '".$self->type."'\n";
 
         if ($self->ref) {
             my $old;
