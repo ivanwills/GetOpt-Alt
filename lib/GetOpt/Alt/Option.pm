@@ -148,7 +148,9 @@ sub process {
 
     my $name = $long ? "--$long" : "-$short";
     my $value;
+    my $used = 0;
     if ($self->type) {
+        $used = 1;
         if (length $data == 0) {
             die "No " . $self->type . " passed for $name\n" if !$args->[0] || $args->[0] =~ /^-/;
 
@@ -185,7 +187,7 @@ sub process {
         $value = ($self->value || 0) + 1;
     }
     elsif ($self->negatable) {
-        $value = $long && $long =~ /^--no-/ ? 0 : 1;
+        $value = $long && $long =~ /^no-/ ? 0 : 1;
     }
     else {
         $value = 1;
@@ -193,7 +195,7 @@ sub process {
 
     $self->value($value);
 
-    return $self->value;
+    return ( $self->value, $used );
 }
 
 1;

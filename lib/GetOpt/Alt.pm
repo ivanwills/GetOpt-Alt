@@ -38,6 +38,11 @@ has opt => (
     isa     => 'HashRef',
     default => sub { {} },
 );
+has default => (
+    is      => 'rw',
+    isa     => 'HashRef',
+    default => sub { {} },
+);
 has files => (
     is      => 'rw',
     isa     => 'ArrayRef[Str]',
@@ -51,7 +56,7 @@ has argv => (
 has bundle => (
     is      => 'rw',
     isa     => 'Bool',
-    default => 0,
+    default => 1,
 );
 has ignore_case => (
     is      => 'rw',
@@ -78,13 +83,13 @@ around BUILDARGS => sub {
     }
     $param{options} ||= [];
 
-    if ( exists $param{default} ) {
+    if ( !exists $param{helper} || $param{helper} ) {
         push @params, (
             'help',
             'man',
             'VERSION',
         );
-        delete $param{default};
+        delete $param{helper};
     }
 
     while ( my $option = shift @params ) {
@@ -116,11 +121,15 @@ sub process {
     if ( !@args ) {
         @args = @{ $self->argv } ? @{ $self->argv } : @ARGV;
     }
+    for my $key ( keys %{ $self->opt } ) {
+        delete $self->opt->{$key};
+    }
+    $self->opt( $self->default ? $self->default : {} );
 
     ARG:
     while (my $arg = shift @args) {
         my ($long, $short, $data);
-        if ($arg =~ /^-- (\w+) (?:= (.*) )?/xms) {
+        if ($arg =~ /^-- (\w[^=\s]+) (?:= (.*) )?/xms) {
             $long = $1;
             $data = $2;
         }
@@ -134,9 +143,14 @@ sub process {
         }
 
         my $opt = $self->best_option( $long, $short );
+        $opt->value( $self->opt->{ $opt->name } );
 
-        my $value = $opt->process( $long, $short, $data, \@args );
+        my ($value, $used) = $opt->process( $long, $short, $data, \@args );
         $self->opt->{$opt->name} = $value;
+
+        if ( !$used && $short && defined $data && length $data ) {
+            unshift @args, '-' . $data;
+        }
     }
 
     if (!@{ $self->argv } && $self->files) {
@@ -163,7 +177,11 @@ sub process {
 }
 
 sub best_option {
-    my ($self, $long, $short) = @_;
+    my ($self, $long, $short, $no) = @_;
+
+    if ($no) {
+        $long =~ s/^no-//xms;
+    }
 
     for my $opt (@{ $self->options }) {
         return $opt if $long && $opt->name eq $long;
@@ -173,6 +191,8 @@ sub best_option {
             return $opt if $short && $name eq $short;
         }
     }
+
+    return $self->best_option($long, $short, 1) if !$no;
 
     die "Unknown option '" . ($long ? "--$long" : "-$short") . "'\n";
 }
@@ -207,9 +227,30 @@ This documentation refers to GetOpt::Alt version 0.1.
 
 =head1 SUBROUTINES/METHODS
 
-=head3 C<new ( $search, )>
+=head2 C<new ( \%config, \@optspec )>
 
-Param: C<$search> - type (detail) - description
+=head3 config
+
+=over 4
+
+=item C<default> - HashRef
+
+Sets the default values for all the options. The values in opt will be reset
+with the values in here each time process is called
+
+=item C<files> - 
+
+=item C<argv> - 
+
+=item C<bundle> - 
+
+=item C<ignore_case> - 
+
+=item C<help> - 
+
+=item C<cmds> - 
+
+=back
 
 Return: GetOpt::Alt -
 
