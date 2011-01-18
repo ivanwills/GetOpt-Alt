@@ -151,7 +151,7 @@ sub process {
     my $used = 0;
     if ($self->type) {
         $used = 1;
-        if (length $data == 0) {
+        if ( !defined $data || length $data == 0 ) {
             die "No " . $self->type . " passed for $name\n" if !$args->[0] || $args->[0] =~ /^-/;
 
             $data = shift @$args;
