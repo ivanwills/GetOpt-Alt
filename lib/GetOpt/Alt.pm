@@ -179,7 +179,7 @@ sub process {
 sub best_option {
     my ($self, $long, $short, $no) = @_;
 
-    if ($no) {
+    if ($no && $long) {
         $long =~ s/^no-//xms;
     }
 
@@ -238,17 +238,17 @@ This documentation refers to GetOpt::Alt version 0.1.
 Sets the default values for all the options. The values in opt will be reset
 with the values in here each time process is called
 
-=item C<files> - 
+=item C<files> -
 
-=item C<argv> - 
+=item C<argv> -
 
-=item C<bundle> - 
+=item C<bundle> -
 
-=item C<ignore_case> - 
+=item C<ignore_case> -
 
-=item C<help> - 
+=item C<help> -
 
-=item C<cmds> - 
+=item C<cmds> -
 
 =back
 
