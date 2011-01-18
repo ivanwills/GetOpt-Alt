@@ -7,3 +7,4 @@ blib/
 tags
 .vimtagsdisplay
 Debian_CPANTS.txt
+GetOpt-Alt-*.tar.gz
