@@ -1,4 +1,4 @@
-package GetOpt::Alt::Command;
+package Getopt::Alt::Command;
 
 # Created on: 2010-03-25 18:04:47
 # Create by:  Ivan Wills
@@ -41,7 +41,7 @@ has run => (
 );
 has options => (
     is  => 'rw',
-    isa => 'ArrayRef[GetOpt::Alt::Option]',
+    isa => 'ArrayRef[Getopt::Alt::Option]',
 );
 
 around BUILDARGS => sub {
@@ -60,16 +60,16 @@ __END__
 
 =head1 NAME
 
-GetOpt::Alt::Command - <One-line description of module's purpose>
+Getopt::Alt::Command - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to GetOpt::Alt::Command version 0.1.
+This documentation refers to Getopt::Alt::Command version 0.1.
 
 
 =head1 SYNOPSIS
 
-   use GetOpt::Alt::Command;
+   use Getopt::Alt::Command;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as

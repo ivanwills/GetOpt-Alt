@@ -45,4 +45,4 @@ not_in_file_ok(Changes =>
     "placeholder date/time"       => qr(Date/time)
 );
 
-module_boilerplate_ok('lib/GetOpt/Alt.pm');
+module_boilerplate_ok('lib/Getopt/Alt.pm');

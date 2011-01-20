@@ -7,7 +7,7 @@ use warnings;
 use List::Util qw/sum/;
 use Test::More;
 use Test::NoWarnings;
-use GetOpt::Alt::Option;
+use Getopt::Alt::Option;
 
 my @invalid = qw(
     |test
@@ -22,7 +22,7 @@ plan tests => @invalid + 1;
 for my $args (@invalid) {
     my $opt;
     eval {
-        $opt = GetOpt::Alt::Option->new( $args );
+        $opt = Getopt::Alt::Option->new( $args );
     };
 
     ok( $@ || !$opt, "'$args' should fail" );

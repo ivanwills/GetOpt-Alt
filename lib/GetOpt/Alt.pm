@@ -1,4 +1,4 @@
-package GetOpt::Alt;
+package Getopt::Alt;
 
 # Created on: 2009-07-17 07:40:56
 # Create by:  Ivan Wills
@@ -16,7 +16,7 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use base qw/Exporter/;
-use GetOpt::Alt::Option;
+use Getopt::Alt::Option;
 use Pod::Usage;
 
 use overload (
@@ -31,7 +31,7 @@ our %EXPORT_TAGS = ();
 
 has options => (
     is    => 'rw',
-    isa   => 'ArrayRef[GetOpt::Alt::Option]',
+    isa   => 'ArrayRef[Getopt::Alt::Option]',
 );
 has opt => (
     is      => 'rw',
@@ -69,7 +69,7 @@ has help => (
 );
 has cmds => (
     is      => 'rw',
-    isa     => 'ArrayRef[GetOpt::Alt::Command]',
+    isa     => 'ArrayRef[Getopt::Alt::Command]',
     default => sub { [] },
 );
 
@@ -93,7 +93,7 @@ around BUILDARGS => sub {
     }
 
     while ( my $option = shift @params ) {
-        push @{ $param{options} }, GetOpt::Alt::Option->new($option);
+        push @{ $param{options} }, Getopt::Alt::Option->new($option);
     }
 
     return $class->$orig(%param);
@@ -209,15 +209,15 @@ __END__
 
 =head1 NAME
 
-GetOpt::Alt - Alternate method of processing command line arguments
+Getopt::Alt - Alternate method of processing command line arguments
 
 =head1 VERSION
 
-This documentation refers to GetOpt::Alt version 0.1.
+This documentation refers to Getopt::Alt version 0.1.
 
 =head1 SYNOPSIS
 
-   use GetOpt::Alt;
+   use Getopt::Alt;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as
@@ -252,7 +252,7 @@ with the values in here each time process is called
 
 =back
 
-Return: GetOpt::Alt -
+Return: Getopt::Alt -
 
 Description:
 

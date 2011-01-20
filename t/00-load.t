@@ -6,9 +6,9 @@ use Test::More tests => 3 + 1;
 use Test::NoWarnings;
 
 BEGIN {
-    use_ok( 'GetOpt::Alt' );
-    use_ok( 'GetOpt::Alt::Command' );
-    use_ok( 'GetOpt::Alt::Option' );
+    use_ok( 'Getopt::Alt' );
+    use_ok( 'Getopt::Alt::Command' );
+    use_ok( 'Getopt::Alt::Option' );
 }
 
-diag( "Testing module $GetOpt::Alt::VERSION, Perl $], $^X" );
+diag( "Testing module $Getopt::Alt::VERSION, Perl $], $^X" );

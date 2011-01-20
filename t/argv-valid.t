@@ -7,10 +7,10 @@ use warnings;
 use List::Util qw/sum/;
 use Test::More tests => 22 + 1;
 use Test::NoWarnings;
-use GetOpt::Alt;
+use Getopt::Alt;
 use Data::Dumper qw/Dumper/;
 
-my $opt = GetOpt::Alt->new(
+my $opt = Getopt::Alt->new(
     {
         bundle => 1,
     },

@@ -1,4 +1,4 @@
-package GetOpt::Alt::Option;
+package Getopt::Alt::Option;
 
 # Created on: 2009-07-17 14:52:26
 # Create by:  Ivan Wills
@@ -204,16 +204,16 @@ __END__
 
 =head1 NAME
 
-GetOpt::Alt::Option - Sets up a particular command line option
+Getopt::Alt::Option - Sets up a particular command line option
 
 =head1 VERSION
 
-This documentation refers to GetOpt::Alt::Option version 0.1.
+This documentation refers to Getopt::Alt::Option version 0.1.
 
 
 =head1 SYNOPSIS
 
-   use GetOpt::Alt::Option;
+   use Getopt::Alt::Option;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as
