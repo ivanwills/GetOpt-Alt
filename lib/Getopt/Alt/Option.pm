@@ -65,7 +65,7 @@ has value => (
     isa => 'Any',
 );
 
-my $r_name     = qr/ \w+ /xms;
+my $r_name     = qr/ [^|\s=+!-][^|\s=+!]* /xms;
 my $r_alt_name = qr/ $r_name | \\d /xms;
 my $r_names    = qr/ $r_name (?: [|] $r_alt_name)* /xms;
 my $r_type     = qr/ [nifsd] /xms;
@@ -91,11 +91,13 @@ around BUILDARGS => sub {
         my $spec = pop @params;
         push @params, (opt => $spec);
 
-        confess "$spec doesn't match the definition!" if $spec !~ /$r_spec/;
+        confess "$spec doesn't match the specification definition! (qr/$r_spec/)" if $spec !~ /$r_spec/;
 
         my ($names,$options) = $spec =~ /$r_spec/;
         my @names = split /\|/, $names;
-        confess "Invalid option spec '$spec'\n" if !@names || grep {!defined $_ || length $_ == 0 || /\W/} @names;
+        if ( !@names || grep {!defined $_ || length $_ == 0 || !/$r_name/} @names ) {
+            confess "Invalid option spec '$spec'\n" . Dumper \@names;
+        }
         push @params, 'names', \@names;
         push @params, 'name', $names[0];
 
@@ -119,14 +121,18 @@ around BUILDARGS => sub {
             if ($type) {
                 my ($text, $ref);
                 $type =~ s/^=//;
-                die "Unknown type in option spec '$spec' ($type)\n" if $type !~ /^ [nifsd] [@%]? $/xms;
+                die "Unknown type in option spec '$spec' ($type)\n" if $type !~ /^ $r_type $r_ref? $/xms;
                 if ( length $type == 1 ) {
                     ($text) = $type =~ /^ ([nifsd]) $/xms;
                     croak "Bad spec $spec, Unknown type $type" if !$text;
                 }
                 elsif ( length $type == 2 ) {
-                    ($text, $ref) = $type =~ /^ ([nifsd]) ([@%]) $/xms;
-                    push @params, ref => $ref;
+                    ($text, $ref) = $type =~ /^ ($r_type) ($r_ref) $/xms;
+                    push @params,
+                         ref =>
+                               $ref eq '%' ? 'HashRef'
+                             : $ref eq '@' ? 'ArrayRef'
+                             :               confess "Unknown reference type '$ref' in '$spec'";
                 }
                 push @params,
                     type =>
@@ -135,7 +141,7 @@ around BUILDARGS => sub {
                         : $text eq 'i' ? 'Int'
                         : $text eq 'f' ? 'Num'
                         : $text eq 'n' ? 'Num'
-                        :                confess "Unknown type spec '$type' in ";
+                        :                confess "Unknown type spec '$type' in '$spec'";
             }
         }
     }
@@ -178,7 +184,7 @@ sub process {
                 $old->{$key} = $value;
             }
             else {
-                confess "Unknown reference type '" . $self->ref . "'\n";
+                confess "Unknown reference type '" . $self->ref . "' (from " . $self->opt . ")\n";
             }
             $value = $old;
         }
