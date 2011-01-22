@@ -3,10 +3,10 @@ use warnings;
 use Module::Build;
 
 my $builder = Module::Build->new(
-    module_name       => 'GetOpt::Alt',
+    module_name       => 'Getopt::Alt',
     license           => 'perl',
     dist_author       => 'Ivan Wills <ivan.wills@gmail.com>',
-    dist_version_from => 'lib/GetOpt/Alt.pm',
+    dist_version_from => 'lib/Getopt/Alt.pm',
     requires => {
         'perl'        => 5.008,
         'version'     => 0,
@@ -17,13 +17,13 @@ my $builder = Module::Build->new(
         'Test::More'       => 0,
         'Test::NoWarnings' => 0,
     },
-    add_to_cleanup     => [ 'GetOpt-Alt-*' ],
+    add_to_cleanup     => [ 'Getopt-Alt-*' ],
     create_makefile_pl => 'traditional',
     create_license     => 1,
     meta_merge         => {
         resources => {
-            repository => 'http://github.com/ivanwills/GetOpt-Alt',
-            bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=GetOpt-Alt',
+            repository => 'http://github.com/ivanwills/Getopt-Alt',
+            bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Getopt-Alt',
         },
     },
 );
