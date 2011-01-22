@@ -162,6 +162,10 @@ sub process {
 
             $data = shift @$args;
         }
+        elsif ( $self->ref || grep { $self->type eq $_ } qw/Int Num Str/ ) {
+            $data =~ s/^=//xms;
+        }
+
         my $key;
         if ($self->ref && $self->ref eq 'HashRef') {
             ($key, $data) = split /=/, $data, 2;
