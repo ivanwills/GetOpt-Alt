@@ -6,10 +6,10 @@ MANIFEST.SKIP
 META.yml
 Makefile.PL
 README
-lib/GetOpt/Alt.pm
-lib/GetOpt/Alt/Command.pm
-lib/GetOpt/Alt/Manual.pod
-lib/GetOpt/Alt/Option.pm
+lib/Getopt/Alt.pm
+lib/Getopt/Alt/Command.pm
+lib/Getopt/Alt/Manual.pod
+lib/Getopt/Alt/Option.pm
 t/00-load.t
 t/argv-invalid.t
 t/argv-valid.t
