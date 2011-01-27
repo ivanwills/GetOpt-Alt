@@ -107,6 +107,11 @@ sub BUILD {
 sub get_options {
     my $caller = caller;
 
+    if ( @_ > 2 && ref $_[0] eq 'HASH' && ref $_[1] ne 'ARRAY' ) {
+        my $options = shift @_;
+        @_ = ( { default => $options}, [ @_ ] );
+    }
+
     my $self = __PACKAGE__->new(@_);
 
     $self->help($caller) if !$self->help || $self->help eq __PACKAGE__;
