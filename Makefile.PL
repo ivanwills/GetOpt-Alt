@@ -3,8 +3,8 @@ require 5.008;
 use ExtUtils::MakeMaker;
 WriteMakefile
 (
-          'NAME' => 'GetOpt::Alt',
-          'VERSION_FROM' => 'lib/GetOpt/Alt.pm',
+          'NAME' => 'Getopt::Alt',
+          'VERSION_FROM' => 'lib/Getopt/Alt.pm',
           'PREREQ_PM' => {
                            'Config::Any' => 0,
                            'Moose' => 0,

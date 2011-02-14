@@ -4,8 +4,8 @@ use strict;
 use warnings;
 use Data::Dumper qw/Dumper/;
 
-use GetOpt::Alt qw/get_options/;
-use GetOpt::Alt::Command;
+use Getopt::Alt qw/get_options/;
+use Getopt::Alt::Command;
 
 main();
 
@@ -19,7 +19,7 @@ sub main {
 
     my $opt = get_options(
         {
-            cmds    => [ map { GetOpt::Alt::Command->new( cmd => $_ ) } qw/sub/ ],
+            cmds    => [ map { Getopt::Alt::Command->new( cmd => $_ ) } qw/sub/ ],
             opt     => { %default },
             default => 1,
         },
@@ -49,7 +49,7 @@ __DATA__
 
 =head1 NAME
 
-longer.pl - a longer example file using GetOpt::Alt
+longer.pl - a longer example file using Getopt::Alt
 
 =head1 SYNOPSIS
 
@@ -61,8 +61,8 @@ longer.pl - a longer example file using GetOpt::Alt
    -i --inc=numb Pass in a number
    -s --str=str  Pass in a string
 
-   -v --verbose  Out put dump of GetOpt::Alt object use twice for more details
-      --help     Should display this message and is defined in GetOpt::Alt itself
+   -v --verbose  Out put dump of Getopt::Alt object use twice for more details
+      --help     Should display this message and is defined in Getopt::Alt itself
       --man      Should display the whole POD documentation
       --VERSION  Should show this script's verion number
 

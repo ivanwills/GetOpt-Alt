@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Data::Dumper qw/Dumper/;
 
-use GetOpt::Alt qw/get_options/;
+use Getopt::Alt qw/get_options/;
 
 main();
 
@@ -35,7 +35,7 @@ __DATA__
 
 =head1 NAME
 
-simple.pl - a simple example file using GetOpt::Alt
+simple.pl - a simple example file using Getopt::Alt
 
 =head1 SYNOPSIS
 
@@ -47,8 +47,8 @@ simple.pl - a simple example file using GetOpt::Alt
    -i --inc=numb Pass in a number
    -s --str=str  Pass in a string
 
-   -v --verbose  Out put dump of GetOpt::Alt object use twice for more details
-      --help     Should display this message and is defined in GetOpt::Alt itself
+   -v --verbose  Out put dump of Getopt::Alt object use twice for more details
+      --help     Should display this message and is defined in Getopt::Alt itself
 
 =head1 REST
 

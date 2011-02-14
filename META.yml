@@ -12,16 +12,16 @@ license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
-name: GetOpt-Alt
+name: Getopt-Alt
 provides:
-  GetOpt::Alt:
-    file: lib/GetOpt/Alt.pm
+  Getopt::Alt:
+    file: lib/Getopt/Alt.pm
     version: v0.0.1
-  GetOpt::Alt::Command:
-    file: lib/GetOpt/Alt/Command.pm
+  Getopt::Alt::Command:
+    file: lib/Getopt/Alt/Command.pm
     version: v0.0.1
-  GetOpt::Alt::Option:
-    file: lib/GetOpt/Alt/Option.pm
+  Getopt::Alt::Option:
+    file: lib/Getopt/Alt/Option.pm
     version: v0.0.1
 requires:
   Config::Any: 0
@@ -29,7 +29,7 @@ requires:
   perl: 5.008
   version: 0
 resources:
-  bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=GetOpt-Alt
+  bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Getopt-Alt
   license: http://dev.perl.org/licenses/
-  repository: http://github.com/ivanwills/GetOpt-Alt
+  repository: http://github.com/ivanwills/Getopt-Alt
 version: v0.0.1
