@@ -134,11 +134,11 @@ sub process {
     ARG:
     while (my $arg = shift @args) {
         my ($long, $short, $data);
-        if ($arg =~ /^-- (\w[^=\s]+) (?:= (.*) )?/xms) {
+        if ( $arg =~ /^-- (\w[^=\s]+) (?:= (.*) )?/xms ) {
             $long = $1;
             $data = $2;
         }
-        elsif ($arg =~ /^- (\w) (.*)/xms) {
+        elsif ( $arg =~ /^- (\w) =? (.*)/xms ) {
             $short = $1;
             $data  = $2;
         }
