@@ -83,8 +83,8 @@ around BUILDARGS => sub {
 
     if (@params == 1 && ref $params[0]) {
         @params =
-              ref $params[0] == 'ARRAY' ? @{ $params[0] }
-            : ref $params[0] == 'HASH'  ? %{ $params[0] }
+              ref $params[0] eq 'ARRAY' ? @{ $params[0] }
+            : ref $params[0] eq 'HASH'  ? %{ $params[0] }
             :                             confess "Can't supply a " . (ref $params[0]) . " ref to new!";
     }
     if (@params == 1 && !ref $params[0]) {
