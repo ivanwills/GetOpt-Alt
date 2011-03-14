@@ -1,10 +1,11 @@
 .*.sw[ponx]
-tmp/
+Debian_CPANTS.txt
+GetOpt-Alt-*
+.vimtagsdisplay
+tags
 Build
 MYMETA.yml
 _build/
 blib/
-tags
-.vimtagsdisplay
-Debian_CPANTS.txt
-GetOpt-Alt-*
+tmp*
+*~
