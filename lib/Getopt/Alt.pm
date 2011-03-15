@@ -224,11 +224,67 @@ This documentation refers to Getopt::Alt version 0.1.
 
    use Getopt::Alt;
 
-   # Brief but working code example(s) here showing the most common usage(s)
-   # This section will be as far as many users bother reading, so make it as
-   # educational and exemplary as possible.
+   # Create a new options object
+   my $opt = Getopt::Alt->new(
+       {
+           default => { string => 'default' },
+       },
+       [
+           'string|s=s',
+           ...
+       ],
+   );
+   print "String = " . $opt->opt->{string} . "\n";
 
 =head1 DESCRIPTION
+
+The aim of C<Getopt::Alt> is to provide an alternative to L<Getopt::Long> that
+allows your simple script to easily grow to a more complex script or to a
+package with multiple commands. The simple usage is quite similar to
+L<Getopt::Long>:
+
+In C<Getopt::Long> you might get your options like:
+
+ use Getopt::Long;
+ my %options = ( string => 'default' );
+ GetOptions(
+     \%options,
+     'string|s=s',
+     ...
+ );
+
+The found options are now stored in the C<%options> hash.
+
+In C<Getopt::Alt> you might do the following:
+
+ use Getopt::Alt qw/get_options/;
+ my %default = ( string => 'default' );
+ my $opt = get_options(
+     \%default,
+     'string|s=s',
+     ...
+ );
+ my %options = %{ $opt->opt };
+
+This will also result in the options stored in the C<%options> hash.
+
+Some other differences between Getopt::Alt and Getopt::Long include:
+
+=over 4
+
+=item *
+
+Bundling - is on by default
+
+=item *
+
+Case sensitivity is on by default
+
+=item *
+
+Throws error rather than returning errors.
+
+=back
 
 =head1 SUBROUTINES/METHODS
 
@@ -243,17 +299,51 @@ This documentation refers to Getopt::Alt version 0.1.
 Sets the default values for all the options. The values in opt will be reset
 with the values in here each time process is called
 
-=item C<files> -
+=item C<files> - ArrayRef[Str]
 
-=item C<argv> -
+Any arguments that not consumed as part of options (usually files), if C<argv>
+was not specified then this value would be put back into C<@ARGV>.
 
-=item C<bundle> -
+=item C<argv> - ArrayRef[Str]
 
-=item C<ignore_case> -
+The arguments that you wish to process, this defaults to C<@ARGV>.
+
+=item C<bundle> - bool
+
+Turns on bundling of arguments eg C<-rv> is equivalent to C<-r -v>. This is
+on by default.
+
+=item C<ignore_case> - bool
+
+Turns ignoring of the case of arguments, off by default.
+
+=item C<helper> - bool
+
+If set to a true value this will cause the help, man, and VERSION options to
+be added the end of your
 
 =item C<help> -
 
-=item C<cmds> -
+???
+
+=item C<cmds> - ArrayRef[Getopt::Alt::Command]
+
+If the Getopt::Alt is being used as part of a package where individual
+commands have their own modules this parameter stores an instance of each
+commands. (Not yet fully implemented.
+
+=item C<options> - ArrayRef[Getopt::Alt::Option]
+
+The individual command option specifications processed.
+
+=item C<opt> - HashRef
+
+The values processed from the argv.
+
+=item C<default> - HashRef
+
+The default values for each option. The default value is not modified by
+processing, so if set the same default will be used from call to call.
 
 =back
 
