@@ -12,8 +12,8 @@ use Getopt::Alt::Option;
 my @invalid = qw(
     |test
     test=q
-    test=q?
-    test=i?
+    test=q-
+    test=i-
     a||b
 );
 

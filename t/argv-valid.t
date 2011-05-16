@@ -23,6 +23,7 @@ my $opt = Getopt::Alt->new(
         'float|f=f',
         'array|a=i@',
         'hash|h=s%',
+        'null|N=i?',
     ],
 );
 
@@ -33,14 +34,14 @@ for my $argv ( @argv ) {
     my $argv_str = join ' ', @{ $argv->[0] };
     eval { $opt->process( @{ $argv->[0] } ) };
     diag $@ if $@;
-    ok !$@, "No errors for  $argv_str";
+    ok !$@, "No errors for  $argv_str" or BAIL_OUT(1);
 
     for my $test ( keys %{ $argv->[1] } ) {
         if ( ref $argv->[1]{$test} ) {
-            is_deeply $opt->opt->{$test}, $argv->[1]{$test}, "$test $argv_str";
+            is_deeply $opt->opt->{$test}, $argv->[1]{$test}, "$test $argv_str" or BAIL_OUT(2);
         }
         else {
-            is $opt->opt->{$test}, $argv->[1]{$test}, "$test $argv_str";
+            is $opt->opt->{$test}, $argv->[1]{$test}, "$test $argv_str" or BAIL_OUT(3);
         }
     }
 }
@@ -89,5 +90,16 @@ sub argv {
         [ [ qw/-h h=a       / ] => { hash    => {h=>'a'        } } ],
         [ [ qw/-h h=b -h i=c/ ] => { hash    => {h=>'b', i=>'c'} } ],
         [ [ qw/-h=a=b       / ] => { hash    => { a => 'b'     } } ],
+        [ [ qw/ -N          / ] => { null    => undef            } ],
+        [ [ qw/ -N 7        / ] => { null    => 7                } ],
+        [ [ qw/ -N=6        / ] => { null    => 6                } ],
+        [ [ qw/ -N-5        / ] => { null    => -5               } ],
+        [ [ qw/ -N -4       / ] => { null    => -4               } ],
+        [ [ qw/ -N=-3       / ] => { null    => -3               } ],
+        [ [ qw/ --null      / ] => { null    => undef            } ],
+        [ [ qw/ --null 3    / ] => { null    => 3                } ],
+        [ [ qw/ --null=2    / ] => { null    => 2                } ],
+        [ [ qw/ --null -6   / ] => { null    => -6               } ],
+        [ [ qw/ --null=-7   / ] => { null    => -7               } ],
     );
 }

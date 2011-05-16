@@ -36,7 +36,10 @@ my @valid = (
     },
     'neg!' => {
         negatable => 1,
-    }
+    },
+    'null?' => {
+        nullable => 1,
+    },
 );
 my @bulk = get_bulk();
 
@@ -50,7 +53,7 @@ for ( my $i = 0; $i < @valid; $i += 2 ) {
     my $opt   = Getopt::Alt::Option->new( $args );
 
     for my $key ( keys %{ $tests } ) {
-        is_deeply( $opt->$key(), $tests->{$key}, "$args -> $tests->{$key}" );
+        is_deeply( $opt->$key(), $tests->{$key}, "$args -> $tests->{$key}" ) or BAIL_OUT(1);
         #diag Dumper $opt, $opt->$key();
         #diag Dumper $opt->$key(), $tests->{$key};
     }
