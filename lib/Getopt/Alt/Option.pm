@@ -65,8 +65,9 @@ has ref => (
     isa => 'Str',
 );
 has value => (
-    is  => 'rw',
-    isa => 'Any',
+    is        => 'rw',
+    isa       => 'Any',
+    predicate => 'has_value',
 );
 
 my $r_name     = qr/ [^|\s=+!-][^|\s=+!?]* /xms;
