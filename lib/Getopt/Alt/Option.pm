@@ -44,6 +44,10 @@ has negatable => (
     is  => 'rw',
     isa => 'Bool',
 );
+has nullable => (
+    is  => 'rw',
+    isa => 'Bool',
+);
 has config => (
     is  => 'ro',
     isa => 'Bool',
@@ -65,7 +69,7 @@ has value => (
     isa => 'Any',
 );
 
-my $r_name     = qr/ [^|\s=+!-][^|\s=+!]* /xms;
+my $r_name     = qr/ [^|\s=+!-][^|\s=+!?]* /xms;
 my $r_alt_name = qr/ $r_name | \\d /xms;
 my $r_names    = qr/ $r_name (?: [|] $r_alt_name)* /xms;
 my $r_type     = qr/ [nifsd] /xms;
@@ -73,7 +77,8 @@ my $r_ref      = qr/ [%@] /xms;
 my $r_type_ref = qr/ = $r_type $r_ref? /xms;
 my $r_inc      = qr/ [+] /xms;
 my $r_neg      = qr/ [!] /xms;
-my $r_spec     = qr/^ ( $r_names ) ( $r_inc | $r_neg | $r_type_ref )? $/xms;
+my $r_null     = qr/ [?] /xms;
+my $r_spec     = qr/^ ( $r_names ) ( $r_inc | $r_neg | $r_type_ref )? ( $r_null )? $/xms;
 
 # calling new => ->new( 'test|t' )
 #                ->new( name => 'text', names => [qw/test tes te t/], ... )
@@ -93,13 +98,17 @@ around BUILDARGS => sub {
 
         confess "$spec doesn't match the specification definition! (qr/$r_spec/)" if $spec !~ /$r_spec/;
 
-        my ($names,$options) = $spec =~ /$r_spec/;
+        my ($names, $options, $null) = $spec =~ /$r_spec/;
         my @names = split /\|/, $names;
         if ( !@names || grep {!defined $_ || length $_ == 0 || !/$r_name/} @names ) {
             confess "Invalid option spec '$spec'\n" . Dumper \@names;
         }
         push @params, 'names', \@names;
         push @params, 'name', $names[0];
+
+        if ( $null && $null eq '?' ) {
+            push @params, 'nullable' => 1;
+        }
 
         if ($options) {
             my ($type, $extra);
@@ -159,12 +168,16 @@ sub process {
         $used = 1;
         if ( !defined $data || length $data == 0 ) {
             confess "No " . $self->type . " passed for $name\n"
-                if !$args->[0] || ( $args->[0] =~ /^-/ && !( $self->type eq 'Int' || $self->type eq 'Num' ) );
+                if ( !$args->[0]  && !$self->nullable ) || (
+                    $args->[0] && $args->[0] =~ /^-/ && !( $self->type eq 'Int' || $self->type eq 'Num' )
+                );
 
             $data = shift @$args;
         }
         elsif ( $self->ref || grep { $self->type eq $_ } qw/Int Num Str/ ) {
-            $data =~ s/^=//xms;
+            if ( $data && !$self->nullable ) {
+                $data =~ s/^=//xms;
+            }
         }
 
         my $key;
@@ -173,7 +186,8 @@ sub process {
         }
 
         $value =
-              $self->type eq 'Int' && $data =~ /^ -? \d+$/xms                           ? $data
+              $self->nullable      && ( !defined $data || $data eq '' )                 ? undef
+            : $self->type eq 'Int' && $data =~ /^ -? \d+$/xms                           ? $data
             : $self->type eq 'Num' && $data =~ /^ -? (?: \d* (?: [.]\d+ )? | \d+ )$/xms ? $data
             : $self->type eq 'Str' && length $data > 0                                  ? $data
             :                                                                             confess "The value '$data' is not of type '".$self->type."'\n";
