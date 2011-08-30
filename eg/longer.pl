@@ -19,9 +19,9 @@ sub main {
 
     my $opt = get_options(
         {
-            cmds    => [ map { Getopt::Alt::Command->new( cmd => $_ ) } qw/sub/ ],
-            opt     => { %default },
-            default => 1,
+            cmds => [ map { Getopt::Alt::Command->new( cmd => $_ ) } qw/sub/ ],
+            opt  => { %default },
+            help => 1,
         },
         [
             'test|t',
