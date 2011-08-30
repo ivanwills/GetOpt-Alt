@@ -7,13 +7,13 @@ use Data::Dumper qw/Dumper/;
 use Getopt::Alt qw/get_options/;
 use Getopt::Alt::Command;
 
-main();
-
-our $VERSION = 1.0;
+our $VERSION = '1.0';
 my %default = (
     inc => 1,
     str => 'string',
 );
+
+main();
 
 sub main {
 

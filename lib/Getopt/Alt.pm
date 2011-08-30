@@ -165,8 +165,7 @@ sub process {
     if ( $self->help ) {
          if ( $self->opt->{VERSION} ) {
              my ($name)  = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
-             my $version = eval '$' . $self->help . '::VERSION';  ## no critic
-             $version ||= 'undef';
+             my $version = defined $main::VERSION ? $main::VERSION : 'undef';
              print "$name Version = $version\n";
              exit 1;
          }
