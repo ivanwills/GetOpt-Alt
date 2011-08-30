@@ -199,7 +199,13 @@ sub best_option {
 
     return $self->best_option($long, $short, 1) if !$no;
 
-    die "Unknown option '" . ($long ? "--$long" : "-$short") . "'\n";
+    if ( $self->help ) {
+        warn "Unknown option '" . ($long ? "--$long" : "-$short") . "'\n";
+        pod2usage( -verbose => 1 );
+    }
+    else {
+        confess "Unknown option '" . ($long ? "--$long" : "-$short") . "'\n";
+    }
 }
 
 sub get_files {
