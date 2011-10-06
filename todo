@@ -1,0 +1,4 @@
+Mooseify
+    * Arg definitions should be treaded as has method calls to generated class
+    * hash definitions should be direct has() calls
+    * intro spection can be used to do stuff
