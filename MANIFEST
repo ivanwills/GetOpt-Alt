@@ -4,6 +4,7 @@ LICENSE
 MANIFEST
 MANIFEST.SKIP
 META.yml
+META.json
 Makefile.PL
 README
 lib/Getopt/Alt.pm
@@ -24,4 +25,3 @@ t/options-invalid.t
 t/options-valid.t
 eg/longer.pl
 eg/simple.pl
-
