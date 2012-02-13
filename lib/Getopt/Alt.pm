@@ -21,12 +21,13 @@ use Pod::Usage;
 
 use overload (
     '@{}'  => \&get_files,
-    'bool' => sub { 1 },
+    #'bool' => sub { 1 },
 );
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw/get_options/;
 our %EXPORT_TAGS = ();
+our $EXIT        = 1;
 #our @EXPORT      = qw//;
 
 has options => (
@@ -163,18 +164,17 @@ sub process {
     }
 
     if ( $self->help ) {
-         if ( $self->opt->{VERSION} ) {
+        if ( $self->opt->{VERSION} ) {
              my ($name)  = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
              my $version = defined $main::VERSION ? $main::VERSION : 'undef';
-             print "$name Version = $version\n";
-             exit 1;
-         }
-         elsif ( $self->opt->{man} ) {
-             pod2usage( -verbose => 2 );
-         }
-         elsif ( $self->opt->{help} ) {
-             pod2usage( -verbose => 1 );
-         }
+             die "$name Version = $version\n";
+        }
+        elsif ( $self->opt->{man} ) {
+            $self->_show_help(2);
+        }
+        elsif ( $self->opt->{help} ) {
+            $self->_show_help(1);
+        }
     }
 
     return $self;
@@ -199,8 +199,7 @@ sub best_option {
     return $self->best_option($long, $short, 1) if !$no;
 
     if ( $self->help ) {
-        warn "Unknown option '" . ($long ? "--$long" : "-$short") . "'\n";
-        pod2usage( -verbose => 1 );
+        $self->_show_help(1, "Unknown option '" . ($long ? "--$long" : "-$short") . "'")
     }
     else {
         confess "Unknown option '" . ($long ? "--$long" : "-$short") . "'\n";
@@ -212,6 +211,41 @@ sub get_files {
 
     return $self->files;
 }
+
+sub _show_help {
+    my ($self, $verbosity, $msg) = @_;
+
+    tie *OUT, 'ScalarHandle';
+    pod2usage(
+        $msg ? ( -msg => $msg ) : (),
+        -verbose => $verbosity,
+        -exitval => 'NOEXIT',
+        -output  => \*OUT,
+    );
+    my $message = $ScalarHandle::out;
+    close OUT;
+    die $message;
+}
+
+1;
+
+package ScalarHandle;
+use strict;
+use warnings;
+use parent qw/Tie::Handle/;
+
+our $out = '';
+
+sub TIEHANDLE {
+    my ($class) = @_;
+    $out = '';
+    return bless {}, $class;
+}
+sub PRINT {
+    my ($self, @lines) = @_;
+    $out .= join '', @lines;
+}
+sub CLOSE { $out = '' }
 
 1;
 
@@ -358,7 +392,13 @@ Description:
 
 =head3 C<get_options (@options | $setup, $options)>
 
-This is the equivalent of calling new(...)->process
+=head3 C<get_options ($default, 'opt1', 'opt2' ... )>
+
+This is the equivalent of calling new(...)->process but it does some extra
+argument processing.
+
+B<Note>: The second form is the same basically the same as Getopt::Long's
+getOptions called with a hash ref as the first parameter.
 
 =head3 C<BUILD ()>
 
