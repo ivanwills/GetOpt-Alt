@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use List::Util qw/sum/;
 use Test::More;
-use Test::NoWarnings;
+#use Test::NoWarnings;
 use Getopt::Alt;
 use Data::Dumper qw/Dumper/;
 
@@ -28,7 +28,7 @@ my $opt = Getopt::Alt->new(
 );
 
 my @argv = argv();
-plan tests => ( sum map { scalar keys %{$_->[1]} } @argv ) + @argv + 1;
+plan tests => ( sum map { scalar keys %{$_->[1]} } @argv ) + @argv;# + 1;
 
 for my $argv ( @argv ) {
     my $argv_str = join ' ', @{ $argv->[0] };

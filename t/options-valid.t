@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use List::Util qw/sum/;
 use Test::More;
-use Test::NoWarnings;
+#use Test::NoWarnings;
 use Getopt::Alt::Option;
 use Data::Dumper qw/Dumper/;
 
@@ -45,7 +45,7 @@ my @bulk = get_bulk();
 
 my %valid = @valid;
 my $tests = ( sum map {scalar keys %{$valid{$_}} } keys %valid );
-plan tests => $tests + @bulk + 1;
+plan tests => $tests + @bulk;# + 1;
 
 for ( my $i = 0; $i < @valid; $i += 2 ) {
     my $args  = $valid[$i];
