@@ -41,5 +41,6 @@ add_stopwords(qw/
     vimdiff
     versioned
     plugins
+    getOptions
 /);
 all_pod_files_spelling_ok();
