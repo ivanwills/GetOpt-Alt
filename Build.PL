@@ -12,17 +12,24 @@ my $builder = Module::Build->new(
         'version'     => 0,
         'Config::Any' => 0,
         'Moose'       => 0,
+        'parent'      => 0,
     },
     build_requires => {
         'Test::More'       => 0,
         'Test::NoWarnings' => 0,
+    },
+    recommends => {
+        'Test::Spelling'     => 0,
+        'Test::Perl::Critic' => 0,
+        'Test::Kwalitee'     => 0,
+        'Pod::Coverage'      => 0,
     },
     add_to_cleanup     => [ 'Getopt-Alt-*' ],
     create_makefile_pl => 'traditional',
     create_license     => 1,
     meta_merge         => {
         resources => {
-            repository => 'http://github.com/ivanwills/Getopt-Alt',
+            repository => 'git://github.com/ivanwills/Getopt-Alt.git',
             bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Getopt-Alt',
         },
     },
