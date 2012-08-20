@@ -21,7 +21,7 @@ use Pod::Usage;
 
 use overload (
     '@{}'  => \&get_files,
-    #'bool' => sub { 1 },
+    'bool' => sub { 1 },
 );
 
 our $VERSION     = version->new('0.0.1');
