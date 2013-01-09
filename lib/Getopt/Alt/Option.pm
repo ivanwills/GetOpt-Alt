@@ -169,7 +169,7 @@ sub process {
         $used = 1;
         if ( !defined $data || length $data == 0 ) {
             confess "No " . $self->type . " passed for $name\n"
-                if ( !$args->[0]  && !$self->nullable ) || (
+                if ( ! defined $args->[0]  && !$self->nullable ) || (
                     $args->[0] && $args->[0] =~ /^-/ && !( $self->type eq 'Int' || $self->type eq 'Num' )
                 );
 
