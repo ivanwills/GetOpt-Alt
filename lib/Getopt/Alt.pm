@@ -10,13 +10,10 @@ use Moose;
 use warnings;
 use version;
 use Carp;
-use Scalar::Util;
-use List::Util;
-#use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use base qw/Exporter/;
-use Getopt::Alt::Option;
+use Getopt::Alt::Option qw/build_option/;
 use Pod::Usage;
 
 use overload (
@@ -74,6 +71,7 @@ has cmds => (
     default => sub { [] },
 );
 
+my $count = 1;
 around BUILDARGS => sub {
     my ($orig, $class, @params) = @_;
     my %param;
@@ -93,17 +91,19 @@ around BUILDARGS => sub {
         delete $param{helper};
     }
 
+    my $classname = 'Getopt::Alt::Dynamic::A' . $count++;
+    my $class = Moose::Meta::Class->create(
+        $class_name,
+        superclasses => [ 'Getopt::Alt::Dynamic' ],
+        #methods      => \%method,
+    );
+
     while ( my $option = shift @params ) {
-        push @{ $param{options} }, Getopt::Alt::Option->new($option);
+        build_option($class, $option);
     }
 
     return $class->$orig(%param);
 };
-
-sub BUILD {
-    my ($self) = @_;
-
-}
 
 sub get_options {
     my $caller = caller;

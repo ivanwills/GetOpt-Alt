@@ -6,21 +6,25 @@ package Getopt::Alt::Option;
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use Moose;
+use strict;
 use warnings;
 use version;
+use Moose::Role;
 use Carp;
 use Scalar::Util;
 use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-#use overload (
-#	'%{}' => &get_options,
-#	'@{}' => &get_files,
-#);
+Moose::Exporter->setup_import_methods(
+    as_is     => [qw/build_option/],
+    #with_meta => ['operation'],
+);
+
 
 our $VERSION = version->new('0.0.1');
+
+Moose::Util::meta_attribute_alias('Getopt::Alt::Option');
 
 has opt => (
     is       => 'ro',
@@ -56,10 +60,6 @@ has project => (
     is  => 'ro',
     isa => 'Bool',
 );
-has type => (
-    is  => 'ro',
-    isa => 'Str',
-);
 has ref => (
     is  => 'ro',
     isa => 'Str',
@@ -84,8 +84,9 @@ my $r_spec     = qr/^ ( $r_names ) ( $r_inc | $r_neg | $r_type_ref )? ( $r_null 
 # calling new => ->new( 'test|t' )
 #                ->new( name => 'text', names => [qw/test tes te t/], ... )
 #                ->new({ name => 'text', names => [qw/test tes te t/], ... )
-around BUILDARGS => sub {
-    my ($orig, $class, @params) = @_;
+#around BUILDARGS => sub {
+sub build_option {
+    my ($class, @params) = @_;
 
     if (@params == 1 && ref $params[0]) {
         @params =
@@ -155,8 +156,15 @@ around BUILDARGS => sub {
             }
         }
     }
+    my %params = @params;
+    $params{traits} = ['Getopt::Alt::Option'];
 
-    return $class->$orig(@params);
+    $class->add_attribute(
+        $params{name}
+        %params,
+    );
+
+    return;
 };
 
 sub process {
