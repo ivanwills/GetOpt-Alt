@@ -159,8 +159,16 @@ sub build_option {
     my %params = @params;
     $params{traits} = ['Getopt::Alt::Option'];
 
+    my $type
+        = $params{type} && $params{ref} ? "$params{ref}\[$params{type}\]"
+        : $params{type}                 ? $params{type}
+        : $params{ref}                  ? $params{ref}
+        :                                 'Str';
+
     $class->add_attribute(
-        $params{name}
+        $params{name},
+        is  => 'rw',
+        isa => $type,
         %params,
     );
 

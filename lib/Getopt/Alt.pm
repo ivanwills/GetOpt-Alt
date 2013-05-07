@@ -80,7 +80,6 @@ around BUILDARGS => sub {
         %param  = %{ $params[0] };
         @params = @{ $params[1] };
     }
-    $param{options} ||= [];
 
     if ( !exists $param{helper} || $param{helper} ) {
         push @params, (
@@ -91,15 +90,19 @@ around BUILDARGS => sub {
         delete $param{helper};
     }
 
-    my $classname = 'Getopt::Alt::Dynamic::A' . $count++;
-    my $class = Moose::Meta::Class->create(
-        $class_name,
-        superclasses => [ 'Getopt::Alt::Dynamic' ],
-        #methods      => \%method,
-    );
+    if ( @params ) {
+        my $class_name = 'Getopt::Alt::Dynamic::A' . $count++;
+        my $object = Moose::Meta::Class->create(
+            $class_name,
+            superclasses => [ 'Getopt::Alt::Dynamic' ],
+            #methods      => \%method,
+        );
 
-    while ( my $option = shift @params ) {
-        build_option($class, $option);
+        while ( my $option = shift @params ) {
+            build_option($object, $option);
+        }
+
+        $param{options} = $class_name->new;
     }
 
     return $class->$orig(%param);
@@ -114,6 +117,7 @@ sub get_options {
     }
 
     my $self = __PACKAGE__->new(@_);
+    warn Dumper $self;
 
     $self->help($caller) if !$self->help || $self->help eq __PACKAGE__;
 
