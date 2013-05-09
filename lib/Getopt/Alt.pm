@@ -14,7 +14,9 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use base qw/Exporter/;
 use Getopt::Alt::Option qw/build_option/;
+use Getopt::Alt::Exception;
 use Pod::Usage;
+use TryCatch;
 
 use overload (
     '@{}'  => \&get_files,
@@ -116,13 +118,27 @@ sub get_options {
         @_ = ( { default => $options}, [ @_ ] );
     }
 
-    my $self = __PACKAGE__->new(@_);
+    try {
+        my $self = __PACKAGE__->new(@_);
 
-    $self->help($caller) if !$self->help || $self->help eq __PACKAGE__;
+        $self->help($caller) if !$self->help || $self->help eq __PACKAGE__;
 
-    $self->process();
+        $self->process();
 
-    return $self;
+        return $self;
+    }
+    catch ($e) {
+        if ( ref $e && ref $e eq 'Getopt::Alt::Exception' && $e->help ) {
+            die $e;
+        }
+
+        warn $e;
+        my $self = __PACKAGE__->new();
+
+        $self->help($caller) if !$self->help || $self->help eq __PACKAGE__;
+
+        $self->_show_help(1);
+    }
 }
 
 sub process {
@@ -170,7 +186,7 @@ sub process {
         if ( $self->opt->{VERSION} ) {
              my ($name)  = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
              my $version = defined $main::VERSION ? $main::VERSION : 'undef';
-             die "$name Version = $version\n";
+             die Getopt::Alt::Exception->new( message => "$name Version = $version\n", help => 1);
         }
         elsif ( $self->opt->{man} ) {
             $self->_show_help(2);
@@ -231,7 +247,7 @@ sub _show_help {
     );
     my $message = $ScalarHandle::out;
     close OUT;
-    die $message;
+    die Getopt::Alt::Exception->new( message => $message, help => 1 );
 }
 
 1;
