@@ -270,6 +270,11 @@ This documentation refers to Getopt::Alt::Option version 0.1.
 
 =head1 SUBROUTINES/METHODS
 
+=head2 C<build_option ( $class, @params )>
+
+This is a helper function to create an C<Getopt::Alt::Option> attribute on the
+supplied C<$class> object.
+
 =head2 C<process ($long, $short, $data, $args)>
 
 Processes the option against the supplied $data or $args->[0] if no $data is set
