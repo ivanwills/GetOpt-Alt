@@ -23,7 +23,7 @@ use overload (
     'bool' => sub { 1 },
 );
 
-our $VERSION     = version->new('0.0.1');
+our $VERSION     = version->new('0.0.2');
 our @EXPORT_OK   = qw/get_options/;
 our %EXPORT_TAGS = ();
 our $EXIT        = 1;
@@ -280,7 +280,7 @@ Getopt::Alt - Alternate method of processing command line arguments
 
 =head1 VERSION
 
-This documentation refers to Getopt::Alt version 0.1.
+This documentation refers to Getopt::Alt version 0.0.2.
 
 =head1 SYNOPSIS
 

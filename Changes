@@ -1,5 +1,15 @@
 Revision history for Getopt-Alt
 
+0.0.2   2013-05-09
+        Got the tests passing
+        Fixed failing tests
+        New Dynaming object parent object
+        Fixed issue where no files causes test to execption
+        More work on getting options working
+        Started objectivying
+        Fixed some error handling
+        Turned on bool overloading again
+
 0.0.1   2012-07-21
         First version, released on an unsuspecting world.
 
