@@ -29,7 +29,7 @@ our $EXIT        = 1;
 
 has options => (
     is    => 'rw',
-    isa   => 'ArrayRef[Getopt::Alt::Option]',
+    isa   => 'Getopt::Alt::Dynamic',
 );
 has opt => (
     is      => 'rw',
@@ -117,7 +117,6 @@ sub get_options {
     }
 
     my $self = __PACKAGE__->new(@_);
-    warn Dumper $self;
 
     $self->help($caller) if !$self->help || $self->help eq __PACKAGE__;
 
@@ -191,7 +190,11 @@ sub best_option {
         $long =~ s/^no-//xms;
     }
 
-    for my $opt (@{ $self->options }) {
+    my $meta = $self->options->meta;
+
+    for my $name ( $meta->get_attribute_list ) {
+        my $opt = $meta->get_attribute($name);
+
         return $opt if $long && $opt->name eq $long;
 
         for my $name (@{ $opt->names }) {

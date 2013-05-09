@@ -20,7 +20,7 @@ for my $data (@data) {
             is_deeply [ @{ $files || [] } ], $test->{results}, "'$test->{name}': Files returned correctly" or note Dumper $files;
         }
         else {
-            ok !$files && $@, "'$test->{name}': failes" or note Dumper { args => $data->{args}, ARGV => $test->{argv}, };
+            ok !$files && $@, "'$test->{name}': fails" or note Dumper { args => $data->{args}, ARGV => $test->{argv}, };
             note $@;
         }
     }

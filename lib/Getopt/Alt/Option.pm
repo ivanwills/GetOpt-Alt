@@ -64,6 +64,10 @@ has ref => (
     is  => 'ro',
     isa => 'Str',
 );
+has type => (
+    is  => 'ro',
+    isa => 'Str',
+);
 has value => (
     is        => 'rw',
     isa       => 'Any',
@@ -167,12 +171,12 @@ sub build_option {
 
     $class->add_attribute(
         $params{name},
-        is  => 'rw',
-        isa => $type,
+        is   => 'rw',
+        isa  => $type,
         %params,
     );
 
-    return;
+    return $class->get_attribute( $params{name} );
 };
 
 sub process {
