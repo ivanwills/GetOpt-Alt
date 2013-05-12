@@ -12,7 +12,9 @@ my $builder = Module::Build->new(
         'version'     => 0,
         'Config::Any' => 0,
         'Moose'       => 0,
+        'Moose::Role' => 0,
         'parent'      => 0,
+        'TryCatch'    => 0,
     },
     configure_requires => {
         'Module::Build' => 0.38,
