@@ -49,9 +49,9 @@ has files => (
     default => sub {[]},
 );
 has argv => (
-    is      => 'rw',
-    isa     => 'ArrayRef[Str]',
-    default => sub {[]},
+    is        => 'rw',
+    isa       => 'ArrayRef[Str]',
+    predicate => 'has_argv',
 );
 has bundle => (
     is      => 'rw',
@@ -71,6 +71,27 @@ has cmds => (
     is      => 'rw',
     isa     => 'ArrayRef[Getopt::Alt::Command]',
     default => sub { [] },
+);
+has cmd => (
+    is      => 'rw',
+    isa     => 'Str',
+);
+has sub_command => (
+    is            => 'rw',
+    #isa           => 'Bool | HashRef[ArrayRef] | CodeRef',
+    predicate     => 'has_sub_command',
+    documentation => 'if true (== 1) processing of args stops at first non ' .
+                   'defined parameter, if a HASH ref the keys are assumed ' .
+                   'to be the allowed sub commands and the values are ' .
+                   'assumed to be parameters to passed to get_options ' .
+                   'where the generated options will be a sub object of ' .
+                   'generated options object. Finally if this is a sub ' .
+                   'ref it will be called with self and the rest of argv',
+);
+has default_sub_command => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_default_sub_command',
 );
 
 my $count = 1;
@@ -144,12 +165,12 @@ sub get_options {
 sub process {
     my ($self, @args) = @_;
     if ( !@args ) {
-        @args = @{ $self->argv } ? @{ $self->argv } : @ARGV;
+        @args = $self->has_argv ? @{ $self->argv } : @ARGV;
     }
     for my $key ( keys %{ $self->opt } ) {
         delete $self->opt->{$key};
     }
-    $self->opt( $self->default ? $self->default : {} );
+    $self->opt( $self->default ? { %{ $self->default } } : {} );
 
     ARG:
     while (my $arg = shift @args) {
@@ -164,6 +185,7 @@ sub process {
         }
         else {
             push @{ $self->files }, $arg;
+            last ARG if $self->sub_command;
             next ARG;
         }
 
@@ -171,6 +193,8 @@ sub process {
         $opt->value( $self->opt->{ $opt->name } );
 
         my ($value, $used) = $opt->process( $long, $short, $data, \@args );
+        my $opt_name = $opt->name;
+        $self->options->$opt_name($value);
         $self->opt->{$opt->name} = $value;
 
         if ( !$used && $short && defined $data && length $data ) {
@@ -178,8 +202,9 @@ sub process {
         }
     }
 
-    if (!@{ $self->argv } && $self->files) {
-        @ARGV = @{ $self->files };
+    $self->cmd( shift @{ $self->files } ) if @{ $self->files } && $self->sub_command;
+    if ( !$self->has_argv && $self->files ) {
+        @ARGV = ( @{ $self->files }, @args );
     }
 
     if ( $self->help ) {
