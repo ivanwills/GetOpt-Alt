@@ -169,6 +169,10 @@ sub build_option {
         : $params{ref}                  ? $params{ref}
         :                                 'Str';
 
+    if ( $params{nullable} ) {
+        $type = "Maybe[$type]";
+    }
+
     $class->add_attribute(
         $params{name},
         is   => 'rw',
