@@ -30,13 +30,13 @@ our $EXIT        = 1;
 #our @EXPORT      = qw//;
 
 has options => (
-    is    => 'rw',
-    isa   => 'Getopt::Alt::Dynamic',
+    is      => 'rw',
+    isa     => 'Str',
+    default => 'Getopt::Alt::Dynamic',
 );
 has opt => (
     is      => 'rw',
-    isa     => 'HashRef',
-    default => sub { {} },
+    isa     => 'Getopt::Alt::Dynamic',
 );
 has default => (
     is      => 'rw',
@@ -125,7 +125,7 @@ around BUILDARGS => sub {
             build_option($object, $option);
         }
 
-        $param{options} = $class_name->new;
+        $param{options} = $class_name;
     }
 
     return $class->$orig(%param);
@@ -167,10 +167,8 @@ sub process {
     if ( !@args ) {
         @args = $self->has_argv ? @{ $self->argv } : @ARGV;
     }
-    for my $key ( keys %{ $self->opt } ) {
-        delete $self->opt->{$key};
-    }
-    $self->opt( $self->default ? { %{ $self->default } } : {} );
+    my $class = $self->options;
+    $self->opt( $class->new( %{ $self->default } ) );
 
     ARG:
     while (my $arg = shift @args) {
@@ -194,7 +192,6 @@ sub process {
 
         my ($value, $used) = $opt->process( $long, $short, $data, \@args );
         my $opt_name = $opt->name;
-        $self->options->$opt_name($value);
         $self->opt->{$opt->name} = $value;
 
         if ( !$used && $short && defined $data && length $data ) {

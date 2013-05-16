@@ -34,7 +34,8 @@ for my $argv ( @argv ) {
     my $argv_str = join ' ', @{ $argv->[0] };
     eval { $opt->process( @{ $argv->[0] } ) };
     diag $@ if $@;
-    ok !$@, "No errors for  $argv_str" or BAIL_OUT(1);
+    ok !$@, "No errors for  $argv_str"
+        or BAIL_OUT('Could not process the values: ' . join ', ', @{ $argv->[0] });
 
     for my $test ( keys %{ $argv->[1] } ) {
         if ( $test eq 'has' ) {

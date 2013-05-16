@@ -28,7 +28,7 @@ sub sub_simple {
     };
     ok $opt, 'Get options'
         or diag $@;
-    is $opt->options->out, 'thing', 'first inputs processed correctly';
+    is $opt->opt->out, 'thing', 'first inputs processed correctly';
     is $ARGV[0], '--not-processed', 'Param not processed';
     #diag Dumper $opt;
 }
