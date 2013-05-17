@@ -1,4 +1,8 @@
 Mooseify
-    * Arg definitions should be treaded as has method calls to generated class
+    * Arg definitions should be treaded as has method calls to generated class (Done)
     * hash definitions should be direct has() calls
     * intro spection can be used to do stuff
+Sub Commands
+    * Simple - stop processing at sub command (done)
+    * Hash - sub command's parametes are passed as values with keys being the sub commands (started)
+    * Sub - Method is provided that checks the sub command details ...
