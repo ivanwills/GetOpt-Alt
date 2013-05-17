@@ -32,7 +32,29 @@ sub sub_simple {
     is $ARGV[0], '--not-processed', 'Param not processed';
     #diag Dumper $opt;
 }
+
 sub sub_hash {
+    @ARGV = qw/ -o thing cmd --processed/;
+    my $opt = eval {
+        get_options(
+            {
+                sub_command => {
+                    cmd => [
+                        'processed|p',
+                    ],
+                },
+            },
+            [
+                'out|o=s',
+            ]
+        )
+    };
+    ok $opt, 'Get options'
+        or diag $@;
+    is $opt->cmd, 'cmd', 'The command cmd is found correctly';
+    ok $opt->opt->can('processed'), 'Processed sub parameter is present';
 }
+
 sub sub_code {
 }
+

@@ -204,6 +204,20 @@ sub process {
         @ARGV = ( @{ $self->files }, @args );
     }
 
+    if ( ref $self->sub_command eq 'HASH' ) {
+        my $sub = $self->sub_command->{$self->cmd};
+        if (!$sub) {
+            warn "Unknown command '$self->cmd'!\n";
+            die Getopt::Alt::Exception->new( message => "Unknown command '$self->cmd'" )
+                if !$self->help;
+            $self->_show_help(1);
+        }
+
+        if ( ref $sub eq 'HASH' ) {
+            # build sub command object
+        }
+    }
+
     if ( $self->help ) {
         if ( $self->opt->{VERSION} ) {
              my ($name)  = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
