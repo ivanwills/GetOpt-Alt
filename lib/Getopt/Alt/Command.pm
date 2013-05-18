@@ -16,7 +16,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
 
-our $VERSION     = version->new('0.0.3');
+our $VERSION     = version->new('0.1.0');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
@@ -64,7 +64,7 @@ Getopt::Alt::Command - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to Getopt::Alt::Command version 0.0.3.
+This documentation refers to Getopt::Alt::Command version 0.1.0.
 
 
 =head1 SYNOPSIS
