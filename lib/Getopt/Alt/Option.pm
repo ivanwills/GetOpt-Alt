@@ -88,7 +88,6 @@ my $r_spec     = qr/^ ( $r_names ) ( $r_inc | $r_neg | $r_type_ref )? ( $r_null 
 # calling new => ->new( 'test|t' )
 #                ->new( name => 'text', names => [qw/test tes te t/], ... )
 #                ->new({ name => 'text', names => [qw/test tes te t/], ... )
-#around BUILDARGS => sub {
 sub build_option {
     my ($class, @params) = @_;
 
@@ -181,7 +180,7 @@ sub build_option {
     );
 
     return $class->get_attribute( $params{name} );
-};
+}
 
 sub process {
     my ($self, $long, $short, $data, $args) = @_;

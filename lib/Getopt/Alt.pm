@@ -117,7 +117,7 @@ around BUILDARGS => sub {
         my $class_name = 'Getopt::Alt::Dynamic::A' . $count++;
         my $object = Moose::Meta::Class->create(
             $class_name,
-            superclasses => [ 'Getopt::Alt::Dynamic' ],
+            superclasses => [ $param{options} || 'Getopt::Alt::Dynamic' ],
             #methods      => \%method,
         );
 
@@ -213,8 +213,17 @@ sub process {
             $self->_show_help(1);
         }
 
-        if ( ref $sub eq 'HASH' ) {
+        if ( ref $sub eq 'ARRAY' ) {
             # build sub command object
+            my $sub_obj = Getopt::Alt->new(
+                {
+                    options => $self->options, # inherit this objects options
+                    default => {%{ $self->opt }},
+                },
+                $sub
+            );
+            $sub_obj->process($self->files);
+            $self->opt( $sub_obj->opt );
         }
     }
 
@@ -334,10 +343,77 @@ This documentation refers to Getopt::Alt version 0.0.3.
    );
    print "String = " . $opt->opt->{string} . "\n";
 
+   # Getopt::Long like usage
+   use Getopt::Alt qw/get_options/;
+
+   # most basic form
+   my $options = get_options(
+       'string|s=s',
+       'int|i=i',
+       'hash|h=s%',
+       'array|a=s@',
+       'increment|c+',
+       'nullable|n=s?',
+       'negatable|b!',
+   );
+   print Dumper $options->opt;           # passed parameters
+   print join ',', @{ $options->files }; # non option parameters
+
+   # with defaults
+   my $options = get_options(
+       { negatable => 1 },
+       'string|s=s',
+       'int|i=i',
+       'hash|h=s%',
+       'array|a=s@',
+       'increment|c+',
+       'nullable|n=s?',
+       'negatable|b!',
+   );
+
+   # with configuration
+   my $options = get_options(
+       {
+           helper => 1, # default when using get_options
+           sub_command => 1, # stop processing at first non argument parameter
+       },
+       [
+           'string|s=s',
+           'int|i=i',
+           'hash|h=s%',
+           'array|a=s@',
+           'increment|c+',
+           'nullable|n=s?',
+           'negatable|b!',
+       ],
+   );
+   print $cmd;   # sub command
+
+   # with sub command details
+   my $options = get_options(
+       {
+           helper => 1, # default when using get_options
+           sub_command => {
+               sub   => [ 'suboption' ],
+               other => [ 'verbose|v' ],
+           },
+       },
+       [
+           'string|s=s',
+           'int|i=i',
+           'hash|h=s%',
+           'array|a=s@',
+           'increment|c+',
+           'nullable|n=s?',
+           'negatable|b!',
+       ],
+   );
+   print Dumper $option->opt;  # command with sub command options merged in
+
 =head1 DESCRIPTION
 
 The aim of C<Getopt::Alt> is to provide an alternative to L<Getopt::Long> that
-allows your simple script to easily grow to a more complex script or to a
+allows a simple command line program to easily grow in complexity. It  or to a
 package with multiple commands. The simple usage is quite similar to
 L<Getopt::Long>:
 
@@ -382,13 +458,31 @@ Case sensitivity is on by default
 
 Throws error rather than returning errors.
 
+=item *
+
+Can work with sub commands
+
 =back
 
 =head1 SUBROUTINES/METHODS
 
-=head2 C<new ( \%config, \@optspec )>
+=head2 Exported
 
-=head3 config
+=head3 C<get_options (@options | $setup, $options)>
+
+=head3 C<get_options ($default, 'opt1', 'opt2' ... )>
+
+This is the equivalent of calling new(...)->process but it does some extra
+argument processing.
+
+B<Note>: The second form is the same basically the same as Getopt::Long's
+getOptions called with a hash ref as the first parameter.
+
+=head2 Class Methods
+
+=head3 C<new ( \%config, \@optspec )>
+
+=head4 config
 
 =over 4
 
@@ -449,15 +543,7 @@ Return: Getopt::Alt -
 
 Description:
 
-=head3 C<get_options (@options | $setup, $options)>
-
-=head3 C<get_options ($default, 'opt1', 'opt2' ... )>
-
-This is the equivalent of calling new(...)->process but it does some extra
-argument processing.
-
-B<Note>: The second form is the same basically the same as Getopt::Long's
-getOptions called with a hash ref as the first parameter.
+=head2 Object Methods
 
 =head3 C<BUILD ()>
 
