@@ -8,6 +8,8 @@ META.json
 Makefile.PL
 README
 lib/Getopt/Alt.pm
+lib/Getopt/Alt/Dynamic.pm
+lib/Getopt/Alt/Exception.pm
 lib/Getopt/Alt/Command.pm
 lib/Getopt/Alt/Manual.pod
 lib/Getopt/Alt/Option.pm
@@ -16,11 +18,13 @@ t/argv-invalid.t
 t/argv-valid.t
 t/boilerplate.t
 t/critic.t
+t/get_options.t
 t/kwalitee.t
 t/pod-coverage.t
 t/pod.t
 t/perlcriticrc
 t/spelling.t
+t/sub_command.t
 t/options-invalid.t
 t/options-valid.t
 eg/longer.pl

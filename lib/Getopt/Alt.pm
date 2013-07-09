@@ -10,13 +10,10 @@ use Moose;
 use warnings;
 use version;
 use Carp;
-use Scalar::Util;
-use List::Util;
-#use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use base qw/Exporter/;
-use Getopt::Alt::Option;
+use Getopt::Alt::Option qw/build_option/;
 use Getopt::Alt::Exception;
 use Pod::Usage;
 use TryCatch;
@@ -26,20 +23,20 @@ use overload (
     'bool' => sub { 1 },
 );
 
-our $VERSION     = version->new('0.0.1');
+our $VERSION     = version->new('0.1.0');
 our @EXPORT_OK   = qw/get_options/;
 our %EXPORT_TAGS = ();
 our $EXIT        = 1;
 #our @EXPORT      = qw//;
 
 has options => (
-    is    => 'rw',
-    isa   => 'ArrayRef[Getopt::Alt::Option]',
+    is      => 'rw',
+    isa     => 'Str',
+    default => 'Getopt::Alt::Dynamic',
 );
 has opt => (
     is      => 'rw',
-    isa     => 'HashRef',
-    default => sub { {} },
+    isa     => 'Getopt::Alt::Dynamic',
 );
 has default => (
     is      => 'rw',
@@ -52,9 +49,9 @@ has files => (
     default => sub {[]},
 );
 has argv => (
-    is      => 'rw',
-    isa     => 'ArrayRef[Str]',
-    default => sub {[]},
+    is        => 'rw',
+    isa       => 'ArrayRef[Str]',
+    predicate => 'has_argv',
 );
 has bundle => (
     is      => 'rw',
@@ -75,12 +72,34 @@ has cmds => (
     isa     => 'ArrayRef[Getopt::Alt::Command]',
     default => sub { [] },
 );
+has cmd => (
+    is      => 'rw',
+    isa     => 'Str',
+);
+has sub_command => (
+    is            => 'rw',
+    #isa           => 'Bool | HashRef[ArrayRef] | CodeRef',
+    predicate     => 'has_sub_command',
+    documentation => 'if true (== 1) processing of args stops at first non ' .
+                   'defined parameter, if a HASH ref the keys are assumed ' .
+                   'to be the allowed sub commands and the values are ' .
+                   'assumed to be parameters to passed to get_options ' .
+                   'where the generated options will be a sub object of ' .
+                   'generated options object. Finally if this is a sub ' .
+                   'ref it will be called with self and the rest of argv',
+);
+has default_sub_command => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_default_sub_command',
+);
 has auto_complete => (
     is        => 'rw',
     isa       => 'CodeRef',
     predicate => 'has_auto_complete',
 );
 
+my $count = 1;
 around BUILDARGS => sub {
     my ($orig, $class, @params) = @_;
     my %param;
@@ -89,7 +108,6 @@ around BUILDARGS => sub {
         %param  = %{ $params[0] };
         @params = @{ $params[1] };
     }
-    $param{options} ||= [];
 
     if ( !exists $param{helper} || $param{helper} ) {
         push @params, (
@@ -101,17 +119,23 @@ around BUILDARGS => sub {
         delete $param{helper};
     }
 
-    while ( my $option = shift @params ) {
-        push @{ $param{options} }, Getopt::Alt::Option->new($option);
+    if ( @params ) {
+        my $class_name = 'Getopt::Alt::Dynamic::A' . $count++;
+        my $object = Moose::Meta::Class->create(
+            $class_name,
+            superclasses => [ $param{options} || 'Getopt::Alt::Dynamic' ],
+            #methods      => \%method,
+        );
+
+        while ( my $option = shift @params ) {
+            build_option($object, $option);
+        }
+
+        $param{options} = $class_name;
     }
 
     return $class->$orig(%param);
 };
-
-sub BUILD {
-    my ($self) = @_;
-
-}
 
 sub get_options {
     my $caller = caller;
@@ -147,12 +171,10 @@ sub get_options {
 sub process {
     my ($self, @args) = @_;
     if ( !@args ) {
-        @args = @{ $self->argv } ? @{ $self->argv } : @ARGV;
+        @args = $self->has_argv ? @{ $self->argv } : @ARGV;
     }
-    for my $key ( keys %{ $self->opt } ) {
-        delete $self->opt->{$key};
-    }
-    $self->opt( $self->default ? $self->default : {} );
+    my $class = $self->options;
+    $self->opt( $class->new( %{ $self->default } ) );
 
     ARG:
     while (my $arg = shift @args) {
@@ -167,6 +189,7 @@ sub process {
         }
         else {
             push @{ $self->files }, $arg;
+            last ARG if $self->sub_command;
             next ARG;
         }
 
@@ -174,6 +197,7 @@ sub process {
         $opt->value( $self->opt->{ $opt->name } );
 
         my ($value, $used) = $opt->process( $long, $short, $data, \@args );
+        my $opt_name = $opt->name;
         $self->opt->{$opt->name} = $value;
 
         if ( !$used && $short && defined $data && length $data ) {
@@ -181,8 +205,32 @@ sub process {
         }
     }
 
-    if (!@{ $self->argv } && $self->files) {
-        @ARGV = @{ $self->files };
+    $self->cmd( shift @{ $self->files } ) if @{ $self->files } && $self->sub_command;
+    if ( !$self->has_argv && $self->files ) {
+        @ARGV = ( @{ $self->files }, @args );
+    }
+
+    if ( ref $self->sub_command eq 'HASH' ) {
+        my $sub = $self->sub_command->{$self->cmd};
+        if (!$sub) {
+            warn "Unknown command '$self->cmd'!\n";
+            die Getopt::Alt::Exception->new( message => "Unknown command '$self->cmd'" )
+                if !$self->help;
+            $self->_show_help(1);
+        }
+
+        if ( ref $sub eq 'ARRAY' ) {
+            # build sub command object
+            my $sub_obj = Getopt::Alt->new(
+                {
+                    options => $self->options, # inherit this objects options
+                    default => {%{ $self->opt }},
+                },
+                $sub
+            );
+            $sub_obj->process($self->files);
+            $self->opt( $sub_obj->opt );
+        }
     }
 
     if ( $self->help ) {
@@ -209,7 +257,11 @@ sub best_option {
         $long =~ s/^no-//xms;
     }
 
-    for my $opt (@{ $self->options }) {
+    my $meta = $self->options->meta;
+
+    for my $name ( $meta->get_attribute_list ) {
+        my $opt = $meta->get_attribute($name);
+
         return $opt if $long && $opt->name eq $long;
 
         for my $name (@{ $opt->names }) {
@@ -279,7 +331,7 @@ Getopt::Alt - Alternate method of processing command line arguments
 
 =head1 VERSION
 
-This documentation refers to Getopt::Alt version 0.1.
+This documentation refers to Getopt::Alt version 0.1.0.
 
 =head1 SYNOPSIS
 
@@ -297,10 +349,77 @@ This documentation refers to Getopt::Alt version 0.1.
    );
    print "String = " . $opt->opt->{string} . "\n";
 
+   # Getopt::Long like usage
+   use Getopt::Alt qw/get_options/;
+
+   # most basic form
+   my $options = get_options(
+       'string|s=s',
+       'int|i=i',
+       'hash|h=s%',
+       'array|a=s@',
+       'increment|c+',
+       'nullable|n=s?',
+       'negatable|b!',
+   );
+   print Dumper $options->opt;           # passed parameters
+   print join ',', @{ $options->files }; # non option parameters
+
+   # with defaults
+   my $options = get_options(
+       { negatable => 1 },
+       'string|s=s',
+       'int|i=i',
+       'hash|h=s%',
+       'array|a=s@',
+       'increment|c+',
+       'nullable|n=s?',
+       'negatable|b!',
+   );
+
+   # with configuration
+   my $options = get_options(
+       {
+           helper => 1, # default when using get_options
+           sub_command => 1, # stop processing at first non argument parameter
+       },
+       [
+           'string|s=s',
+           'int|i=i',
+           'hash|h=s%',
+           'array|a=s@',
+           'increment|c+',
+           'nullable|n=s?',
+           'negatable|b!',
+       ],
+   );
+   print $cmd;   # sub command
+
+   # with sub command details
+   my $options = get_options(
+       {
+           helper => 1, # default when using get_options
+           sub_command => {
+               sub   => [ 'suboption' ],
+               other => [ 'verbose|v' ],
+           },
+       },
+       [
+           'string|s=s',
+           'int|i=i',
+           'hash|h=s%',
+           'array|a=s@',
+           'increment|c+',
+           'nullable|n=s?',
+           'negatable|b!',
+       ],
+   );
+   print Dumper $option->opt;  # command with sub command options merged in
+
 =head1 DESCRIPTION
 
 The aim of C<Getopt::Alt> is to provide an alternative to L<Getopt::Long> that
-allows your simple script to easily grow to a more complex script or to a
+allows a simple command line program to easily grow in complexity. It  or to a
 package with multiple commands. The simple usage is quite similar to
 L<Getopt::Long>:
 
@@ -345,13 +464,31 @@ Case sensitivity is on by default
 
 Throws error rather than returning errors.
 
+=item *
+
+Can work with sub commands
+
 =back
 
 =head1 SUBROUTINES/METHODS
 
-=head2 C<new ( \%config, \@optspec )>
+=head2 Exported
 
-=head3 config
+=head3 C<get_options (@options | $setup, $options)>
+
+=head3 C<get_options ($default, 'opt1', 'opt2' ... )>
+
+This is the equivalent of calling new(...)->process but it does some extra
+argument processing.
+
+B<Note>: The second form is the same basically the same as Getopt::Long's
+getOptions called with a hash ref as the first parameter.
+
+=head2 Class Methods
+
+=head3 C<new ( \%config, \@optspec )>
+
+=head4 config
 
 =over 4
 
@@ -412,15 +549,7 @@ Return: Getopt::Alt -
 
 Description:
 
-=head3 C<get_options (@options | $setup, $options)>
-
-=head3 C<get_options ($default, 'opt1', 'opt2' ... )>
-
-This is the equivalent of calling new(...)->process but it does some extra
-argument processing.
-
-B<Note>: The second form is the same basically the same as Getopt::Long's
-getOptions called with a hash ref as the first parameter.
+=head2 Object Methods
 
 =head3 C<BUILD ()>
 

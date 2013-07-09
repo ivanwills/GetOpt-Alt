@@ -1,5 +1,27 @@
 Revision history for Getopt-Alt
 
+0.1.0   2013-05-19
+        Got sub command hashes working, added documentation on how that works
+        Updated the tasks
+        Added new test
+        Starting to implement more complex sub commands
+        Rationalised options use ->options is now the class name and opt is the object with the processed options
+        Fixed nullable parameter
+        Basic sub commands working
+
+0.0.3   2013-05-12
+        Added missing pre-requisite from Build.pl
+
+0.0.2   2013-05-09
+        Got the tests passing
+        Fixed failing tests
+        New Dynaming object parent object
+        Fixed issue where no files causes test to execption
+        More work on getting options working
+        Started objectivying
+        Fixed some error handling
+        Turned on bool overloading again
+
 0.0.1   2012-07-21
         First version, released on an unsuspecting world.
 

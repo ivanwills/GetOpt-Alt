@@ -47,10 +47,15 @@ my %valid = @valid;
 my $tests = ( sum map {scalar keys %{$valid{$_}} } keys %valid );
 plan tests => $tests + @bulk;# + 1;
 
+my $object = Moose::Meta::Class->create(
+    'dummy',
+    superclasses => [ 'Getopt::Alt::Dynamic' ],
+);
+
 for ( my $i = 0; $i < @valid; $i += 2 ) {
     my $args  = $valid[$i];
     my $tests = $valid[$i+1];
-    my $opt   = Getopt::Alt::Option->new( $args );
+    my $opt   = Getopt::Alt::Option::build_option( $object, $args );
 
     for my $key ( keys %{ $tests } ) {
         is_deeply( $opt->$key(), $tests->{$key}, "$args -> $tests->{$key}" ) or BAIL_OUT(1);
@@ -60,7 +65,7 @@ for ( my $i = 0; $i < @valid; $i += 2 ) {
 }
 
 for my $valid (@bulk) {
-    my $opt = eval{ Getopt::Alt::Option->new($valid) };
+    my $opt = eval{ Getopt::Alt::Option::build_option( $object, $valid ) };
     diag Dumper $@ if $@;
     ok($opt, "'$valid' loads");
 }

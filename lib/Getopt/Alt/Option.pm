@@ -6,21 +6,25 @@ package Getopt::Alt::Option;
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use Moose;
+use strict;
 use warnings;
 use version;
+use Moose::Role;
 use Carp;
 use Scalar::Util;
 use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-#use overload (
-#	'%{}' => &get_options,
-#	'@{}' => &get_files,
-#);
+Moose::Exporter->setup_import_methods(
+    as_is     => [qw/build_option/],
+    #with_meta => ['operation'],
+);
 
-our $VERSION = version->new('0.0.1');
+
+our $VERSION = version->new('0.1.0');
+
+Moose::Util::meta_attribute_alias('Getopt::Alt::Option');
 
 has opt => (
     is       => 'ro',
@@ -56,11 +60,11 @@ has project => (
     is  => 'ro',
     isa => 'Bool',
 );
-has type => (
+has ref => (
     is  => 'ro',
     isa => 'Str',
 );
-has ref => (
+has type => (
     is  => 'ro',
     isa => 'Str',
 );
@@ -84,8 +88,8 @@ my $r_spec     = qr/^ ( $r_names ) ( $r_inc | $r_neg | $r_type_ref )? ( $r_null 
 # calling new => ->new( 'test|t' )
 #                ->new( name => 'text', names => [qw/test tes te t/], ... )
 #                ->new({ name => 'text', names => [qw/test tes te t/], ... )
-around BUILDARGS => sub {
-    my ($orig, $class, @params) = @_;
+sub build_option {
+    my ($class, @params) = @_;
 
     if (@params == 1 && ref $params[0]) {
         @params =
@@ -155,9 +159,28 @@ around BUILDARGS => sub {
             }
         }
     }
+    my %params = @params;
+    $params{traits} = ['Getopt::Alt::Option'];
 
-    return $class->$orig(@params);
-};
+    my $type
+        = $params{type} && $params{ref} ? "$params{ref}\[$params{type}\]"
+        : $params{type}                 ? $params{type}
+        : $params{ref}                  ? $params{ref}
+        :                                 'Str';
+
+    if ( $params{nullable} ) {
+        $type = "Maybe[$type]";
+    }
+
+    $class->add_attribute(
+        $params{name},
+        is   => 'rw',
+        isa  => $type,
+        %params,
+    );
+
+    return $class->get_attribute( $params{name} );
+}
 
 sub process {
     my ($self, $long, $short, $data, $args) = @_;
@@ -234,7 +257,7 @@ Getopt::Alt::Option - Sets up a particular command line option
 
 =head1 VERSION
 
-This documentation refers to Getopt::Alt::Option version 0.1.
+This documentation refers to Getopt::Alt::Option version 0.1.0.
 
 
 =head1 SYNOPSIS
@@ -249,6 +272,11 @@ This documentation refers to Getopt::Alt::Option version 0.1.
 =head1 DESCRIPTION
 
 =head1 SUBROUTINES/METHODS
+
+=head2 C<build_option ( $class, @params )>
+
+This is a helper function to create an C<Getopt::Alt::Option> attribute on the
+supplied C<$class> object.
 
 =head2 C<process ($long, $short, $data, $args)>
 
