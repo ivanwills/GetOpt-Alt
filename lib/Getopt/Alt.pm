@@ -75,6 +75,11 @@ has cmds => (
     isa     => 'ArrayRef[Getopt::Alt::Command]',
     default => sub { [] },
 );
+has auto_complete => (
+    is        => 'rw',
+    isa       => 'CodeRef',
+    predicate => 'has_auto_complete',
+);
 
 around BUILDARGS => sub {
     my ($orig, $class, @params) = @_;
@@ -91,6 +96,7 @@ around BUILDARGS => sub {
             'help',
             'man',
             'VERSION',
+            'auto_complete|auto-complete=i',
         );
         delete $param{helper};
     }
