@@ -28,7 +28,7 @@ sub sub_simple {
     };
     ok $opt, 'Get options'
         or diag $@;
-    is $opt->opt->out, 'thing', 'first inputs processed correctly';
+    is $opt->out, 'thing', 'first inputs processed correctly';
     is $ARGV[0], '--not-processed', 'Param not processed';
     #diag Dumper $opt;
 }
@@ -36,7 +36,7 @@ sub sub_simple {
 sub sub_hash {
     @ARGV = qw/ -o thing cmd --processed/;
     my $opt = eval {
-        get_options(
+        Getopt::Alt->new(
             {
                 sub_command => {
                     cmd => [
@@ -48,7 +48,8 @@ sub sub_hash {
                 'out|o=s',
             ]
         )
-    };
+    }->process;
+
     ok $opt, 'Get options'
         or diag $@;
     is $opt->cmd, 'cmd', 'The command cmd is found correctly';

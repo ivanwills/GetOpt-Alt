@@ -15,13 +15,14 @@ for my $data (@data) {
     for my $test ( @{ $data->{tests} } ) {
         local @ARGV = @{ $test->{argv} };
         my $files = eval { get_options( @{ $data->{args} } ) };
+        my $error = $@;
         if ( $test->{success} ) {
-            ok !$@, "'$test->{name}': No errors" or note $@;
-            is_deeply [ @{ $files || [] } ], $test->{results}, "'$test->{name}': Files returned correctly" or note Dumper $files;
+            ok !$error, "'$test->{name}': No errors" or note $error;
+            is_deeply \@ARGV, $test->{results}, "'$test->{name}': Files returned correctly" or note Dumper $files;
         }
         else {
-            ok !$files && $@, "'$test->{name}': fails" or note Dumper { args => $data->{args}, ARGV => $test->{argv}, };
-            note $@;
+            ok !$files && $error, "'$test->{name}': fails" or note Dumper { args => $data->{args}, ARGV => $test->{argv}, };
+            note $error;
         }
     }
 }

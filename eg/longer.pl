@@ -31,17 +31,17 @@ sub main {
         ],
     );
 
-    if ($opt->opt->{test}) {
+    if ($opt->test) {
         print "In test mode!\n";
         }
-        if ($opt->opt->{inc}) {
-        print "Inc\n" x $opt->opt->{inc};
+        if ($opt->inc) {
+        print "Inc\n" x $opt->inc;
     }
-    if ($opt->opt->{str}) {
-        print "You said: " . $opt->opt->{str} . "\n";
+    if ($opt->str) {
+        print "You said: " . $opt->str . "\n";
     }
-    if ($opt->opt->{verbose}) {
-        print Dumper $opt->opt->{verbose} > 1 ? $opt : $opt->opt;
+    if ($opt->verbose) {
+        print Dumper $opt;
     }
 }
 

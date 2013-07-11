@@ -152,7 +152,7 @@ sub get_options {
 
         $self->process();
 
-        return $self;
+        return $self->opt;
     }
     catch ($e) {
         if ( ref $e && ref $e eq 'Getopt::Alt::Exception' && $e->help ) {
