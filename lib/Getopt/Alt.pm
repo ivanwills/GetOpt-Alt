@@ -48,11 +48,6 @@ has files => (
     isa     => 'ArrayRef[Str]',
     default => sub {[]},
 );
-has argv => (
-    is        => 'rw',
-    isa       => 'ArrayRef[Str]',
-    predicate => 'has_argv',
-);
 has bundle => (
     is      => 'rw',
     isa     => 'Bool',
@@ -86,7 +81,7 @@ has sub_command => (
                    'assumed to be parameters to passed to get_options ' .
                    'where the generated options will be a sub object of ' .
                    'generated options object. Finally if this is a sub ' .
-                   'ref it will be called with self and the rest of argv',
+                   'ref it will be called with self and the rest of ARGV',
 );
 has default_sub_command => (
     is        => 'rw',
@@ -170,9 +165,9 @@ sub get_options {
 
 sub process {
     my ($self, @args) = @_;
-    if ( !@args ) {
-        @args = $self->has_argv ? @{ $self->argv } : @ARGV;
-    }
+    my $passed_args = scalar @args;
+    @args ||= @ARGV;
+
     my $class = $self->options;
     $self->opt( $class->new( %{ $self->default } ) );
 
@@ -206,7 +201,7 @@ sub process {
     }
 
     $self->cmd( shift @{ $self->files } ) if @{ $self->files } && $self->sub_command;
-    if ( !$self->has_argv && $self->files ) {
+    if ( !$passed_args && $self->files ) {
         @ARGV = ( @{ $self->files }, @args );
     }
 
@@ -230,6 +225,7 @@ sub process {
             );
             $sub_obj->process($self->files);
             $self->opt( $sub_obj->opt );
+            $self->files( $sub_obj->files );
         }
     }
 
@@ -499,12 +495,9 @@ with the values in here each time process is called
 
 =item C<files> - ArrayRef[Str]
 
-Any arguments that not consumed as part of options (usually files), if C<argv>
-was not specified then this value would be put back into C<@ARGV>.
-
-=item C<argv> - ArrayRef[Str]
-
-The arguments that you wish to process, this defaults to C<@ARGV>.
+Any arguments that not consumed as part of options (usually files), if no
+arguments were passed to C<process> then this value would also be put back
+into C<@ARGV>.
 
 =item C<bundle> - bool
 
@@ -536,7 +529,8 @@ The individual command option specifications processed.
 
 =item C<opt> - HashRef
 
-The values processed from the argv.
+The values processed from the C<$ARGV> or arguments passed to the C<process>
+method..
 
 =item C<default> - HashRef
 
