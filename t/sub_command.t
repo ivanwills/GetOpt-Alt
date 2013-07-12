@@ -10,7 +10,8 @@ use Getopt::Alt qw/get_options/;
 use Data::Dumper qw/Dumper/;
 
 sub_simple();
-sub_hash();
+sub_array();
+sub_array_complex();
 sub_code();
 done_testing();
 
@@ -33,7 +34,7 @@ sub sub_simple {
     #diag Dumper $opt;
 }
 
-sub sub_hash {
+sub sub_array {
     @ARGV = qw/ -o thing cmd --processed/;
     my $opt = eval {
         Getopt::Alt->new(
@@ -47,13 +48,56 @@ sub sub_hash {
             [
                 'out|o=s',
             ]
-        )
-    }->process;
+        )->process
+    };
 
     ok $opt, 'Get options'
         or diag $@;
     is $opt->cmd, 'cmd', 'The command cmd is found correctly';
     ok $opt->opt->can('processed'), 'Processed sub parameter is present';
+}
+
+sub sub_array_complex {
+    my $opt = eval {
+        Getopt::Alt->new(
+            {
+                sub_command => {
+                    cmd => [
+                        {
+                            default => {
+                                out       => 'local default',
+                                processed => 'false',
+                            },
+                        },
+                        [ 'processed|p=s', ],
+                    ],
+                },
+                default => {
+                    other => 'global default',
+                },
+            },
+            [
+                'out|o=s',
+                'other|t=s',
+            ]
+        )
+    };
+    eval { $opt->process(qw/ -o thing cmd --processed yes/) };
+
+    ok $opt, 'Get options'
+        or diag $@;
+    is $opt->cmd, 'cmd', 'The command cmd is found correctly';
+    ok $opt->opt->can('processed'), 'Processed sub parameter is present';
+    is $opt->opt->processed, 'yes', 'The processed parameter is what we expect';
+
+    # Check default parameters
+    $opt->process(qw/cmd/);
+
+    ok $opt, 'Get options'
+        or diag $@;
+    is $opt->opt->processed, 'false', 'The processed parameter is the default';
+    is $opt->opt->out, 'local default', 'The out parameter is the sub command default value';
+    is $opt->opt->other, 'global default', 'The other parameter is the default value';
 }
 
 sub sub_code {

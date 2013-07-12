@@ -10,7 +10,7 @@ use Moose;
 use warnings;
 use version;
 use Carp;
-use Data::Dumper qw/Dumper/;
+use Data::Dumper::GUI;
 use English qw/ -no_match_vars /;
 use base qw/Exporter/;
 use Getopt::Alt::Option qw/build_option/;
@@ -129,6 +129,7 @@ around BUILDARGS => sub {
         $param{options} = $class_name;
     }
 
+            warn Dumper \%param;
     return $class->$orig(%param);
 };
 
@@ -166,7 +167,7 @@ sub get_options {
 sub process {
     my ($self, @args) = @_;
     my $passed_args = scalar @args;
-    @args ||= @ARGV;
+    @args = $passed_args ? @args : @ARGV;
 
     my $class = $self->options;
     $self->opt( $class->new( %{ $self->default } ) );
@@ -222,6 +223,29 @@ sub process {
                     default => {%{ $self->opt }},
                 },
                 $sub
+            );
+            $sub_obj->process($self->files);
+            $self->opt( $sub_obj->opt );
+            $self->files( $sub_obj->files );
+        }
+        elsif ( ref $sub eq 'ARRAY' ) {
+            # check the style
+            my $options  = @$sub == 2 && ref $sub->[0] == 'HASH' && ref $sub->[1] == 'ARRAY' ? shift @$sub : {};
+            my $opt_args = %$options ? $sub->[0] : $sub;
+
+            # build sub command object
+            warn Dumper {
+                    %{ $options },
+                    options => $self->options, # inherit this objects options
+                    default => { %{ $self->opt }, %{ $options->{default} || {} } },
+                }, $opt_args;
+            my $sub_obj = Getopt::Alt->new(
+                {
+                    %{ $options },
+                    options => $self->options, # inherit this objects options
+                    default => { %{ $self->opt }, %{ $options->{default} || {} } },
+                },
+                $opt_args
             );
             $sub_obj->process($self->files);
             $self->opt( $sub_obj->opt );
