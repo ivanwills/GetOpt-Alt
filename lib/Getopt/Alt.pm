@@ -206,7 +206,7 @@ sub process {
     }
 
     if ( ref $self->sub_command eq 'HASH' ) {
-        my $sub = $self->sub_command->{$self->cmd};
+        my $sub = [ @{$self->sub_command->{$self->cmd}} ];
         if (!$sub) {
             warn "Unknown command '$self->cmd'!\n";
             die Getopt::Alt::Exception->new( message => "Unknown command '$self->cmd'" )
@@ -220,11 +220,6 @@ sub process {
             my $opt_args = %$options ? $sub->[0] : @{$sub};
 
             # build sub command object
-            warn Dumper {
-                    %{ $options },
-                    options => $self->options, # inherit this objects options
-                    default => { %{ $self->opt }, %{ $options->{default} || {} } },
-                }, $opt_args;
             my $sub_obj = Getopt::Alt->new(
                 {
                     %{ $options },
@@ -233,7 +228,7 @@ sub process {
                 },
                 $opt_args
             );
-            $sub_obj->process(@{ $self->files });
+            $sub_obj->process(@args);
             $self->opt( $sub_obj->opt );
             $self->files( $sub_obj->files );
         }
