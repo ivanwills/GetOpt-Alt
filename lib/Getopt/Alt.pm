@@ -215,22 +215,9 @@ sub process {
         }
 
         if ( ref $sub eq 'ARRAY' ) {
-            # build sub command object
-            my $sub_obj = Getopt::Alt->new(
-                {
-                    options => $self->options, # inherit this objects options
-                    default => {%{ $self->opt }},
-                },
-                $sub
-            );
-            $sub_obj->process($self->files);
-            $self->opt( $sub_obj->opt );
-            $self->files( $sub_obj->files );
-        }
-        elsif ( ref $sub eq 'ARRAY' ) {
             # check the style
-            my $options  = @$sub == 2 && ref $sub->[0] == 'HASH' && ref $sub->[1] == 'ARRAY' ? shift @$sub : {};
-            my $opt_args = %$options ? $sub->[0] : $sub;
+            my $options  = @$sub == 2 && ref $sub->[0] eq 'HASH' && ref $sub->[1] eq 'ARRAY' ? shift @$sub : {};
+            my $opt_args = %$options ? $sub->[0] : @{$sub};
 
             # build sub command object
             warn Dumper {
@@ -246,7 +233,7 @@ sub process {
                 },
                 $opt_args
             );
-            $sub_obj->process($self->files);
+            $sub_obj->process(@{ $self->files });
             $self->opt( $sub_obj->opt );
             $self->files( $sub_obj->files );
         }
