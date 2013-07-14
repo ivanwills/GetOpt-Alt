@@ -10,7 +10,7 @@ use Moose;
 use warnings;
 use version;
 use Carp;
-use Data::Dumper::GUI;
+use Data::Dumper;
 use English qw/ -no_match_vars /;
 use base qw/Exporter/;
 use Getopt::Alt::Option qw/build_option/;
@@ -129,7 +129,6 @@ around BUILDARGS => sub {
         $param{options} = $class_name;
     }
 
-            warn Dumper \%param;
     return $class->$orig(%param);
 };
 
@@ -309,12 +308,20 @@ sub get_files {
 sub _show_help {
     my ($self, $verbosity, $msg) = @_;
 
+    my %input;
+    if ( $self->help && $self->help ne 1 ) {
+        my $help = $self->help . '.pm';
+        $help =~ s{::}{/}g;
+        %input = ( -input => $INC{$help} );
+    }
+
     tie *OUT, 'ScalarHandle';
     pod2usage(
         $msg ? ( -msg => $msg ) : (),
         -verbose => $verbosity,
         -exitval => 'NOEXIT',
         -output  => \*OUT,
+        %input,
     );
     my $message = $ScalarHandle::out;
     close OUT;
