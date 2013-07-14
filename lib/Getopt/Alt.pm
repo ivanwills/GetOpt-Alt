@@ -310,8 +310,11 @@ sub _show_help {
 
     my %input;
     if ( $self->help && $self->help ne 1 ) {
-        my $help = $self->help . '.pm';
-        $help =~ s{::}{/}g;
+        my $help = $self->help;
+        if ( !-f $help ) {
+            $help  .= '.pm';
+            $help =~ s{::}{/}g;
+        }
         %input = ( -input => $INC{$help} );
     }
 
