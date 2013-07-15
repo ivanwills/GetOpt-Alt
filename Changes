@@ -1,5 +1,19 @@
 Revision history for Getopt-Alt
 
+0.1.1   2013-07-15
+        Cleaned up messages
+        Fixed issues with calling process on the same object several times
+        Fixed gramma
+        Fixed altering self's sub_command by semi deep copy
+        Getting closer to making test pass
+        Fixed issue where help could be a file rather than a package name
+        Changed showing help to show help from the specified module
+        Trying to get more detailed tests for sub-commands
+        WIP on example complex sub command usage
+        Cleaned up the argv attribute which isn't really needed or tested
+        Added checking if want array to make subcommand usage easier so that the sub command can be returned
+        Big change with get_options now only returns the options (common use senario) to get the Getopt::Alt object you have to use new
+
 0.1.0   2013-05-19
         Got sub command hashes working, added documentation on how that works
         Updated the tasks
