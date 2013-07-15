@@ -11,7 +11,6 @@ use warnings;
 use version;
 use Getopt::Alt;
 use English qw/ -no_match_vars /;
-use Path::Class;
 
 our $VERSION = version->new('0.0.1');
 my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
