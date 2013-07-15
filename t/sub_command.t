@@ -88,14 +88,14 @@ sub sub_array_complex {
         or diag $@;
     is $opt->cmd, 'cmd', 'The sub command cmd is found correctly';
     ok $opt->opt->can('processed'), 'Processed sub parameter is present';
-    is $opt->opt->processed, 'yes', 'The processed parameter is what we expect';
+    is $opt->opt->processed, 'yes', 'The processed sub command parameter is what we expect';
 
     # Check default parameters
     $opt->process(qw/cmd/);
 
     ok $opt, 'Get options'
         or diag $@;
-    is $opt->opt->processed, 'false', 'The processed parameter is the default';
+    is $opt->opt->processed, 'false', 'The processed sub command parameter is the default value';
     is $opt->opt->out, 'local default', 'The out parameter is the sub command default value';
     is $opt->opt->other, 'global default', 'The other parameter is the default value';
 }
