@@ -37,6 +37,7 @@ has options => (
 has opt => (
     is      => 'rw',
     isa     => 'Getopt::Alt::Dynamic',
+    clearer => 'clear_opt',
 );
 has default => (
     is      => 'rw',
@@ -70,6 +71,7 @@ has cmds => (
 has cmd => (
     is      => 'rw',
     isa     => 'Str',
+    clearer => 'clear_cmd',
 );
 has sub_command => (
     is            => 'rw',
@@ -167,6 +169,9 @@ sub process {
     my ($self, @args) = @_;
     my $passed_args = scalar @args;
     @args = $passed_args ? @args : @ARGV;
+    $self->clear_opt;
+    $self->clear_cmd;
+    $self->files([]);
 
     my $class = $self->options;
     $self->opt( $class->new( %{ $self->default } ) );
@@ -217,7 +222,7 @@ sub process {
         if ( ref $sub eq 'ARRAY' ) {
             # check the style
             my $options  = @$sub == 2 && ref $sub->[0] eq 'HASH' && ref $sub->[1] eq 'ARRAY' ? shift @$sub : {};
-            my $opt_args = %$options ? $sub->[0] : @{$sub};
+            my $opt_args = %$options ? $sub->[0] : $sub;
 
             # build sub command object
             my $sub_obj = Getopt::Alt->new(
@@ -228,6 +233,7 @@ sub process {
                 },
                 $opt_args
             );
+            local @ARGV;
             $sub_obj->process(@args);
             $self->opt( $sub_obj->opt );
             $self->files( $sub_obj->files );
