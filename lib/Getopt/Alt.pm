@@ -111,7 +111,7 @@ around BUILDARGS => sub {
             'help',
             'man',
             'VERSION',
-            'auto_complete|auto-complete=i',
+            'auto_complete|auto-complete',
         );
         delete $param{helper};
     }
@@ -251,6 +251,12 @@ sub process {
         }
         elsif ( $self->opt->{help} ) {
             $self->_show_help(1);
+        }
+        elsif ( $self->auto_complete && $self->opt->auto_complete ) {
+            # run the auto complete method
+            $self->auto_complete->($self, $self->opt->auto_complete);
+            # exit here as auto complete should stop processing
+            exit 0;
         }
     }
 
