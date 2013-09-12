@@ -107,7 +107,7 @@ around BUILDARGS => sub {
     }
 
     if ( !exists $param{helper} || $param{helper} ) {
-        push @params, (
+        unshift @params, (
             'help',
             'man',
             'VERSION',
