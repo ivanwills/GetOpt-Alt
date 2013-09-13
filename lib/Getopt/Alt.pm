@@ -440,6 +440,22 @@ This documentation refers to Getopt::Alt version 0.1.1.
    );
    print Dumper $option->opt;  # command with sub command options merged in
 
+   # auto_complete
+   my $options = get_options(
+       {
+           helper        => 1, # default when using get_options
+           auto_complete => sub {
+               my ($opt, $auto) = @_;
+               # ... code for auto completeion
+               # called if --auto-complete specified on the command line
+           },
+       },
+       [
+           'string|s=s',
+           'int|i=i',
+       ],
+   );
+
 =head1 DESCRIPTION
 
 The aim of C<Getopt::Alt> is to provide an alternative to L<Getopt::Long> that
