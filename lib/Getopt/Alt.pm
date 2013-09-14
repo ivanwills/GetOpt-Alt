@@ -175,33 +175,44 @@ sub process {
 
     my $class = $self->options;
     $self->opt( $class->new( %{ $self->default } ) );
+    my @errors;
 
-    ARG:
-    while (my $arg = shift @args) {
-        my ($long, $short, $data);
-        if ( $arg =~ /^-- (\w[^=\s]+) (?:= (.*) )?/xms ) {
-            $long = $1;
-            $data = $2;
+    try {
+        ARG:
+        while (my $arg = shift @args) {
+            my ($long, $short, $data);
+            if ( $arg =~ /^-- (\w[^=\s]+) (?:= (.*) )?/xms ) {
+                $long = $1;
+                $data = $2;
+            }
+            elsif ( $arg =~ /^- (\w) =? (.*)/xms ) {
+                $short = $1;
+                $data  = $2;
+            }
+            else {
+                push @{ $self->files }, $arg;
+                last ARG if $self->sub_command;
+                next ARG;
+            }
+
+            my $opt = $self->best_option( $long, $short );
+            $opt->value( $self->opt->{ $opt->name } );
+
+            my ($value, $used) = $opt->process( $long, $short, $data, \@args );
+            my $opt_name = $opt->name;
+            $self->opt->{$opt->name} = $value;
+
+            if ( !$used && $short && defined $data && length $data ) {
+                unshift @args, '-' . $data;
+            }
         }
-        elsif ( $arg =~ /^- (\w) =? (.*)/xms ) {
-            $short = $1;
-            $data  = $2;
+    }
+    catch (e) {
+        if ( $self->auto_complete && $self->opt->auto_complete ) {
+            push @errors, $e;
         }
         else {
-            push @{ $self->files }, $arg;
-            last ARG if $self->sub_command;
-            next ARG;
-        }
-
-        my $opt = $self->best_option( $long, $short );
-        $opt->value( $self->opt->{ $opt->name } );
-
-        my ($value, $used) = $opt->process( $long, $short, $data, \@args );
-        my $opt_name = $opt->name;
-        $self->opt->{$opt->name} = $value;
-
-        if ( !$used && $short && defined $data && length $data ) {
-            unshift @args, '-' . $data;
+            die $e;
         }
     }
 
@@ -254,7 +265,7 @@ sub process {
         }
         elsif ( $self->auto_complete && $self->opt->auto_complete ) {
             # run the auto complete method
-            $self->auto_complete->($self, $self->opt->auto_complete);
+            $self->auto_complete->($self, $self->opt->auto_complete, \@errors);
             # exit here as auto complete should stop processing
             exit 0;
         }
