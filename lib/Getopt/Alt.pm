@@ -12,6 +12,7 @@ use version;
 use Carp;
 use Data::Dumper;
 use English qw/ -no_match_vars /;
+use List::MoreUtils qw/uniq/;
 use base qw/Exporter/;
 use Getopt::Alt::Option qw/build_option/;
 use Getopt::Alt::Exception;
@@ -112,6 +113,7 @@ around BUILDARGS => sub {
             'man',
             'VERSION',
             'auto_complete|auto-complete',
+            'auto_complete_list|auto-complete-list!',
         );
         delete $param{helper};
     }
@@ -200,6 +202,10 @@ sub process {
 
             my ($value, $used) = $opt->process( $long, $short, $data, \@args );
             my $opt_name = $opt->name;
+            if ( $self->opt->auto_complete && $opt_name eq 'auto_complete_list' ) {
+                print join ' ', $self->list_options;
+                exit 0;
+            }
             $self->opt->{$opt->name} = $value;
 
             if ( !$used && $short && defined $data && length $data ) {
@@ -272,6 +278,28 @@ sub process {
     }
 
     return $self;
+}
+
+sub list_options {
+    my ($self) = @_;
+    my @names;
+
+    my $meta = $self->options->meta;
+
+    for my $name ( $meta->get_attribute_list ) {
+        my $opt = $meta->get_attribute($name);
+        for my $name (@{ $opt->names }) {
+
+            # skip auto-complete commands (they are hidden options)
+            next if grep {$name eq $_} qw/auto_complete auto-complete auto_complete_list auto-complete-list/;
+            push @names, $name
+        }
+    }
+
+    return map {
+            length $_ == 1 ? "-$_" : "--$_"
+        }
+        uniq sort { lc $a cmp lc $b } @names;
 }
 
 sub best_option {
