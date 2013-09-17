@@ -61,6 +61,31 @@ module, if --man or --help is used will run pod2usage on the calling script.
 This all reduces the amount of boilder plate code needed in your scripts (of
 cause this means you should also write POD for your script).
 
+=head2 Sub-Commands
+
+L<Getopt::Alt> has three sub command modes:
+
+=over 4
+
+=item simple
+
+Just stops processing at first non-option parameter (assumed to be the sub command)
+
+=item hash
+
+A hash is passed with the keys representing the sub commands and the values are
+the sub-commands parameters.
+
+=item TBA
+
+Still have to work out how to implement this.
+
+=back
+
+=head3 Simple
+
+=head3 HASH
+
 =head1 AUTHOR
 
 Ivan Wills - (ivan.wills@gmail.com)
