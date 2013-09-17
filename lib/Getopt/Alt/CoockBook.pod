@@ -84,7 +84,53 @@ Still have to work out how to implement this.
 
 =head3 Simple
 
+    use Getopt::Alt qw/get_options/;
+
+    my ($options, $cmd) = get_options(
+        { helper => 1, sub_command => 1 },
+        [ 'dir|d=s' ],
+    );
+
+    # on the command line
+    $ command --dir=/some/where sub
+
+    # will result in $option->{dir} eq /some/where and $cmd eq 'sub'
+
 =head3 HASH
+
+=head2 Auto Completion
+
+    use Getopt::Alt qw/get_options/;
+
+    my ($options, $cmd) = get_options(
+        { helper => 1, auto_complete => \&my_auto },
+        [ 'dir|d=s' ],
+    );
+
+
+The C<auto_complete> parameter takes a code reference with is called when the
+script is with the C<--auto-complete> parameter (supplied by helper => 1).
+<Getopt::Alt> will try (TODO) to complete any unfinished options but not their
+values that is left to for C$self-><sub_command> to process.
+
+Eg C<~/.bashrc> function for auto completion of "command"
+
+    _command() {
+        local cur prev opts
+        COMPREPLY=()
+        cur="${COMP_WORDS[COMP_CWORD]}"
+        prev="${COMP_WORDS[COMP_CWORD-1]}"
+        # get list of command line options
+        opts=$(command --auto-complete --auto-complete-list)
+
+        if [[ ${cur} == -* && ${COMP_CWORD} -eq 1 ]]; then
+            COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
+        else
+            local sonames=$(command --auto-complete ${COMP_WORDS[@]})
+            COMPREPLY=($(compgen -W "${sonames}" -- ${cur}))
+        fi
+    }
+    complete -F _command command
 
 =head1 AUTHOR
 
