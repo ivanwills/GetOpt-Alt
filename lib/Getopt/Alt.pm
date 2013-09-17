@@ -213,7 +213,7 @@ sub process {
             }
         }
     }
-    catch (e) {
+    catch ($e) {
         if ( $self->auto_complete && $self->opt->auto_complete ) {
             push @errors, $e;
         }
