@@ -15,6 +15,7 @@ use Scalar::Util;
 use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
+use Getopt::Alt::Exception;
 
 Moose::Exporter->setup_import_methods(
     as_is     => [qw/build_option/],
@@ -191,7 +192,7 @@ sub process {
     if ($self->type) {
         $used = 1;
         if ( !defined $data || length $data == 0 ) {
-            confess "No " . $self->type . " passed for $name\n"
+            die [ Getopt::Alt::Exception->new( option => $name, type => $self->type ) ]
                 if ( ! defined $args->[0]  && !$self->nullable ) || (
                     $args->[0] && $args->[0] =~ /^-/ && !( $self->type eq 'Int' || $self->type eq 'Num' )
                 );

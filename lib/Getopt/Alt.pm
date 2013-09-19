@@ -214,6 +214,9 @@ sub process {
         }
     }
     catch ($e) {
+        if ( ref $e eq 'ARRAY' && @$e == 1 ) {
+            $e = $e->[0];
+        }
         if ( $self->auto_complete && $self->opt->auto_complete ) {
             push @errors, $e;
         }
