@@ -13,7 +13,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use overload '""' => sub { shift->message };
 
-our $VERSION     = version->new('0.1.1');
+our $VERSION = version->new('0.1.1');
 
 has message => (
     is      => 'rw',
@@ -22,6 +22,14 @@ has message => (
 has help => (
     is  => 'rw',
     isa => 'Bool',
+);
+has option => (
+    is  => 'rw',
+    isa => 'Str',
+);
+has type => (
+    is  => 'rw',
+    isa => 'Str',
 );
 
 1;
