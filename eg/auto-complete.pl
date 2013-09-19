@@ -41,7 +41,7 @@ sub main {
 }
 
 sub auto {
-    my ($option, $auto, @errors ) = @_;
+    my ($option, $auto, $errors ) = @_;
 }
 
 __DATA__
