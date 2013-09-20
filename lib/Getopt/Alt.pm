@@ -179,49 +179,48 @@ sub process {
     $self->opt( $class->new( %{ $self->default } ) );
     my @errors;
 
-    try {
-        ARG:
-        while (my $arg = shift @args) {
-            my ($long, $short, $data);
-            if ( $arg =~ /^-- (\w[^=\s]+) (?:= (.*) )?/xms ) {
-                $long = $1;
-                $data = $2;
-            }
-            elsif ( $arg =~ /^- (\w) =? (.*)/xms ) {
-                $short = $1;
-                $data  = $2;
+    ARG:
+    while (my $arg = shift @args) {
+        try {
+                my ($long, $short, $data);
+                if ( $arg =~ /^-- (\w[^=\s]+) (?:= (.*) )?/xms ) {
+                    $long = $1;
+                    $data = $2;
+                }
+                elsif ( $arg =~ /^- (\w) =? (.*)/xms ) {
+                    $short = $1;
+                    $data  = $2;
+                }
+                else {
+                    push @{ $self->files }, $arg;
+                    last ARG if $self->sub_command;
+                    next ARG;
+                }
+
+                my $opt = $self->best_option( $long, $short );
+                $opt->value( $self->opt->{ $opt->name } );
+
+                my ($value, $used) = $opt->process( $long, $short, $data, \@args );
+                my $opt_name = $opt->name;
+                if ( $self->opt->auto_complete && $opt_name eq 'auto_complete_list' ) {
+                    print join ' ', $self->list_options;
+                    exit 0;
+                }
+                $self->opt->{$opt->name} = $value;
+
+                if ( !$used && $short && defined $data && length $data ) {
+                    unshift @args, '-' . $data;
+                }
+        }
+        catch ($e) {
+            $e = $e->[0] if ref $e eq 'ARRAY' && @$e == 1;
+
+            if ( $self->auto_complete && $self->opt->auto_complete ) {
+                push @errors, $e;
             }
             else {
-                push @{ $self->files }, $arg;
-                last ARG if $self->sub_command;
-                next ARG;
+                die $e;
             }
-
-            my $opt = $self->best_option( $long, $short );
-            $opt->value( $self->opt->{ $opt->name } );
-
-            my ($value, $used) = $opt->process( $long, $short, $data, \@args );
-            my $opt_name = $opt->name;
-            if ( $self->opt->auto_complete && $opt_name eq 'auto_complete_list' ) {
-                print join ' ', $self->list_options;
-                exit 0;
-            }
-            $self->opt->{$opt->name} = $value;
-
-            if ( !$used && $short && defined $data && length $data ) {
-                unshift @args, '-' . $data;
-            }
-        }
-    }
-    catch ($e) {
-        if ( ref $e eq 'ARRAY' && @$e == 1 ) {
-            $e = $e->[0];
-        }
-        if ( $self->auto_complete && $self->opt->auto_complete ) {
-            push @errors, $e;
-        }
-        else {
-            die $e;
         }
     }
 
@@ -328,10 +327,17 @@ sub best_option {
     return $self->best_option($long, $short, 1) if !$no;
 
     if ( $self->help ) {
-        $self->_show_help(1, "Unknown option '" . ($long ? "--$long" : "-$short") . "'")
+        die [ Getopt::Alt::Exception->new(
+                message => "Unknown option '" . ($long ? "--$long" : "-$short") . "'\n",
+                option  => ($long ? "--$long" : "-$short"),
+            ) ]
     }
     else {
-        confess "Unknown option '" . ($long ? "--$long" : "-$short") . "'\n";
+        die [ Getopt::Alt::Exception->new(
+                help    => 1,
+                message => "Unknown option '" . ($long ? "--$long" : "-$short") . "'\n",
+                option  => ($long ? "--$long" : "-$short"),
+            ) ]
     }
 }
 
