@@ -192,7 +192,11 @@ sub process {
     if ($self->type) {
         $used = 1;
         if ( !defined $data || length $data == 0 ) {
-            die [ Getopt::Alt::Exception->new( option => $name, type => $self->type ) ]
+            die [ Getopt::Alt::Exception->new(
+                    message => "The option '$name' requires an " . $self->type . " argument\n",
+                    option  => $name,
+                    type    => $self->type
+                ) ]
                 if ( ! defined $args->[0]  && !$self->nullable ) || (
                     $args->[0] && $args->[0] =~ /^-/ && !( $self->type eq 'Int' || $self->type eq 'Num' )
                 );
