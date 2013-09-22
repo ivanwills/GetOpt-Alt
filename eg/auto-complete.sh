@@ -1,11 +1,15 @@
+#!/bin/bash
+
+# to use this for your own code all you should need to do is change the
+# eg/auto-complete.pl to your scripts name and rename the function.
 _auto-complete() {
-    local cur prev opts
+    local cur opts
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD-1]}"
     # get list of auto-complete line options
     opts=$(eg/auto-complete.pl --auto-complete --auto-complete-list)
 
+    # split the reply into arguments and other
     if [[ ${cur} == -* && ${COMP_CWORD} -eq 1 ]]; then
         COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
     else
