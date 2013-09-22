@@ -70,6 +70,9 @@ This documentation refers to eg/auto-complete.pl version 0.0.1
 
 =head1 DESCRIPTION
 
+This example script (along with the bash script eg/auto-complete.sh) show
+how to add auto completion to a program using L<Getopt::Alt> and BASH.
+
 =head1 SUBROUTINES/METHODS
 
 =head1 DIAGNOSTICS
