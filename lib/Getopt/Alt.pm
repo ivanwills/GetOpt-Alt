@@ -277,8 +277,14 @@ sub process {
             $self->_show_help(1);
         }
         elsif ( $self->auto_complete && $self->opt->auto_complete ) {
-            # run the auto complete method
-            $self->auto_complete->($self, $self->opt->auto_complete, \@errors);
+            if ( $ARGV[-1] =~ /^-/ ) {
+                print join ' ', $self->list_options;
+            }
+            else {
+                # run the auto complete method
+                $self->auto_complete->($self, $self->opt->auto_complete, \@errors);
+            }
+
             # exit here as auto complete should stop processing
             exit 0;
         }
