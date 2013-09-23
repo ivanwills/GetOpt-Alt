@@ -193,8 +193,7 @@ sub process {
                 }
                 else {
                     push @{ $self->files }, $arg;
-                    last ARG if $self->sub_command;
-                    next ARG;
+                    die $self->sub_command ? 'last' : 'next';
                 }
 
                 my $opt = $self->best_option( $long, $short );
@@ -211,6 +210,12 @@ sub process {
                 if ( !$used && $short && defined $data && length $data ) {
                     unshift @args, '-' . $data;
                 }
+        }
+        catch (Str $e where { $_ eq 'next' } ) {
+            next;
+        }
+        catch (Str $e where { $_ eq 'last' } ) {
+            last;
         }
         catch ($e) {
             $e = $e->[0] if ref $e eq 'ARRAY' && @$e == 1;
