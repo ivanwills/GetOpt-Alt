@@ -193,7 +193,7 @@ sub process {
                 }
                 else {
                     push @{ $self->files }, $arg;
-                    die $self->sub_command ? 'last' : 'next';
+                    die $self->sub_command ? "last\n" : "next\n";
                 }
 
                 my $opt = $self->best_option( $long, $short );
@@ -211,10 +211,10 @@ sub process {
                     unshift @args, '-' . $data;
                 }
         }
-        catch (Str $e where { $_ eq 'next' } ) {
+        catch ($e where { $_; $_ eq "next\n" } ) {
             next;
         }
-        catch (Str $e where { $_ eq 'last' } ) {
+        catch ($e where { $_; $_ eq "last\n" } ) {
             last;
         }
         catch ($e) {
