@@ -13,7 +13,6 @@ use Carp;
 use Data::Dumper;
 use English qw/ -no_match_vars /;
 use List::MoreUtils qw/uniq/;
-use base qw/Exporter/;
 use Getopt::Alt::Option qw/build_option/;
 use Getopt::Alt::Exception;
 use Pod::Usage;
@@ -24,11 +23,12 @@ use overload (
     'bool' => sub { 1 },
 );
 
-our $VERSION     = version->new('0.1.1');
-our @EXPORT_OK   = qw/get_options/;
-our %EXPORT_TAGS = ();
-our $EXIT        = 1;
-#our @EXPORT      = qw//;
+Moose::Exporter->setup_import_methods(
+    as_is => [qw/get_options/],
+);
+
+our $VERSION = version->new('0.1.1');
+our $EXIT    = 1;
 
 has options => (
     is      => 'rw',
