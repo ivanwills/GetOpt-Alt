@@ -64,6 +64,10 @@ has help => (
     is      => 'rw',
     isa     => 'Str',
 );
+has helper => (
+    is      => 'rw',
+    isa     => 'Bool',
+);
 has cmds => (
     is      => 'rw',
     isa     => 'ArrayRef[Getopt::Alt::Command]',
@@ -115,7 +119,6 @@ around BUILDARGS => sub {
             'auto_complete|auto-complete',
             'auto_complete_list|auto-complete-list!',
         );
-        delete $param{helper};
     }
 
     if ( @params ) {
@@ -211,10 +214,10 @@ sub process {
                     unshift @args, '-' . $data;
                 }
         }
-        catch ($e where { $_; $_ eq "next\n" } ) {
+        catch ($e where { my $a = $_; $_ eq "next\n" } ) {
             next;
         }
-        catch ($e where { $_; $_ eq "last\n" } ) {
+        catch ($e where { my $a = $_; $_ eq "last\n" } ) {
             last;
         }
         catch ($e) {
