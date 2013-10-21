@@ -13,7 +13,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use overload '""' => sub { shift->message };
 
-our $VERSION = version->new('0.1.1');
+our $VERSION = version->new('0.1.2');
 
 has message => (
     is      => 'rw',
@@ -42,7 +42,7 @@ Getopt::Alt::Exception - I have forgotten where I was going with this
 
 =head1 VERSION
 
-This documentation refers to Getopt::Alt::Exception version 0.1.1.
+This documentation refers to Getopt::Alt::Exception version 0.1.2.
 
 
 =head1 SYNOPSIS

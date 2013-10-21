@@ -16,7 +16,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
 
-our $VERSION     = version->new('0.1.1');
+our $VERSION     = version->new('0.1.2');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
@@ -33,7 +33,7 @@ Getopt::Alt::Dynamic - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to Getopt::Alt::Dynamic version 0.1.1.
+This documentation refers to Getopt::Alt::Dynamic version 0.1.2.
 
 
 =head1 SYNOPSIS

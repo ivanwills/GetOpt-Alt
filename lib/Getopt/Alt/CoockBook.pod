@@ -4,7 +4,7 @@ Getopt::Alt::CoockBook - Example usages of Getopt::Alt;
 
 =head1 VERSION
 
-This documentation refers to Getopt::Alt version 0.1.1.
+This documentation refers to Getopt::Alt version 0.1.2.
 
 =head1 EXAMPLES
 
