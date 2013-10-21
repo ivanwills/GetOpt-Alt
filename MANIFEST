@@ -28,6 +28,8 @@ t/spelling.t
 t/sub_command.t
 t/options-invalid.t
 t/options-valid.t
+eg/auto-complete.pl
+eg/auto-complete.sh
 eg/longer.pl
 eg/simple.pl
 eg/sub-command.pl
