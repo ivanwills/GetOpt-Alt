@@ -15,7 +15,7 @@ This documentation refers to Getopt::Alt version 0.1.1.
 Simple example comparing L<Getopt::Long>'s C<GetOptions> to L<Getopt::Alt>'s
 C<get_options>
 
-GetOption:
+GetOptions:
 
     use Getopt::Long;
     use Pod::Usage;
@@ -58,7 +58,7 @@ get_options:
 The helper parameter gives adds the verbose, man, help and VERSION options to
 your options and will if --VERSION specified output the version of the calling
 module, if --man or --help is used will run pod2usage on the calling script.
-This all reduces the amount of boilder plate code needed in your scripts (of
+This all reduces the amount of boiler plate code needed in your scripts (of
 cause this means you should also write POD for your script).
 
 =head2 Sub-Commands
@@ -75,10 +75,6 @@ Just stops processing at first non-option parameter (assumed to be the sub comma
 
 A hash is passed with the keys representing the sub commands and the values are
 the sub-commands parameters.
-
-=item TBA
-
-Still have to work out how to implement this.
 
 =back
 
@@ -110,7 +106,7 @@ Still have to work out how to implement this.
 
 The C<auto_complete> parameter takes a code reference with is called when the
 script is with the C<--auto-complete> parameter (supplied by helper => 1).
-<Getopt::Alt> will try (TODO) to complete any unfinished options but not their
+<Getopt::Alt> will try to complete any unfinished options but not their
 values that is left to for C$self-><sub_command> to process.
 
 Eg C<~/.bashrc> function for auto completion of "command"

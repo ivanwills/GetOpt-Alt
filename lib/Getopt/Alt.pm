@@ -584,7 +584,7 @@ This is the equivalent of calling new(...)->process but it does some extra
 argument processing.
 
 B<Note>: The second form is the same basically the same as Getopt::Long's
-getOptions called with a hash ref as the first parameter.
+GetOptions called with a hash ref as the first parameter.
 
 =head2 Class Methods
 
@@ -656,6 +656,10 @@ Description:
 internal method
 
 =head3 C<process ()>
+
+=head3 C<list_options ()>
+
+Returns a list of all command line options in the current object.
 
 =head3 C<best_option ()>
 
