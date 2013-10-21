@@ -1,6 +1,8 @@
 Revision history for Getopt-Alt
 
 0.1.2   2013-10-21
+        Updated dependencies (Ivan Wills)
+        Added files missing from the manifest (Ivan Wills)
         Fixed POD (Ivan Wills)
         Fixed warning, started saving helper (Ivan Wills)
         Changed code to use Moose::Exporter (Ivan Wills)
