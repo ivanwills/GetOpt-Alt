@@ -1,5 +1,34 @@
 Revision history for Getopt-Alt
 
+0.1.2   2013-10-21
+        Updated dependencies (Ivan Wills)
+        Added files missing from the manifest (Ivan Wills)
+        Fixed POD (Ivan Wills)
+        Fixed warning, started saving helper (Ivan Wills)
+        Changed code to use Moose::Exporter (Ivan Wills)
+        Made next/last work as expected (Ivan Wills)
+        Added showing a list of options if the current parameter is an option (Ivan Wills)
+        Fixed warning about exiting eval via next/last (Ivan Wills)
+        Trying to simplify bash function (Ivan Wills)
+        Added some documentation to eg/auto-complete.sh (Ivan Wills)
+        Added a description (Ivan Wills)
+        Added message (Ivan Wills)
+        Converted confesses to Exceptions (Ivan Wills)
+        Changed missing argument value to throw execption (with work around for TryCatch not catching (Ivan Wills)
+        Added option and type fields to explain what went wrong for individual options (Ivan Wills)
+        Fixed error type (Ivan Wills)
+        New example script to show --auto-complete in action (Ivan Wills)
+        Added more recipies (Ivan Wills)
+        Added missing files (Ivan Wills)
+        Fixed missing $ (Ivan Wills)
+        Added --auto-complete-list to list all options for auto completion (Ivan Wills)
+        Started to document sub-commands (Ivan Wills)
+        Added new Coock Book POD (Ivan Wills)
+        Added catching errors if --auto-complete is on and passing them to the auto_complete function (Ivan Wills)
+        Added auto completeion example (Ivan Wills)
+        First implementation for --auto-complete (Ivan Wills)
+        Changed helper arguments to put their values first so that they can be overridden (Ivan Wills)
+
 0.1.1   2013-07-15
         Cleaned up messages
         Fixed issues with calling process on the same object several times
