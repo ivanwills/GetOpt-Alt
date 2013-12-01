@@ -17,6 +17,8 @@ use Getopt::Alt::Option qw/build_option/;
 use Getopt::Alt::Exception;
 use Pod::Usage;
 use TryCatch;
+use Path::Class;
+use Config::Any;
 
 use overload (
     '@{}'  => \&get_files,
@@ -100,6 +102,11 @@ has auto_complete => (
     isa       => 'CodeRef',
     predicate => 'has_auto_complete',
 );
+has name => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub { file($0)->basename },
+);
 
 my $count = 1;
 around BUILDARGS => sub {
@@ -138,6 +145,25 @@ around BUILDARGS => sub {
 
     return $class->$orig(%param);
 };
+
+sub BUILD {
+    my ($self) = @_;
+
+    my $basename = $self->name;
+    my $conf = Config::Any->load_stems({
+        stems   => [ ".$basename", "$ENV{HOME}/.$basename", "/etc/.$basename" ],
+        use_ext => 1,
+    });
+    $conf = {
+        map { %$_        }
+        map { values %$_ }
+        @{ $conf || [] }
+    };
+
+    $self->default({ %{$self->default}, %$conf, });
+
+    return;
+}
 
 sub get_options {
     my $caller = caller;
