@@ -160,21 +160,23 @@ sub BUILD {
         @{ $conf || [] }
     };
 
-    $self->default({ %{$self->default}, %$conf, });
+    # perlcritic is confused here combining hashes is not the same as comma seperated arguments
+    $self->default({ %{$self->default}, %$conf, });  ## no critic
 
     return;
 }
 
-sub get_options {
+sub get_options {  ## no critic
+    my @args = @_;
     my $caller = caller;
 
-    if ( @_ > 2 && ref $_[0] eq 'HASH' && ref $_[1] ne 'ARRAY' ) {
-        my $options = shift @_;
-        @_ = ( { default => $options}, [ @_ ] );
+    if ( @args > 2 && ref $args[0] eq 'HASH' && ref $args[1] ne 'ARRAY' ) {
+        my $options = shift @args;
+        @args = ( { default => $options}, [ @args ] );
     }
 
     try {
-        my $self = __PACKAGE__->new(@_);
+        my $self = __PACKAGE__->new(@args);
 
         $self->help($caller) if !$self->help || $self->help eq __PACKAGE__;
 
@@ -194,6 +196,8 @@ sub get_options {
 
         $self->_show_help(1);
     }
+
+    return;
 }
 
 sub process {
@@ -400,38 +404,18 @@ sub _show_help {
         %input = ( -input => $INC{$help} );
     }
 
-    tie *OUT, 'ScalarHandle';
+    require Tie::Handle::Scalar;
+    my $out = '';
+    tie *FH, 'Tie::Handle::Scalar', \$out;
     pod2usage(
         $msg ? ( -msg => $msg ) : (),
         -verbose => $verbosity,
         -exitval => 'NOEXIT',
-        -output  => \*OUT,
+        -output  => \*FH,
         %input,
     );
-    my $message = $ScalarHandle::out;
-    close OUT;
-    die Getopt::Alt::Exception->new( message => $message, help => 1 );
+    die Getopt::Alt::Exception->new( message => $out, help => 1 );
 }
-
-1;
-
-package ScalarHandle;
-use strict;
-use warnings;
-use parent qw/Tie::Handle/;
-
-our $out = '';
-
-sub TIEHANDLE {
-    my ($class) = @_;
-    $out = '';
-    return bless {}, $class;
-}
-sub PRINT {
-    my ($self, @lines) = @_;
-    $out .= join '', @lines;
-}
-sub CLOSE { $out = '' }
 
 1;
 
