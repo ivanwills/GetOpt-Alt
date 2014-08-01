@@ -194,7 +194,7 @@ sub get_options {  ## no critic
         $self->help($caller) if !$self->help || $self->help eq __PACKAGE__;
 
         $self->_show_help(1);
-    }
+    };
 
     return if !defined $self;
 
@@ -215,6 +215,7 @@ sub process {
 
     ARG:
     while (my $arg = shift @args) {
+        my $action = '';
         try {
                 my ($long, $short, $data);
                 if ( $arg =~ /^-- (\w[^=\s]+) (?:= (.*) )?/xms ) {
@@ -247,10 +248,10 @@ sub process {
         }
         catch {
             if ( $_ eq "next\n" ) {
-                next;
+                $action = 'next';
             }
             elsif ( $_ eq "last\n" ) {
-                last;
+                $action = 'last';
             }
             else {
                 $_ = $_->[0] if ref $_ eq 'ARRAY' && @$_ == 1;
@@ -262,7 +263,9 @@ sub process {
                     die $_;
                 }
             }
-        }
+        };
+        next if $action eq 'next';
+        last if $action eq 'last';
     }
 
     $self->cmd( shift @{ $self->files } ) if @{ $self->files } && $self->sub_command;
