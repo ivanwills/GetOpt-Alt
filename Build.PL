@@ -16,7 +16,7 @@ my $builder = Module::Build->new(
         'Path::Class'         => 0,
         'Scalar::Util'        => 0,
         'Tie::Handle::Scalar' => 0,
-        'TryCatch'            => 0,
+        'Try::Tiny'           => 0,
         'parent'              => 0,
         'version'             => 0,
     },
