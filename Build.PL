@@ -9,6 +9,7 @@ my $builder = Module::Build->new(
     dist_version_from => 'lib/Getopt/Alt.pm',
     requires => {
         'perl'                => '5.006',
+        'Config::Any'         => 0,
         'List::MoreUtils'     => 0,
         'List::Util'          => 0,
         'Moose'               => 0,
