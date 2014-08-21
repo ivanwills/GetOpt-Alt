@@ -1,5 +1,21 @@
 Revision history for Getopt-Alt
 
+0.1.3   2014-08-21
+        Updated licence (Ivan Wills)
+        Merge branch 'master' of github.com:ivanwills/GetOpt-Alt (Ivan Wills)
+        Added ignoring tag files (Ivan Wills)
+        Updated dependency (Ivan Wills)
+        Fixed more Try::Tiny limitations (Ivan Wills)
+        Trying to replace TryCatch with Try::Tiny (Ivan Wills)
+        Adding tag files (Ivan Wills)
+        Got Perl::Critic happyer (Ivan Wills)
+        First stab at default config (probably needs more work) (Ivan Wills)
+        Merge branch 'master' of github.com:ivanwills/GetOpt-Alt (Ivan Wills)
+        Added more changes (Ivan Wills)
+        Updated dependencies (Ivan Wills)
+        Added files missing from the manifest (Ivan Wills)
+        Updating for release of version 0.1.2 (Ivan Wills)
+
 0.1.2   2013-10-21
         Updated dependencies (Ivan Wills)
         Added files missing from the manifest (Ivan Wills)

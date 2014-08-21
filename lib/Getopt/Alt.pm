@@ -29,7 +29,7 @@ Moose::Exporter->setup_import_methods(
     as_is => [qw/get_options/],
 );
 
-our $VERSION = version->new('0.1.2');
+our $VERSION = version->new('0.1.3');
 our $EXIT    = 1;
 
 has options => (
@@ -433,7 +433,7 @@ Getopt::Alt - Alternate method of processing command line arguments
 
 =head1 VERSION
 
-This documentation refers to Getopt::Alt version 0.1.2.
+This documentation refers to Getopt::Alt version 0.1.3.
 
 =head1 SYNOPSIS
 
