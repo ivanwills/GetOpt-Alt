@@ -15,7 +15,6 @@ use English qw/ -no_match_vars /;
 use List::MoreUtils qw/uniq/;
 use Getopt::Alt::Option qw/build_option/;
 use Getopt::Alt::Exception;
-use Pod::Usage;
 use Try::Tiny;
 use Path::Class;
 use Config::Any;
@@ -413,7 +412,8 @@ sub _show_help {
     require Tie::Handle::Scalar;
     my $out = '';
     tie *FH, 'Tie::Handle::Scalar', \$out;
-    pod2usage(
+    require Pod::Usage;
+    Pod::Usage::pod2usage(
         $msg ? ( -msg => $msg ) : (),
         -verbose => $verbosity,
         -exitval => 'NOEXIT',
