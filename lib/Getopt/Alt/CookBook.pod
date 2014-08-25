@@ -1,6 +1,6 @@
 =head1 NAME
 
-Getopt::Alt::CoockBook - Example usages of Getopt::Alt;
+Getopt::Alt::CookBook - Example usages of Getopt::Alt;
 
 =head1 VERSION
 
