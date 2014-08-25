@@ -10,7 +10,6 @@ use Moose;
 use warnings;
 use version;
 use Carp;
-use Data::Dumper;
 use English qw/ -no_match_vars /;
 use List::MoreUtils qw/uniq/;
 use Getopt::Alt::Option qw/build_option/;

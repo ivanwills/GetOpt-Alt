@@ -11,8 +11,6 @@ use warnings;
 use version;
 use Moose::Role;
 use Carp;
-use Scalar::Util;
-use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use Getopt::Alt::Exception;

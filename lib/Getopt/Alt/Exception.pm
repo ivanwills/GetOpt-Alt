@@ -8,9 +8,6 @@ package Getopt::Alt::Exception;
 
 use Moose;
 use version;
-use Carp;
-use Data::Dumper qw/Dumper/;
-use English qw/ -no_match_vars /;
 use overload '""' => sub { shift->message };
 
 our $VERSION = version->new('0.1.3');
