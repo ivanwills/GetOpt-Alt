@@ -1,5 +1,17 @@
 Revision history for Getopt-Alt
 
+0.1.4   2014-08-26
+        Updated manifest (Ivan Wills)
+        Updated boilerplate test (Ivan Wills)
+        [Bug #98242] Removed unused modules (Ivan Wills)
+        [Bug #98242] Moved to load Pod::Usage later (Ivan Wills)
+        [Bug #98241] Fixed bad file name (Ivan Wills)
+        Converted to POD syntax (Ivan Wills)
+        Moved to pod (Ivan Wills)
+        Start using travis-ci (Ivan Wills)
+        Updating for release of version 0.1.3 (Ivan Wills)
+        Added missing dependency (Ivan Wills)
+
 0.1.3   2014-08-21
         Updated licence (Ivan Wills)
         Merge branch 'master' of github.com:ivanwills/GetOpt-Alt (Ivan Wills)
