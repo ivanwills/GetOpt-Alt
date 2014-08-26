@@ -6,7 +6,7 @@ MANIFEST.SKIP
 META.yml
 META.json
 Makefile.PL
-README
+README.pod
 lib/Getopt/Alt.pm
 lib/Getopt/Alt/CookBook.pod
 lib/Getopt/Alt/Dynamic.pm
