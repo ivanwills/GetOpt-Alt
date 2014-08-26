@@ -1,8 +1,9 @@
-#!perl
+#!/usr/bin/perl
 
 use strict;
 use warnings;
-use Test::More tests => 3;
+use Test::More tests => 9 + 1;
+use Test::NoWarnings;
 
 sub not_in_file_ok {
     my ($filename, %regex) = @_;
@@ -36,7 +37,7 @@ sub module_boilerplate_ok {
     );
 }
 
-not_in_file_ok(README =>
+not_in_file_ok((-f '../README' ? 'README' : 'README.pod') =>
     "The README is used..."       => qr/The README is used/,
     "'version information here'"  => qr/to provide version information/,
 );
@@ -46,3 +47,9 @@ not_in_file_ok(Changes =>
 );
 
 module_boilerplate_ok('lib/Getopt/Alt.pm');
+module_boilerplate_ok('lib/Getopt/Alt/Option.pm');
+module_boilerplate_ok('lib/Getopt/Alt/Manual.pod');
+module_boilerplate_ok('lib/Getopt/Alt/Exception.pm');
+module_boilerplate_ok('lib/Getopt/Alt/Command.pm');
+module_boilerplate_ok('lib/Getopt/Alt/CookBook.pod');
+module_boilerplate_ok('lib/Getopt/Alt/Dynamic.pm');
