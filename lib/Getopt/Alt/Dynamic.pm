@@ -6,7 +6,7 @@ package Getopt::Alt::Dynamic;
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use Moose;
+use Moo;
 use version;
 use Carp;
 

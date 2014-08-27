@@ -6,34 +6,36 @@ package Getopt::Alt::Command;
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use Moose;
+use Moo;
 use version;
 use Carp;
 use English qw/ -no_match_vars /;
+use Types::Standard -types;
+use Type::Utils qw/class_type/;
 
 our $VERSION = version->new('0.1.4');
 
 has cmd => (
     is       => 'ro',
-    isa      => 'Str',
+    isa      => Str,
     required => 1,
 );
 has module => (
     is  => 'ro',
-    isa => 'Str',
+    isa => Str,
 );
 has method => (
     is      => 'ro',
-    isa     => 'Str',
+    isa     => Str,
     default => 'run',
 );
 has run => (
     is  => 'ro',
-    isa => 'CodeRef',
+    isa => CodeRef,
 );
 has options => (
     is  => 'rw',
-    isa => 'ArrayRef[Getopt::Alt::Option]',
+    isa => ArrayRef[class_type('Getopt::Alt::Option')],
 );
 
 around BUILDARGS => sub {

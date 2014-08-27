@@ -6,27 +6,28 @@ package Getopt::Alt::Exception;
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use Moose;
+use Moo;
 use version;
+use Types::Standard -types;
 use overload '""' => sub { shift->message };
 
 our $VERSION = version->new('0.1.4');
 
 has message => (
-    is      => 'rw',
-    isa     => 'Str',
+    is  => 'rw',
+    isa => Str,
 );
 has help => (
     is  => 'rw',
-    isa => 'Bool',
+    isa => Bool,
 );
 has option => (
     is  => 'rw',
-    isa => 'Str',
+    isa => Str,
 );
 has type => (
     is  => 'rw',
-    isa => 'Str',
+    isa => Str,
 );
 
 1;

@@ -9,21 +9,22 @@ package Getopt::Alt::Option;
 use strict;
 use warnings;
 use version;
-use Moose::Role;
+use Moo::Role;
 use Carp;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use Getopt::Alt::Exception;
+use Types::Standard -types;
 
-Moose::Exporter->setup_import_methods(
-    as_is     => [qw/build_option/],
-    #with_meta => ['operation'],
-);
-
+our @EXPORT = qw/build_option/;
+#Moo::Exporter->setup_import_methods(
+#    as_is     => [qw/build_option/],
+#    #with_meta => ['operation'],
+#);
 
 our $VERSION = version->new('0.1.4');
 
-Moose::Util::meta_attribute_alias('Getopt::Alt::Option');
+#Moo::Util::meta_attribute_alias('Getopt::Alt::Option');
 
 has opt => (
     is       => 'ro',
@@ -31,45 +32,45 @@ has opt => (
 );
 has name => (
     is       => 'rw',
-    isa      => 'Str',
+    isa      => Str,
     required => 1,
 );
 has names => (
     is       => 'rw',
-    isa      => 'ArrayRef[Str]',
+    isa      => ArrayRef[Str],
     required => 1,
 );
 has increment => (
     is  => 'rw',
-    isa => 'Bool',
+    isa => Bool,
 );
 has negatable => (
     is  => 'rw',
-    isa => 'Bool',
+    isa => Bool,
 );
 has nullable => (
     is  => 'rw',
-    isa => 'Bool',
+    isa => Bool,
 );
 has config => (
     is  => 'ro',
-    isa => 'Bool',
+    isa => Bool,
 );
 has project => (
     is  => 'ro',
-    isa => 'Bool',
+    isa => Bool,
 );
 has ref => (
     is  => 'ro',
-    isa => 'Str',
+    isa => Str,
 );
 has type => (
     is  => 'ro',
-    isa => 'Str',
+    isa => Str,
 );
 has value => (
     is        => 'rw',
-    isa       => 'Any',
+    isa       => Any,
     predicate => 'has_value',
 );
 

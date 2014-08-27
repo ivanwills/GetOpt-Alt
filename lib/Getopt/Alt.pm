@@ -6,7 +6,7 @@ package Getopt::Alt;
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use Moose;
+use Moo;
 use warnings;
 use version;
 use Carp;
@@ -17,65 +17,68 @@ use Getopt::Alt::Exception;
 use Try::Tiny;
 use Path::Class;
 use Config::Any;
+use Types::Standard -types;
+use Type::Utils qw/class_type/;
 
 use overload (
     '@{}'  => \&get_files,
     'bool' => sub { 1 },
 );
 
-Moose::Exporter->setup_import_methods(
-    as_is => [qw/get_options/],
-);
+our @EXPORT = qw/build_option/;
+#Moo::Exporter->setup_import_methods(
+#    as_is => [qw/get_options/],
+#);
 
 our $VERSION = version->new('0.1.4');
 our $EXIT    = 1;
 
 has options => (
     is      => 'rw',
-    isa     => 'Str',
+    isa     => Str,
     default => 'Getopt::Alt::Dynamic',
 );
 has opt => (
     is      => 'rw',
-    isa     => 'Getopt::Alt::Dynamic',
+    isa     => class_type('Getopt::Alt::Dynamic'),
     clearer => 'clear_opt',
 );
 has default => (
     is      => 'rw',
-    isa     => 'HashRef',
+    isa     => HashRef,
     default => sub { {} },
 );
 has files => (
     is      => 'rw',
-    isa     => 'ArrayRef[Str]',
+    isa     => ArrayRef[Str],
     default => sub {[]},
 );
 has bundle => (
     is      => 'rw',
-    isa     => 'Bool',
+    isa     => Bool,
     default => 1,
 );
 has ignore_case => (
     is      => 'rw',
-    isa     => 'Bool',
+    isa     => Bool,
     default => 1,
 );
 has help => (
     is      => 'rw',
-    isa     => 'Str',
+    isa     => Str,
 );
 has helper => (
     is      => 'rw',
-    isa     => 'Bool',
+    isa     => Bool,
 );
 has cmds => (
     is      => 'rw',
-    isa     => 'ArrayRef[Getopt::Alt::Command]',
+    isa     => ArrayRef[class_type('Getopt::Alt::Command')],
     default => sub { [] },
 );
 has cmd => (
     is      => 'rw',
-    isa     => 'Str',
+    isa     => Str,
     clearer => 'clear_cmd',
 );
 has sub_command => (
@@ -92,17 +95,17 @@ has sub_command => (
 );
 has default_sub_command => (
     is        => 'rw',
-    isa       => 'Str',
+    isa       => Str,
     predicate => 'has_default_sub_command',
 );
 has auto_complete => (
     is        => 'rw',
-    isa       => 'CodeRef',
+    isa       => CodeRef,
     predicate => 'has_auto_complete',
 );
 has name => (
     is      => 'rw',
-    isa     => 'Str',
+    isa     => Str,
     default => sub { file($0)->basename },
 );
 
@@ -130,7 +133,7 @@ around BUILDARGS => sub {
         my $class_name = 'Getopt::Alt::Dynamic::A' . $count++;
         my $object = Moose::Meta::Class->create(
             $class_name,
-            superclasses => [ $param{options} || 'Getopt::Alt::Dynamic' ],
+            superclasses => [ $param{options} || class_type('Getopt::Alt::Dynamic') ],
             #methods      => \%method,
         );
 
