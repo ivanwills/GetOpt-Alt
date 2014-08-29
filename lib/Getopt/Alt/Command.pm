@@ -52,7 +52,7 @@ __END__
 
 =head1 NAME
 
-Getopt::Alt::Command - <One-line description of module's purpose>
+Getopt::Alt::Command - Base for sub commands
 
 =head1 VERSION
 
