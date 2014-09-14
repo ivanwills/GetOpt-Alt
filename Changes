@@ -1,6 +1,12 @@
 Revision history for Getopt-Alt
 
+0.1.5   2014-09-14
+        Updated manifest (Ivan Wills)
+        Added better diagnostics (Ivan Wills)
+
 0.1.4   2014-08-26
+        Got updated boilerplate test passing (Ivan Wills)
+        Updating for release of version 0.1.4 (Ivan Wills)
         Updated manifest (Ivan Wills)
         Updated boilerplate test (Ivan Wills)
         [Bug #98242] Removed unused modules (Ivan Wills)
