@@ -17,8 +17,8 @@ for my $data (@data) {
         my $files = eval { get_options( @{ $data->{args} } ) };
         my $error = $@;
         if ( $test->{success} ) {
-            ok !$error, "'$test->{name}': No errors" or note $error;
-            is_deeply \@ARGV, $test->{results}, "'$test->{name}': Files returned correctly" or note Dumper $files;
+            ok !$error, "'$test->{name}': No errors" or diag "'$test->{name}' failed with: $error";
+            is_deeply \@ARGV, $test->{results}, "'$test->{name}': Files returned correctly" or diag Dumper $files;
         }
         else {
             ok !$files && $error, "'$test->{name}': fails" or note Dumper { args => $data->{args}, ARGV => $test->{argv}, };
