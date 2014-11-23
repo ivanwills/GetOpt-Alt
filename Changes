@@ -1,6 +1,19 @@
 Revision history for Getopt-Alt
 
+0.2.0   2014-11-23
+        Updating for release of version 0.2.0 (Ivan Wills)
+        Added new test to manifest (Ivan Wills)
+        Reordered files (Ivan Wills)
+        Added more tests for processing options (Ivan Wills)
+        Removed unessesary code to (gets better code coverage) (Ivan Wills)
+        Added more tests for building options (Ivan Wills)
+        Changed build requires to Test::Warnings (Ivan Wills)
+        Cleaned up bang (Ivan Wills)
+        Changed from Test::NoWarnings to Test::Warnings (Ivan Wills)
+        Added better tests for get_options (Ivan Wills)
+
 0.1.5   2014-09-14
+        Updating for release of version 0.1.5 (Ivan Wills)
         Updated manifest (Ivan Wills)
         Added better diagnostics (Ivan Wills)
 
