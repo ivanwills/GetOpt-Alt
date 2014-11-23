@@ -90,7 +90,6 @@ my $r_spec     = qr/^ ( $r_names ) ( $r_inc | $r_neg | $r_type_ref )? ( $r_null 
 sub build_option {
     my ($class, @params) = @_;
 
-    $DB::single = 1;
     if (@params == 1 && ref $params[0]) {
         @params =
               ref $params[0] eq 'ARRAY' ? @{ $params[0] }

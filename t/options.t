@@ -8,6 +8,7 @@ use Test::Warnings;
 use Getopt::Alt::Option;
 
 option_type();
+option_process();
 done_testing();
 
 sub option_type {
@@ -54,4 +55,38 @@ sub option_type {
     # bad spec
     eval { build_option($object, 'a||q') };
     ok $@, "Bad spec";
+}
+
+sub option_process {
+    my $class_name = 'Getopt::Alt::Dynamic::Test';
+    my $object = Moose::Meta::Class->create(
+        $class_name,
+        superclasses => [ 'Getopt::Alt::Dynamic' ],
+    );
+
+    my $one = build_option($object, ['one|o!']);
+    my ($value, $used) = $one->process('one', '', undef, []);
+    is $value, 1, '--long sets value to 1';
+    ($value, $used) = $one->process('no-one', '', undef, []);
+    is $value, 0, '--no-one long sets value to 0';
+
+    my $two = build_option($object, ['two|t+']);
+    ($value, $used) = $two->process('', 't', undef, []);
+    is $value, 1, '--short sets value to 1';
+    ($value, $used) = $two->process('', 't', undef, []);
+    is $value, 2, '--short again sets value to 2';
+
+    my $three = build_option($object, ['three|T=s']);
+    eval { $three->process('', 'T', undef, []) };
+    my $error = $@;
+    ok ref $error, 'Get an error';
+    is $error->[0]->message, "The option '-T' requires an Str argument\n";
+
+    eval { $three->process('', 'T', '', []) };
+    $error = $@;
+    ok ref $error, 'Get an error';
+    is $error->[0]->message, "The option '-T' requires an Str argument\n";
+
+    ($value, $used) = $three->process('', 'T', 'test', []);
+    is $value, 'test', '--short again sets value to test';
 }
