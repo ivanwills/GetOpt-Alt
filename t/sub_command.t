@@ -6,6 +6,7 @@ use strict;
 use warnings;
 use List::Util qw/sum/;
 use Test::More;
+use Test::Warnings;
 use Getopt::Alt qw/get_options/;
 use Data::Dumper qw/Dumper/;
 

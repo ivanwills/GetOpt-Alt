@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use List::Util qw/sum/;
 use Test::More;
-#use Test::NoWarnings;
+use Test::Warnings;
 use Getopt::Alt::Option;
 use Data::Dumper qw/Dumper/;
 
@@ -45,7 +45,6 @@ my @bulk = get_bulk();
 
 my %valid = @valid;
 my $tests = ( sum map {scalar keys %{$valid{$_}} } keys %valid );
-plan tests => $tests + @bulk;# + 1;
 
 my $object = Moose::Meta::Class->create(
     'dummy',
@@ -69,6 +68,7 @@ for my $valid (@bulk) {
     diag Dumper $@ if $@;
     ok($opt, "'$valid' loads");
 }
+done_testing();
 
 sub get_bulk {
     return (

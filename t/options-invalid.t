@@ -1,12 +1,10 @@
 #!/usr/bin/perl -w
 
-BEGIN { $ENV{TESTING} = 1 }
-
 use strict;
 use warnings;
 use List::Util qw/sum/;
 use Test::More;
-#use Test::NoWarnings;
+use Test::Warnings;
 use Getopt::Alt::Option;
 
 my @invalid = qw(
@@ -17,8 +15,6 @@ my @invalid = qw(
     a||b
 );
 
-plan tests => scalar @invalid;# + 1;
-
 for my $args (@invalid) {
     my $opt;
     eval {
@@ -28,4 +24,4 @@ for my $args (@invalid) {
     ok( $@ || !$opt, "'$args' should fail" );
     diag Dumper $opt if $opt;
 }
-
+done_testing();

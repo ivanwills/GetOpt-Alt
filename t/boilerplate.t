@@ -2,8 +2,8 @@
 
 use strict;
 use warnings;
-use Test::More tests => 9 + 1;
-use Test::NoWarnings;
+use Test::More;
+use Test::Warnings;
 
 sub not_in_file_ok {
     my ($filename, %regex) = @_;
@@ -62,3 +62,4 @@ module_boilerplate_ok('lib/Getopt/Alt/Exception.pm');
 module_boilerplate_ok('lib/Getopt/Alt/Command.pm');
 module_boilerplate_ok('lib/Getopt/Alt/CookBook.pod');
 module_boilerplate_ok('lib/Getopt/Alt/Dynamic.pm');
+done_testing();

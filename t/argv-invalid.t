@@ -1,12 +1,10 @@
 #!/usr/bin/perl -w
 
-BEGIN { $ENV{TESTING} = 1 }
-
 use strict;
 use warnings;
 use List::Util qw/sum/;
-use Test::More tests => 6;# + 1;
-#use Test::NoWarnings;
+use Test::More;
+use Test::Warnings;
 use Getopt::Alt;
 use Data::Dumper qw/Dumper/;
 
@@ -28,6 +26,7 @@ for my $argv ( argv() ) {
     eval { $opt->process( @{ $argv } ) };
     ok( $@, join ' ', @{ $argv }, 'fails') or diag Dumper $opt->opt;
 }
+done_testing();
 
 sub argv {
     return (

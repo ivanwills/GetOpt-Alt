@@ -2,8 +2,8 @@
 
 use strict;
 use warnings;
-use Test::More tests => 5;# + 1;
-#use Test::NoWarnings;
+use Test::More;
+use Test::Warnings;
 
 BEGIN {
     use_ok('Getopt::Alt');
@@ -14,3 +14,4 @@ BEGIN {
 }
 
 diag( "Testing module $Getopt::Alt::VERSION, Perl $], $^X" );
+done_testing();
