@@ -27,6 +27,7 @@ t/get_options.t
 t/kwalitee.t
 t/options-invalid.t
 t/options-valid.t
+t/options.t
 t/perlcriticrc
 t/pod-coverage.t
 t/pod.t
