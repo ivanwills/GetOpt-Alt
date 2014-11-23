@@ -56,10 +56,10 @@ not_in_file_ok(Changes =>
 );
 
 module_boilerplate_ok('lib/Getopt/Alt.pm');
-module_boilerplate_ok('lib/Getopt/Alt/Option.pm');
-module_boilerplate_ok('lib/Getopt/Alt/Manual.pod');
-module_boilerplate_ok('lib/Getopt/Alt/Exception.pm');
 module_boilerplate_ok('lib/Getopt/Alt/Command.pm');
 module_boilerplate_ok('lib/Getopt/Alt/CookBook.pod');
 module_boilerplate_ok('lib/Getopt/Alt/Dynamic.pm');
+module_boilerplate_ok('lib/Getopt/Alt/Exception.pm');
+module_boilerplate_ok('lib/Getopt/Alt/Manual.pod');
+module_boilerplate_ok('lib/Getopt/Alt/Option.pm');
 done_testing();
