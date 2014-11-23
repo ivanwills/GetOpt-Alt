@@ -1,6 +1,4 @@
-#!/usr/bin/perl -w
-
-BEGIN { $ENV{TESTING} = 1 }
+#!/usr/bin/perl
 
 use strict;
 use warnings;
