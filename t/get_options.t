@@ -1,28 +1,45 @@
 #!/usr/bin/perl -w
 
-BEGIN { $ENV{TESTING} = 1 }
-
 use strict;
 use warnings;
 use List::Util qw/sum/;
 use Test::More;
+use Test::Warnings qw/warning/;
 use Getopt::Alt qw/get_options/;
-use Data::Dumper qw/Dumper/;
 
+our $VERSION = 0.123;
 my @data = data();
 
 for my $data (@data) {
     for my $test ( @{ $data->{tests} } ) {
         local @ARGV = @{ $test->{argv} };
-        my $files = eval { get_options( @{ $data->{args} } ) };
-        my $error = $@;
-        if ( $test->{success} ) {
-            ok !$error, "'$test->{name}': No errors" or diag "'$test->{name}' failed with: $error";
-            is_deeply \@ARGV, $test->{results}, "'$test->{name}': Files returned correctly" or diag Dumper $files;
+
+        if ( $test->{error} ) {
+            my $error;
+            my $warning = warning { eval { get_options( @{ $data->{args} } ) }; $error = $@; };
+            $warning = '' if ref $warning eq 'ARRAY' && @$warning == 0;
+
+            like "$error", $test->{error}  , "'$test->{name}': Fails as expected"
+                or note explain {
+                    args => $data->{args},
+                    ARGV => $test->{argv},
+                    error => $error,
+                    test => $test->{error}
+                } and exit;
+            like $warning, $test->{warning}, "'$test->{name}': Warns as expected"
+                or note explain {
+                    args => $data->{args},
+                    ARGV => $test->{argv},
+                    warning => $warning,
+                    test => $test->{error}
+                } and exit;
         }
         else {
-            ok !$files && $error, "'$test->{name}': fails" or note Dumper { args => $data->{args}, ARGV => $test->{argv}, };
-            note $error;
+            my $files = eval { get_options( @{ $data->{args} } ) };
+            my $error = $@;
+            ok !$error, "'$test->{name}': No errors" or diag "'$test->{name}' failed with: $error";
+            is_deeply \@ARGV, $test->{results}, "'$test->{name}': Files returned correctly"
+                or diag explain $files;
         }
     }
 }
@@ -38,32 +55,29 @@ sub data {
             tests => [
                 {
                     name    => 'Empty',
-                    success => 1,
                     argv    => [],
                     results => [],
                 },
                 {
                     name    => 'with test',
-                    success => 1,
                     argv    => [qw/-t -t/],
                     results => [],
                 },
                 {
                     name    => 'with file',
-                    success => 1,
                     argv    => [qw/file/],
                     results => [qw/file/],
                 },
                 {
                     name    => 'with test and file',
-                    success => 1,
                     argv    => [qw/-t file/],
                     results => [qw/file/],
                 },
                 {
                     name    => 'unknown option',
-                    success => 0,
                     argv    => [qw/--unknown/],
+                    warning => qr/Unknown option '--unknown'/,
+                    error   => qr/ get_options [.][.][.]/,
                 },
             ]
         },
@@ -76,20 +90,19 @@ sub data {
             tests => [
                 {
                     name    => 'Name',
-                    success => 1,
                     argv    => [],
                     results => [],
                 },
                 {
                     name    => 'with data',
-                    success => 1,
                     argv    => [qw/-d data1 -d data2/],
                     results => [],
                 },
                 {
                     name    => 'Name',
-                    success => 0,
                     argv    => [qw/-a/],
+                    error   => qr/ get_options [.][.][.]/,
+                    warning => qr/Unknown option '-a'/,
                 },
             ]
         },
@@ -100,23 +113,27 @@ sub data {
             tests => [
                 {
                     name    => '--help (will die)',
-                    success => 0,
                     argv    => [qw/--help/],
+                    error   => qr/ get_options [.][.][.]/,
+                    warning => qr/^$/,
                 },
                 {
                     name    => '--man (will die)',
-                    success => 0,
                     argv    => [qw/--man/],
+                    error   => qr/ get_options [.][.][.]/,
+                    warning => qr/^$/,
                 },
                 {
                     name    => '--VERSION (will die)',
-                    success => 0,
                     argv    => [qw/--VERSION/],
+                    error   => qr/get_options.t Version = 0.123/,
+                    warning => qr/^$/,
                 },
                 {
                     name    => 'no -h',
-                    success => 0,
                     argv    => [qw/-h/],
+                    error   => qr/ get_options [.][.][.]/,
+                    warning => qr/Unknown option '-h'/,
                 },
             ]
         },
