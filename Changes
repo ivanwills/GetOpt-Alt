@@ -1,5 +1,9 @@
 Revision history for Getopt-Alt
 
+0.2.1   2014-11-24
+        Updating for release of version 0.2.1 (Ivan Wills)
+        Changed to get home directory from File::HomeDir (Ivan Wills)
+
 0.2.0   2014-11-23
         Updating for release of version 0.2.0 (Ivan Wills)
         Added new test to manifest (Ivan Wills)
