@@ -10,6 +10,7 @@ my $builder = Module::Build->new(
     requires => {
         'perl'                => '5.006',
         'Config::Any'         => 0,
+        'File::HomeDir'       => 0,
         'List::MoreUtils'     => 0,
         'List::Util'          => 0,
         'Moose'               => 0,

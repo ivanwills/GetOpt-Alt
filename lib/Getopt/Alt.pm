@@ -17,6 +17,7 @@ use Getopt::Alt::Exception;
 use Try::Tiny;
 use Path::Class;
 use Config::Any;
+use File::HomeDir;
 
 use overload (
     '@{}'  => \&get_files,
@@ -149,7 +150,7 @@ sub BUILD {
 
     my $basename = $self->name;
     my $conf = Config::Any->load_stems({
-        stems   => [ ".$basename", "$ENV{HOME}/.$basename", "/etc/.$basename" ],
+        stems   => [ ".$basename", File::HomeDir->my_home . "/.$basename", "/etc/.$basename" ],
         use_ext => 1,
     });
     $conf = {
