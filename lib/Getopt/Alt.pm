@@ -655,7 +655,8 @@ be added the end of your
 
 =item C<help> -
 
-???
+The Perl package with the POD documentation for --help and --man, by default
+it's the callers package.
 
 =item C<cmds> - ArrayRef[Getopt::Alt::Command]
 
@@ -676,6 +677,12 @@ method..
 
 The default values for each option. The default value is not modified by
 processing, so if set the same default will be used from call to call.
+
+=item C<aliases> - HashRef[ArrayRef[Str]]
+
+When using sub-commands this allows you to configure aliases for those
+commands, aliases are recursed, they can have extra arguments though.
+If a configuration file is used aliases can be specified in that file.
 
 =back
 
@@ -703,6 +710,32 @@ Returns a list of all command line options in the current object.
 =head1 DIAGNOSTICS
 
 =head1 CONFIGURATION AND ENVIRONMENT
+
+Configuration files can be used to specify default values and aliases. They
+can be located in the current directory, $HOME or /etc.The file name is
+specified by the C<name> attribute (which defaults to the program's name)
+and is prepended with a dot. eg:
+
+For a program called as C<$ ./foo> or C<$ foo> C<name> would be set to foo
+and possible configuration names would be
+
+=over 4
+
+=item *
+
+.foo.yml
+
+=item *
+
+~/.foo.rc
+
+=item *
+
+/etc/.foo.yml
+
+=back
+
+See L<Config::Any> for information about config formats and file extensions.
 
 =head1 DEPENDENCIES
 
