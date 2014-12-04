@@ -1,5 +1,12 @@
 Revision history for Getopt-Alt
 
+0.2.2   2014-12-04
+        Updating for release of version 0.2.2 (Ivan Wills)
+        License update (Ivan Wills)
+        Fixed the documentation about help and aliases attributes (Ivan Wills)
+        Added the ability to have sub-command aliases (Ivan Wills)
+        Fixed spelling (Ivan Wills)
+
 0.2.1   2014-11-24
         Updating for release of version 0.2.1 (Ivan Wills)
         Changed to get home directory from File::HomeDir (Ivan Wills)
