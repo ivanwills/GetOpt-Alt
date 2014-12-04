@@ -91,6 +91,12 @@ has sub_command => (
                    'generated options object. Finally if this is a sub ' .
                    'ref it will be called with self and the rest of ARGV',
 );
+has aliases => (
+    is            => 'rw',
+    isa           => 'HashRef[ArrayRef]',
+    default       => sub {{}},
+    documentation => 'Stores the list of aliases sub-commands can have',
+);
 has default_sub_command => (
     is        => 'rw',
     isa       => 'Str',
@@ -161,6 +167,12 @@ sub BUILD {
 
     # perlcritic is confused here combining hashes is not the same as comma separated arguments
     $self->default({ %{$self->default}, %$conf, });  ## no critic
+
+    if ($conf->{aliases}) {
+        for my $alias (keys %{ $conf->{aliases} }) {
+            $self->aliases->{$alias} = [ split /\s+/, $conf->{aliases}{$alias} ];
+        }
+    }
 
     return;
 }
@@ -250,6 +262,12 @@ sub process {
                 $action = 'next';
             }
             elsif ( $_ eq "last\n" ) {
+                # last means we have found a sub command we should see if it is an alias
+                if ($self->aliases->{$arg}) {
+                    $self->files->[-1] = shift @{ $self->aliases->{$arg} };
+                    unshift @args, @{ $self->aliases->{$arg} };
+                }
+
                 $action = 'last';
             }
             else {
