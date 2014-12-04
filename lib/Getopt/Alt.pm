@@ -159,7 +159,7 @@ sub BUILD {
         @{ $conf || [] }
     };
 
-    # perlcritic is confused here combining hashes is not the same as comma seperated arguments
+    # perlcritic is confused here combining hashes is not the same as comma separated arguments
     $self->default({ %{$self->default}, %$conf, });  ## no critic
 
     return;
