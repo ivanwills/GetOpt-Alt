@@ -143,7 +143,6 @@ around BUILDARGS => sub {
         my $object = Moose::Meta::Class->create(
             $class_name,
             superclasses => [ $param{options} || 'Getopt::Alt::Dynamic' ],
-            #methods      => \%method,
         );
 
         while ( my $option = shift @params ) {
