@@ -1,5 +1,9 @@
 Revision history for Getopt-Alt
 
+0.2.3   2014-12-06
+        Updating for release of version 0.2.3 (Ivan Wills)
+        Added the ability to change the prefix of the config name (Ivan Wills)
+
 0.2.2   2014-12-04
         Updating for release of version 0.2.2 (Ivan Wills)
         License update (Ivan Wills)
