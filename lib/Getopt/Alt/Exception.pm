@@ -10,7 +10,7 @@ use Moose;
 use version;
 use overload '""' => sub { shift->message };
 
-our $VERSION = version->new('0.2.3');
+our $VERSION = version->new('0.2.4');
 
 has message => (
     is      => 'rw',
@@ -39,7 +39,7 @@ Getopt::Alt::Exception - I have forgotten where I was going with this
 
 =head1 VERSION
 
-This documentation refers to Getopt::Alt::Exception version 0.2.3.
+This documentation refers to Getopt::Alt::Exception version 0.2.4.
 
 
 =head1 SYNOPSIS
