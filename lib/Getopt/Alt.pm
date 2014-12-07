@@ -15,7 +15,7 @@ use List::MoreUtils qw/uniq/;
 use Getopt::Alt::Option qw/build_option/;
 use Getopt::Alt::Exception;
 use Try::Tiny;
-use Path::Class;
+use Path::Tiny;
 use Config::Any;
 use File::HomeDir;
 
@@ -110,7 +110,7 @@ has auto_complete => (
 has name => (
     is      => 'rw',
     isa     => 'Str',
-    default => sub { file($0)->basename },
+    default => sub { path($0)->basename },
 );
 has conf_prefix => (
     is      => 'rw',
