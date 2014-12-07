@@ -61,7 +61,7 @@ has ignore_case => (
     isa     => 'Bool',
     default => 1,
 );
-has help => (
+has help_package => (
     is      => 'rw',
     isa     => 'Str',
 );
@@ -195,7 +195,7 @@ sub get_options {  ## no critic
     try {
         $self = __PACKAGE__->new(@args);
 
-        $self->help($caller) if !$self->help || $self->help eq __PACKAGE__;
+        $self->help_package($caller) if !$self->help_package || $self->help_package eq __PACKAGE__;
 
         $self->process();
     }
@@ -207,7 +207,7 @@ sub get_options {  ## no critic
         warn $_;
         $self = __PACKAGE__->new();
 
-        $self->help($caller) if !$self->help || $self->help eq __PACKAGE__;
+        $self->help_package($caller) if !$self->help_package || $self->help_package eq __PACKAGE__;
 
         $self->_show_help(1);
     };
@@ -300,7 +300,7 @@ sub process {
         if (!$sub) {
             warn "Unknown command '$self->cmd'!\n";
             die Getopt::Alt::Exception->new( message => "Unknown command '$self->cmd'" )
-                if !$self->help;
+                if !$self->help_package;
             $self->_show_help(1);
         }
 
@@ -325,7 +325,7 @@ sub process {
         }
     }
 
-    if ( $self->help ) {
+    if ( $self->help_package ) {
         if ( $self->opt->{VERSION} ) {
              my ($name)  = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
              my $version = defined $main::VERSION ? $main::VERSION : 'undef';
@@ -398,7 +398,7 @@ sub best_option {
 
     return $self->best_option($long, $short, 1) if !$no;
 
-    if ( $self->help ) {
+    if ( $self->help_package ) {
         die [ Getopt::Alt::Exception->new(
                 message => "Unknown option '" . ($long ? "--$long" : "-$short") . "'\n",
                 option  => ($long ? "--$long" : "-$short"),
@@ -423,8 +423,8 @@ sub _show_help {
     my ($self, $verbosity, $msg) = @_;
 
     my %input;
-    if ( $self->help && $self->help ne 1 ) {
-        my $help = $self->help;
+    if ( $self->help_package && $self->help_package ne 1 ) {
+        my $help = $self->help_package;
         if ( !-f $help ) {
             $help  .= '.pm';
             $help =~ s{::}{/}g;
@@ -658,7 +658,7 @@ Turns ignoring of the case of arguments, off by default.
 If set to a true value this will cause the help, man, and VERSION options to
 be added the end of your
 
-=item C<help> -
+=item C<help_package> -
 
 The Perl package with the POD documentation for --help and --man, by default
 it's the callers package.
