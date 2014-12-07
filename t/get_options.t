@@ -20,14 +20,14 @@ for my $data (@data) {
             $warning = '' if ref $warning eq 'ARRAY' && @$warning == 0;
 
             like "$error", $test->{error}  , "'$test->{name}': Fails as expected"
-                or note explain {
+                or diag explain {
                     args => $data->{args},
                     ARGV => $test->{argv},
                     error => $error,
                     test => $test->{error}
                 } and exit;
             like $warning, $test->{warning}, "'$test->{name}': Warns as expected"
-                or note explain {
+                or diag explain {
                     args => $data->{args},
                     ARGV => $test->{argv},
                     warning => $warning,
@@ -89,7 +89,7 @@ sub data {
             ],
             tests => [
                 {
-                    name    => 'Name',
+                    name    => 'No args',
                     argv    => [],
                     results => [],
                 },
@@ -99,7 +99,7 @@ sub data {
                     results => [],
                 },
                 {
-                    name    => 'Name',
+                    name    => 'Unknown arg -a',
                     argv    => [qw/-a/],
                     error   => qr/ get_options [.][.][.]/,
                     warning => qr/Unknown option '-a'/,
@@ -126,7 +126,7 @@ sub data {
                 {
                     name    => '--VERSION (will die)',
                     argv    => [qw/--VERSION/],
-                    error   => qr/get_options.t Version = 0.123/,
+                    error   => qr/Version = 0.123/,
                     warning => qr/^$/,
                 },
                 {
