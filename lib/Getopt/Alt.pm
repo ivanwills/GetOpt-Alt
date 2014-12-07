@@ -44,7 +44,7 @@ has opt => (
 has default => (
     is      => 'rw',
     isa     => 'HashRef',
-    default => sub { {} },
+    default => sub {{}},
 );
 has files => (
     is      => 'rw',
@@ -83,13 +83,13 @@ has sub_command => (
     is            => 'rw',
     #isa           => 'Bool | HashRef[ArrayRef] | CodeRef',
     predicate     => 'has_sub_command',
-    documentation => 'if true (== 1) processing of args stops at first non ' .
-                   'defined parameter, if a HASH ref the keys are assumed ' .
-                   'to be the allowed sub commands and the values are ' .
-                   'assumed to be parameters to passed to get_options ' .
-                   'where the generated options will be a sub object of ' .
-                   'generated options object. Finally if this is a sub ' .
-                   'ref it will be called with self and the rest of ARGV',
+    documentation => <<'DOC',
+if true (== 1) processing of args stops at first non-defined parameter, if
+a HASH ref the keys are assumed to be the allowed sub commands and the values
+are assumed to be parameters to passed to get_options where the generated
+options will be a sub object of generated options object. Finally if this
+is a sub ref it will be called with self and the rest of ARGV
+DOC
 );
 has aliases => (
     is            => 'rw',
