@@ -1,5 +1,13 @@
 Revision history for Getopt-Alt
 
+0.2.5   2014-12-07
+        Updating for release of version 0.2.5 (Ivan Wills)
+        Changed test to better find out why Windows is having troubles (Ivan Wills)
+        Updating for release of version 0.2.4 (Ivan Wills)
+        Renamed attribute to be clearer about its meaning (Ivan Wills)
+        Switched from Path::Class to Path::Tiny (Ivan Wills)
+        Changed documentation to hear doc for clarity (Ivan Wills)
+
 0.2.4   2014-12-07
         Updating for release of version 0.2.4 (Ivan Wills)
         Renamed attribute to be clearer about its meaning (Ivan Wills)
