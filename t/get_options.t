@@ -19,6 +19,9 @@ for my $data (@data) {
             my $warning = warning { eval { get_options( @{ $data->{args} } ) }; $error = $@; };
             $warning = '' if ref $warning eq 'ARRAY' && @$warning == 0;
 
+            # error in windows where something is getting a permissions denied error
+            $error = $error->[0] if ref $error eq 'ARRAY' && $error->[1] =~ /Permission denied/;
+
             like "$error", $test->{error}  , "'$test->{name}': Fails as expected"
                 or diag explain {
                     args => $data->{args},
