@@ -1,5 +1,9 @@
 Revision history for Getopt-Alt
 
+0.2.6   2014-12-12
+        Updating for release of version 0.2.6 (Ivan Wills)
+        Attempt to fix windows issue (Ivan Wills)
+
 0.2.5   2014-12-07
         Updating for release of version 0.2.5 (Ivan Wills)
         Changed test to better find out why Windows is having troubles (Ivan Wills)
