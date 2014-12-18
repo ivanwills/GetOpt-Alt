@@ -452,7 +452,7 @@ __END__
 
 =head1 NAME
 
-Getopt::Alt - Alternate method of processing command line arguments
+Getopt::Alt - Command line option passing with with lots of features
 
 =head1 VERSION
 
@@ -560,9 +560,12 @@ This documentation refers to Getopt::Alt version 0.2.6.
 =head1 DESCRIPTION
 
 The aim of C<Getopt::Alt> is to provide an alternative to L<Getopt::Long> that
-allows a simple command line program to easily grow in complexity. It  or to a
-package with multiple commands. The simple usage is quite similar to
-L<Getopt::Long>:
+allows a simple command line program to easily grow in complexity. L<Getopt::Lon>
+can be expanded from a simple command line option passer to allow sub-commands.
+Option processing may stop at the sub-command or with the help of modules can
+cascade the processing into the sub command's module or config.
+
+The simple usage is quite similar to L<Getopt::Long>:
 
 In C<Getopt::Long> you might get your options like:
 
