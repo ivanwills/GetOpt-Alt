@@ -139,6 +139,7 @@ around BUILDARGS => sub {
     }
 
     if ( @params ) {
+        # construct a class of options passing
         my $class_name = 'Getopt::Alt::Dynamic::A' . $count++;
         my $object = Moose::Meta::Class->create(
             $class_name,
@@ -150,6 +151,9 @@ around BUILDARGS => sub {
         }
 
         $param{options} = $class_name;
+    }
+    elsif ( !$param{options} ) {
+        confess "No options supplied!\n";
     }
 
     return $class->$orig(%param);
@@ -462,6 +466,7 @@ This documentation refers to Getopt::Alt version 0.2.6.
 
    use Getopt::Alt;
 
+   # OO Style usage
    # Create a new options object
    my $opt = Getopt::Alt->new(
        {
