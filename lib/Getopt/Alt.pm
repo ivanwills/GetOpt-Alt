@@ -127,6 +127,9 @@ around BUILDARGS => sub {
         %param  = %{ $params[0] };
         @params = @{ $params[1] };
     }
+    elsif ( !%param && ref $params[0] eq 'HASH' ) {
+        %param = %{ shift @params };
+    }
 
     if ( !exists $param{helper} || $param{helper} ) {
         unshift @params, (
@@ -151,9 +154,6 @@ around BUILDARGS => sub {
         }
 
         $param{options} = $class_name;
-    }
-    elsif ( !$param{options} ) {
-        confess "No options supplied!\n";
     }
 
     return $class->$orig(%param);
