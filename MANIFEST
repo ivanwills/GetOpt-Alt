@@ -18,12 +18,15 @@ MANIFEST
 META.json
 META.yml
 README.pod
+t/.getopt-alt.t.yml
+t/.other.yml
 t/00-load.t
 t/argv-invalid.t
 t/argv-valid.t
 t/boilerplate.t
 t/critic.t
 t/get_options.t
+t/getopt-alt.t
 t/kwalitee.t
 t/options-invalid.t
 t/options-valid.t
