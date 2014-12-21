@@ -168,9 +168,10 @@ sub BUILD {
         stems   => [ "$prefix$basename", File::HomeDir->my_home . "/$prefix$basename", "/etc/$basename" ],
         use_ext => 1,
     });
+
     $conf = {
-        map { %$_        }
-        map { values %$_ }
+        map { $_ ? %$_ : () }
+        map { values %$_    }
         @{ $conf || [] }
     };
 
