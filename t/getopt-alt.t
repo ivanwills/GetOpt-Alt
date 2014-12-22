@@ -8,6 +8,7 @@ use Test::Warnings;
 use Getopt::Alt;
 
 build();
+get_opt();
 done_testing();
 
 sub build {
@@ -39,5 +40,10 @@ sub build {
     };
     ok $opt, "Conf read with out error";
     ok !$opt->default->{foo}, "--foo not read";
+}
+
+sub get_opt {
+    my $opt = eval { get_options('test|t', 'foo|f', 'bar|b') };
+    ok !$@, 'no error' or diag $@;
 }
 
