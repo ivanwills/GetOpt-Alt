@@ -653,12 +653,12 @@ Any arguments that not consumed as part of options (usually files), if no
 arguments were passed to C<process> then this value would also be put back
 into C<@ARGV>.
 
-=item C<bundle> - bool
+=item C<bundle> - bool (Default true)
 
 Turns on bundling of arguments eg C<-rv> is equivalent to C<-r -v>. This is
 on by default.
 
-=item C<ignore_case> - bool
+=item C<ignore_case> - bool (Default true)
 
 Turns ignoring of the case of arguments, off by default.
 
@@ -668,10 +668,14 @@ If set to a true value this will cause the help, man, and version options to
 be added the end of your options list. (i.e. you get --help --man and
 --version arguments for you program.)
 
-=item C<help_package> -
+=item C<help_package> - Str
 
 The Perl package with the POD documentation for --help and --man, by default
 it's the callers package.
+
+=item C<name> - Str (Default $0's basename)
+
+Used when displaying --version info
 
 =item C<cmds> - ArrayRef[Getopt::Alt::Command]
 
@@ -679,9 +683,9 @@ If the Getopt::Alt is being used as part of a package where individual
 commands have their own modules this parameter stores an instance of each
 commands. (Not yet fully implemented.
 
-=item C<options> - ArrayRef[Getopt::Alt::Option]
+=item C<options> - Str (Default Getopt::Alt::Dynamic)
 
-The individual command option specifications processed.
+The parent class for generating options.
 
 =item C<opt> - HashRef
 
@@ -698,6 +702,25 @@ processing, so if set the same default will be used from call to call.
 When using sub-commands this allows you to configure aliases for those
 commands, aliases are recursed, they can have extra arguments though.
 If a configuration file is used aliases can be specified in that file.
+
+=item C<conf_prefix> - Str (Default ".")
+
+The prefix for finding the configuration files. By default the following
+is used:
+
+=over 4
+
+=item *
+
+./$conf_prefix$name
+
+=item *
+
+~/$conf_prefix$name
+
+=item *
+
+/etc/$conf_prefix$name
 
 =back
 
