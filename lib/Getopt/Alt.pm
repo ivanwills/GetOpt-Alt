@@ -664,8 +664,9 @@ Turns ignoring of the case of arguments, off by default.
 
 =item C<helper> - bool
 
-If set to a true value this will cause the help, man, and VERSION options to
-be added the end of your
+If set to a true value this will cause the help, man, and version options to
+be added the end of your options list. (i.e. you get --help --man and
+--version arguments for you program.)
 
 =item C<help_package> -
 
