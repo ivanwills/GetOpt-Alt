@@ -111,7 +111,7 @@ sub data {
         },
         {
             args => [
-                {}, ['test|t', 'man', 'help', 'VERSION']
+                {}, ['test|t', 'man', 'help', 'version']
             ],
             tests => [
                 {
@@ -127,8 +127,8 @@ sub data {
                     warning => qr/^$/,
                 },
                 {
-                    name    => '--VERSION (will die)',
-                    argv    => [qw/--VERSION/],
+                    name    => '--version (will die)',
+                    argv    => [qw/--version/],
                     error   => qr/Version = 0.123/,
                     warning => qr/^$/,
                 },
