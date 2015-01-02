@@ -135,7 +135,7 @@ around BUILDARGS => sub {
         unshift @params, (
             'help',
             'man',
-            'VERSION',
+            'version',
             'auto_complete|auto-complete',
             'auto_complete_list|auto-complete-list!',
         );
@@ -331,7 +331,7 @@ sub process {
     }
 
     if ( $self->help_package ) {
-        if ( $self->opt->{VERSION} ) {
+        if ( $self->opt->{version} ) {
              my ($name)  = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
              my $version = defined $main::VERSION ? $main::VERSION : 'undef';
              die Getopt::Alt::Exception->new( message => "$name Version = $version\n", help => 1);
