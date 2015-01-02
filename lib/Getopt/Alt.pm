@@ -724,9 +724,7 @@ is used:
 
 =back
 
-Return: Getopt::Alt -
-
-Description:
+=back
 
 =head2 Object Methods
 
