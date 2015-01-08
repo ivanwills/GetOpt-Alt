@@ -1,5 +1,21 @@
 Revision history for Getopt-Alt
 
+0.2.7   2015-01-08
+        Updating for release of version 0.2.7
+        Updated licence (Ivan Wills)
+        Fixed POD (Ivan Wills)
+        Fixed tests to use --version rather than --VERSION (Ivan Wills)
+        Added missing new options documentation (Ivan Wills)
+        Updated helper docs (Ivan Wills)
+        Changed --VERSION to --version to be consistent with standard practice (Ivan Wills)
+        Expanding coverage (Ivan Wills)
+        added new files to manifest (Ivan Wills)
+        Added tests for more for code (Ivan Wills)
+        Reverted changes for new test (Ivan Wills)
+        New test for build arguments (Ivan Wills)
+        Added some comments and confess missing error condition (Ivan Wills)
+        Updating the documentation (Ivan Wills)
+
 0.2.6   2014-12-12
         Updating for release of version 0.2.6 (Ivan Wills)
         Attempt to fix windows issue (Ivan Wills)
