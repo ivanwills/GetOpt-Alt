@@ -22,11 +22,12 @@ for my $data (@data) {
             # error in windows where something is getting a permissions denied error
             $error = $error->[0] if ref $error eq 'ARRAY' && $error->[1] =~ /Permission denied/;
 
-            like "$error", $test->{error}  , "'$test->{name}': Fails as expected"
+            like "$error", $test->{error}, "'$test->{name}': Fails as expected"
                 or diag explain {
                     args => $data->{args},
                     ARGV => $test->{argv},
                     error => $error,
+                    ERROR => "$error",
                     test => $test->{error}
                 } and exit;
             like $warning, $test->{warning}, "'$test->{name}': Warns as expected"

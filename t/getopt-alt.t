@@ -24,6 +24,9 @@ sub build {
             ['foo|f']
         )
     };
+    my $error = $@;
+    ok !$error, "No error found"
+        or diag "Error : $error";
     ok $opt, "Conf read with out error";
     ok $opt->default->{foo}, "--foo read";
     is $opt->aliases->{bar}[0], 'baz', "bar is baz";
