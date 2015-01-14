@@ -35,6 +35,7 @@ for my $data (@data) {
                     args => $data->{args},
                     ARGV => $test->{argv},
                     warning => $warning,
+                    WARNING => "$warning",
                     test => $test->{error}
                 } and exit;
         }
