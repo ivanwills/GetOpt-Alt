@@ -144,13 +144,13 @@ around BUILDARGS => sub {
     if ( @params ) {
         # construct a class of options passing
         my $class_name = 'Getopt::Alt::Dynamic::A' . $count++;
-        my $object = Moose::Meta::Class->create(
+        my $option_class = Moose::Meta::Class->create(
             $class_name,
             superclasses => [ $param{options} || 'Getopt::Alt::Dynamic' ],
         );
 
         while ( my $option = shift @params ) {
-            build_option($object, $option);
+            build_option($option_class, $option);
         }
 
         $param{options} = $class_name;
@@ -180,7 +180,7 @@ sub BUILD {
 
     if ($conf->{aliases}) {
         for my $alias (keys %{ $conf->{aliases} }) {
-            $self->aliases->{$alias} = [ split /\s+/, $conf->{aliases}{$alias} ];
+            $self->aliases->{$alias} = [ split /\s+/xms, $conf->{aliases}{$alias} ];
         }
     }
 
@@ -238,14 +238,14 @@ sub process {
     while (my $arg = shift @args) {
         my $action = '';
         try {
-                my ($long, $short, $data);
+                my ($long, $short, $arg_data);
                 if ( $arg =~ /^-- (\w[^=\s]+) (?:= (.*) )?/xms ) {
                     $long = $1;
-                    $data = $2;
+                    $arg_data = $2;
                 }
                 elsif ( $arg =~ /^- (\w) =? (.*)/xms ) {
                     $short = $1;
-                    $data  = $2;
+                    $arg_data  = $2;
                 }
                 else {
                     push @{ $self->files }, $arg;
@@ -255,7 +255,7 @@ sub process {
                 my $opt = $self->best_option( $long, $short );
                 $opt->value( $self->opt->{ $opt->name } );
 
-                my ($value, $used) = $opt->process( $long, $short, $data, \@args );
+                my ($value, $used) = $opt->process( $long, $short, $arg_data, \@args );
                 my $opt_name = $opt->name;
                 if ( $self->opt->auto_complete && $opt_name eq 'auto_complete_list' ) {
                     print join ' ', $self->list_options;
@@ -263,8 +263,8 @@ sub process {
                 }
                 $self->opt->{$opt->name} = $value;
 
-                if ( !$used && $short && defined $data && length $data ) {
-                    unshift @args, '-' . $data;
+                if ( !$used && $short && defined $arg_data && length $arg_data ) {
+                    unshift @args, '-' . $arg_data;
                 }
         }
         catch {
@@ -297,7 +297,7 @@ sub process {
 
     $self->cmd( shift @{ $self->files } ) if @{ $self->files } && $self->sub_command;
     if ( !$passed_args && $self->files ) {
-        @ARGV = ( @{ $self->files }, @args );
+        @ARGV = ( @{ $self->files }, @args );  ## no critic
     }
 
     if ( ref $self->sub_command eq 'HASH' ) {
@@ -317,13 +317,13 @@ sub process {
             # build sub command object
             my $sub_obj = Getopt::Alt->new(
                 {
-                    %{ $options },
+                    %{ $options },  ## no critic
                     options => $self->options, # inherit this objects options
                     default => { %{ $self->opt }, %{ $options->{default} || {} } },
                 },
                 $opt_args
             );
-            local @ARGV;
+            local @ARGV = ();
             $sub_obj->process(@args);
             $self->opt( $sub_obj->opt );
             $self->files( $sub_obj->files );
@@ -343,7 +343,7 @@ sub process {
             $self->_show_help(1);
         }
         elsif ( $self->auto_complete && $self->opt->auto_complete ) {
-            if ( $ARGV[-1] =~ /^-/ ) {
+            if ( $ARGV[-1] =~ /^-/xms ) {
                 print join ' ', $self->list_options;
             }
             else {
@@ -382,9 +382,9 @@ sub list_options {
 }
 
 sub best_option {
-    my ($self, $long, $short, $no) = @_;
+    my ($self, $long, $short, $has_no) = @_;
 
-    if ($no && $long) {
+    if ($has_no && $long) {
         $long =~ s/^no-//xms;
     }
 
@@ -401,7 +401,7 @@ sub best_option {
         }
     }
 
-    return $self->best_option($long, $short, 1) if !$no;
+    return $self->best_option($long, $short, 1) if !$has_no;
 
     if ( $self->help_package ) {
         die [ Getopt::Alt::Exception->new(
@@ -428,11 +428,11 @@ sub _show_help {
     my ($self, $verbosity, $msg) = @_;
 
     my %input;
-    if ( $self->help_package && $self->help_package ne 1 ) {
+    if ( $self->help_package && $self->help_package ne "1" ) {
         my $help = $self->help_package;
         if ( !-f $help ) {
             $help  .= '.pm';
-            $help =~ s{::}{/}g;
+            $help =~ s{::}{/}gxms;
         }
         %input = ( -input => $INC{$help} );
     }

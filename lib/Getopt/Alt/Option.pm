@@ -11,7 +11,6 @@ use warnings;
 use version;
 use Moose::Role;
 use Carp;
-use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use Getopt::Alt::Exception;
 
@@ -102,10 +101,10 @@ sub build_option {
         my $spec = pop @params;
         push @params, (opt => $spec);
 
-        confess "$spec doesn't match the specification definition! (qr/$r_spec/)" if $spec !~ /$r_spec/;
+        confess "$spec doesn't match the specification definition! (qr/$r_spec/)" if $spec !~ /$r_spec/xms;
 
-        my ($names, $options, $null) = $spec =~ /$r_spec/;
-        my @names = split /\|/, $names;
+        my ($names, $options, $null) = $spec =~ /$r_spec/xms;
+        my @names = split /\|/xms, $names;
         push @params, 'names', \@names;
         push @params, 'name', $names[0];
 
@@ -118,7 +117,7 @@ sub build_option {
             my ($option) = substr $options, 0, 1;
 
             if ($option eq '=') {
-                ($type, $extra) = split /;/, $options;
+                ($type, $extra) = split /;/xms, $options;
             }
             elsif ($option eq '+') {
                 push @params, 'increment' => 1;
@@ -130,7 +129,7 @@ sub build_option {
 
             if ($type) {
                 my ($text, $ref);
-                $type =~ s/^=//;
+                $type =~ s/^=//xms;
 
                 if ( length $type == 1 ) {
                     ($text) = $type =~ /^ ($r_type) $/xms;
@@ -174,42 +173,42 @@ sub build_option {
 }
 
 sub process {
-    my ($self, $long, $short, $data, $args) = @_;
+    my ($self, $long, $short, $arg_data, $args) = @_;
 
     my $name = $long ? "--$long" : "-$short";
     my $value;
     my $used = 0;
     if ($self->type) {
         $used = 1;
-        if ( !defined $data || length $data == 0 ) {
+        if ( !defined $arg_data || length $arg_data == 0 ) {
             die [ Getopt::Alt::Exception->new(
                     message => "The option '$name' requires an " . $self->type . " argument\n",
                     option  => $name,
                     type    => $self->type
                 ) ]
                 if ( ! defined $args->[0]  && !$self->nullable ) || (
-                    $args->[0] && $args->[0] =~ /^-/ && !( $self->type eq 'Int' || $self->type eq 'Num' )
+                    $args->[0] && $args->[0] =~ /^-/xms && !( $self->type eq 'Int' || $self->type eq 'Num' )
                 );
 
-            $data = shift @$args;
+            $arg_data = shift @$args;
         }
         elsif ( $self->ref || grep { $self->type eq $_ } qw/Int Num Str/ ) {
-            if ( $data && !$self->nullable ) {
-                $data =~ s/^=//xms;
+            if ( $arg_data && !$self->nullable ) {
+                $arg_data =~ s/^=//xms;
             }
         }
 
         my $key;
         if ($self->ref && $self->ref eq 'HashRef') {
-            ($key, $data) = split /=/, $data, 2;
+            ($key, $arg_data) = split /=/xms, $arg_data, 2;
         }
 
         $value =
-              $self->nullable      && ( !defined $data || $data eq '' )                 ? undef
-            : $self->type eq 'Int' && $data =~ /^ -? \d+$/xms                           ? $data
-            : $self->type eq 'Num' && $data =~ /^ -? (?: \d* (?: [.]\d+ )? | \d+ )$/xms ? $data
-            : $self->type eq 'Str' && length $data > 0                                  ? $data
-            :                                                                             confess "The value '$data' is not of type '".$self->type."'\n";
+              $self->nullable      && ( !defined $arg_data || $arg_data eq '' )             ? undef
+            : $self->type eq 'Int' && $arg_data =~ /^ -? \d+$/xms                           ? $arg_data
+            : $self->type eq 'Num' && $arg_data =~ /^ -? (?: \d* (?: [.]\d+ )? | \d+ )$/xms ? $arg_data
+            : $self->type eq 'Str' && length $arg_data > 0                                  ? $arg_data
+            :                                                                                 confess "The value '$arg_data' is not of type '".$self->type."'\n";
 
         if ($self->ref) {
             my $old;
@@ -231,7 +230,7 @@ sub process {
         $value = ($self->value || 0) + 1;
     }
     elsif ($self->negatable) {
-        $value = $long && $long =~ /^no-/ ? 0 : 1;
+        $value = $long && $long =~ /^no-/xms ? 0 : 1;
     }
     else {
         $value = 1;
@@ -271,9 +270,9 @@ This documentation refers to Getopt::Alt::Option version 0.2.8.
 This is a helper function to create an C<Getopt::Alt::Option> attribute on the
 supplied C<$class> object.
 
-=head2 C<process ($long, $short, $data, $args)>
+=head2 C<process ($long, $short, $arg_data, $args)>
 
-Processes the option against the supplied $data or $args->[0] if no $data is set
+Processes the option against the supplied $arg_data or $args->[0] if no $arg_data is set
 
 =head1 DIAGNOSTICS
 
