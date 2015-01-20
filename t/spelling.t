@@ -42,5 +42,7 @@ add_stopwords(qw/
     versioned
     plugins
     GetOptions
+    Str
+    foo
 /);
 all_pod_files_spelling_ok();
