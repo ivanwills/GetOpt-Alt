@@ -25,28 +25,40 @@ sub build {
         )
     };
     my $error = $@;
-    ok !$error, "No error found"
-        or diag "Error : $error";
-    ok $opt, "Conf read with out error";
-    ok $opt->default->{foo}, "--foo read";
-    is $opt->aliases->{bar}[0], 'baz', "bar is baz";
+    SKIP: {
+        if ( $error !~ /YAML/ ) {
+            skip "Don't have the correct modules installed", 6;
+        }
 
-    $opt = eval {
-        Getopt::Alt->new(
-            {
-                helper      => 0,
-                conf_prefix => 't/.',
-                name        => 'other',
-            },
-            ['foo|f']
-        )
-    };
-    ok $opt, "Conf read with out error";
-    ok !$opt->default->{foo}, "--foo not read";
+        ok !$error, "No error found"
+            or diag "Error : $error";
+        ok $opt, "Conf read with out error";
+        ok $opt->default->{foo}, "--foo read";
+        is $opt->aliases->{bar}[0], 'baz', "bar is baz";
+
+        $opt = eval {
+            Getopt::Alt->new(
+                {
+                    helper      => 0,
+                    conf_prefix => 't/.',
+                    name        => 'other',
+                },
+                ['foo|f']
+            )
+        };
+        ok $opt, "Conf read with out error";
+        ok !$opt->default->{foo}, "--foo not read";
+    }
 }
 
 sub get_opt {
     my $opt = eval { get_options('test|t', 'foo|f', 'bar|b') };
-    ok !$@, 'no error' or diag $@;
+    my $error = $@;
+    SKIP: {
+        if ( $error !~ /YAML/ ) {
+            skip "Don't have the correct modules installed", 6;
+        }
+        ok !$error, 'no error' or diag $error;
+    }
 }
 
