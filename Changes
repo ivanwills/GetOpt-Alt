@@ -1,5 +1,13 @@
 Revision history for Getopt-Alt
 
+0.2.9   2015-01-21
+        Updating for release of version 0.2.9
+        Changed skipping to check if a YAML module is installed (Ivan Wills)
+        Added more stop words (Ivan Wills)
+        Added suggested config file formats (Ivan Wills)
+        Added skipping if YAML isn't installed and the yaml config is picked by Config::Any (Ivan Wills)
+        Working on perlcritic improvements (Ivan Wills)
+
 0.2.8   2015-01-15
         Updating for release of version 0.2.8
         Added case for when the warning is an error object as well (Ivan Wills)
