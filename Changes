@@ -1,5 +1,9 @@
 Revision history for Getopt-Alt
 
+0.3.0   2015-01-27
+        Updating for release of version 0.3.0
+        Upped minimum version as Perl 5.8.8 seems to have issues (Ivan Wills)
+
 0.2.9   2015-01-21
         Updating for release of version 0.2.9
         Changed skipping to check if a YAML module is installed (Ivan Wills)
