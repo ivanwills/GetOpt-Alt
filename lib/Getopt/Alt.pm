@@ -492,6 +492,7 @@ This documentation refers to Getopt::Alt version 0.3.0.
        'increment|c+',
        'nullable|n=s?',
        'negatable|b!',
+       'fixed_values|fixed-values|f=[a|bunch|of|fixed|values]',
    );
    print Dumper $options->opt;           # passed parameters
    print join ',', @{ $options->files }; # non option parameters
@@ -506,6 +507,7 @@ This documentation refers to Getopt::Alt version 0.3.0.
        'increment|c+',
        'nullable|n=s?',
        'negatable|b!',
+       'fixed_values|fixed-values|f=[a|bunch|of|fixed|values]',
    );
 
    # with configuration
@@ -522,6 +524,7 @@ This documentation refers to Getopt::Alt version 0.3.0.
            'increment|c+',
            'nullable|n=s?',
            'negatable|b!',
+           'fixed_values|fixed-values|f=[a|bunch|of|fixed|values]',
        ],
    );
    print $cmd;   # sub command
@@ -543,6 +546,7 @@ This documentation refers to Getopt::Alt version 0.3.0.
            'increment|c+',
            'nullable|n=s?',
            'negatable|b!',
+           'fixed_values|fixed-values|f=[a|bunch|of|fixed|values]',
        ],
    );
    print Dumper $option->opt;  # command with sub command options merged in
