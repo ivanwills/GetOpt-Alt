@@ -106,6 +106,6 @@ sub argv {
         [ [ qw/ --null=-7   / ] => { null    => -7                   } ],
         [ [ qw/ --value=yes / ] => { value   => 'yes'                } ],
         [ [ qw/ --value=auto/ ] => { value   => 'auto'               } ],
-        [ [ qw/ --value=no  / ] => { value   => 'no'                 } ],
+        [ [ qw/ -v=no       / ] => { value   => 'no'                 } ],
     );
 }
