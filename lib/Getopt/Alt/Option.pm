@@ -77,7 +77,9 @@ my $r_alt_name = qr/ $r_name | \\d /xms;
 my $r_names    = qr/ $r_name (?: [|] $r_alt_name)* /xms;
 my $r_type     = qr/ [nifsd] /xms;
 my $r_ref      = qr/ [%@] /xms;
-my $r_type_ref = qr/ = $r_type $r_ref? /xms;
+my $r_sub_val  = qr/ [\w-]+ /xms;
+my $r_values   = qr/ \[ $r_sub_val (?: [|] $r_sub_val )* \] /xms;
+my $r_type_ref = qr/ = (?: $r_type $r_ref? | $r_values ) /xms;
 my $r_inc      = qr/ [+] /xms;
 my $r_neg      = qr/ [!] /xms;
 my $r_null     = qr/ [?] /xms;
@@ -134,9 +136,14 @@ sub build_option {
                 if ( length $type == 1 ) {
                     ($text) = $type =~ /^ ($r_type) $/xms;
                 }
-                else {
+                elsif ( length $type == 2 ) {
                     ($text, $ref) = $type =~ /^ ($r_type) ($r_ref) $/xms;
                     push @params, ref => $ref eq '%' ? 'HashRef' : 'ArrayRef';
+                }
+                else {
+                    $type =~ s/(?: ^\[ | \]$ )//gxms;
+                    my @values = split /[|]/, $type;
+                    $text = 's';
                 }
 
                 push @params,

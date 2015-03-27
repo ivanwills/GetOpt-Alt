@@ -392,5 +392,6 @@ sub get_bulk {
         , 'words|w=s'
         , 'wrap|w'
         , 'write|w'
+        , 'string|s=[one|two|three]'
     );
 }
