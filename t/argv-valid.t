@@ -22,6 +22,7 @@ my $opt = Getopt::Alt->new(
         'array|a=i@',
         'hash|h=s%',
         'null|N=i?',
+        'value|v=[yes|auto|no]',
     ],
 );
 
@@ -103,5 +104,8 @@ sub argv {
         [ [ qw/ --null=2    / ] => { null    => 2                    } ],
         [ [ qw/ --null -6   / ] => { null    => -6                   } ],
         [ [ qw/ --null=-7   / ] => { null    => -7                   } ],
+        [ [ qw/ --value=yes / ] => { value   => 'yes'                } ],
+        [ [ qw/ --value=auto/ ] => { value   => 'auto'               } ],
+        [ [ qw/ --value=no  / ] => { value   => 'no'                 } ],
     );
 }

@@ -71,6 +71,11 @@ has value => (
     isa       => 'Any',
     predicate => 'has_value',
 );
+has values => (
+    is        => 'rw',
+    isa       => 'ArrayRef',
+    predicate => 'has_values',
+);
 
 my $r_name     = qr/ [^|\s=+!?@%-][^|\s=+!?@%]* /xms;
 my $r_alt_name = qr/ $r_name | \\d /xms;
@@ -144,6 +149,7 @@ sub build_option {
                     $type =~ s/(?: ^\[ | \]$ )//gxms;
                     my @values = split /[|]/, $type;
                     $text = 's';
+                    push @params, values => \@values;
                 }
 
                 push @params,
@@ -217,18 +223,23 @@ sub process {
             : $self->type eq 'Str' && length $arg_data > 0                                  ? $arg_data
             :                                                                                 confess "The value '$arg_data' is not of type '".$self->type."'\n";
 
+        if ($self->values && !grep { $value eq $_ } @{ $self->values }) {
+            die [ Getopt::Alt::Exception->new(
+                    message => "The option '$name' must be one of " . ( join ', ', @{ $self->values } ) . "\n",
+                    option  => $name,
+                    type    => $self->type
+                ) ]
+        }
+
         if ($self->ref) {
             my $old;
             if ($self->ref eq 'ArrayRef') {
                 $old = $self->value || [];
                 push @$old, $value;
             }
-            elsif ($self->ref eq 'HashRef') {
+            else {
                 $old = $self->value || {};
                 $old->{$key} = $value;
-            }
-            else {
-                confess "Unknown reference type '" . $self->ref . "' (from " . $self->opt . ")\n";
             }
             $value = $old;
         }

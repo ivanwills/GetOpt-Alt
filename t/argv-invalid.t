@@ -19,6 +19,7 @@ my $opt = Getopt::Alt->new(
         'string|s=s',
         'integer|I=i',
         'float|f=f',
+        'value|v=[yes|auto|no]',
     ],
 );
 
@@ -36,6 +37,7 @@ sub argv {
         [ qw/-I   negate/ ],
         [ qw/-I 12negate/ ],
         [ qw/-f 2.3a    / ],
+        [ qw/-v any     / ],
     );
 }
 
