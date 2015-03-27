@@ -13,6 +13,8 @@ if ( !eval { require YAML } || !eval { require YAML::XS } || !eval { require YAM
 
 build();
 get_opt();
+list_options();
+overload();
 done_testing();
 
 sub build {
@@ -53,4 +55,28 @@ sub get_opt {
     my $opt = eval { get_options('test|t', 'foo|f', 'bar|b') };
     my $error = $@;
     ok !$error, 'no error' or diag $error;
+}
+
+sub list_options {
+    my $opt = Getopt::Alt->new(
+        { helper => 0 },
+        ['foo|f']
+    );
+
+    is_deeply [$opt->list_options], [qw/-f --foo/], 'Get of options';
+    $opt = Getopt::Alt->new(
+        { helper => 1 },
+        ['foo|f']
+    );
+
+    is_deeply [$opt->list_options], [qw/-f --foo --help --man --version/], 'Get of options';
+}
+
+sub overload {
+    my $opt = Getopt::Alt->new(
+        { helper => 0 },
+        ['foo|f']
+    );
+
+    is_deeply \@{ $opt }, [], 'Files by default for @';
 }

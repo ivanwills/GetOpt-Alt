@@ -20,7 +20,7 @@ use Config::Any;
 use File::HomeDir;
 
 use overload (
-    '@{}'  => \&get_files,
+    '@{}'  => sub { $_[0]->files },
     'bool' => sub { 1 },
 );
 
@@ -418,12 +418,6 @@ sub best_option {
     }
 }
 
-sub get_files {
-    my ($self) = @_;
-
-    return $self->files;
-}
-
 sub _show_help {
     my ($self, $verbosity, $msg) = @_;
 
@@ -743,9 +737,6 @@ internal method
 Returns a list of all command line options in the current object.
 
 =head3 C<best_option ()>
-
-=head3 C<get_files ()>
-
 
 =head1 DIAGNOSTICS
 
