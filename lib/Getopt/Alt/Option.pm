@@ -42,6 +42,10 @@ has increment => (
     is  => 'rw',
     isa => 'Bool',
 );
+has number => (
+    is  => 'rw',
+    isa => 'Bool',
+);
 has negatable => (
     is  => 'rw',
     isa => 'Bool',
@@ -86,9 +90,10 @@ my $r_sub_val  = qr/ [\w-]+ /xms;
 my $r_values   = qr/ \[ $r_sub_val (?: [|] $r_sub_val )* \] /xms;
 my $r_type_ref = qr/ = (?: $r_type $r_ref? | $r_values ) /xms;
 my $r_inc      = qr/ [+] /xms;
+my $r_number   = qr/ [+][+] /xms;
 my $r_neg      = qr/ [!] /xms;
 my $r_null     = qr/ [?] /xms;
-my $r_spec     = qr/^ ( $r_names ) ( $r_inc | $r_neg | $r_type_ref )? ( $r_null )? $/xms;
+my $r_spec     = qr/^ ( $r_names ) ( $r_inc | $r_number | $r_neg | $r_type_ref )? ( $r_null )? $/xms;
 
 # calling new => ->new( 'test|t' )
 #                ->new( name => 'text', names => [qw/test tes te t/], ... )
@@ -125,6 +130,10 @@ sub build_option {
 
             if ($option eq '=') {
                 ($type, $extra) = split /;/xms, $options;
+            }
+            elsif ($options eq '++') {
+                push @params, 'increment' => 1;
+                push @params, 'number' => 1;
             }
             elsif ($option eq '+') {
                 push @params, 'increment' => 1;
@@ -246,6 +255,9 @@ sub process {
     }
     elsif ($self->increment) {
         $value = ($self->value || 0) + 1;
+    }
+    elsif ($self->number) {
+        $value = $long || $short
     }
     elsif ($self->negatable) {
         $value = $long && $long =~ /^no-/xms ? 0 : 1;
