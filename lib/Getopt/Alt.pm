@@ -407,14 +407,14 @@ sub best_option {
         die [ Getopt::Alt::Exception->new(
                 message => "Unknown option '" . ($long ? "--$long" : "-$short") . "'\n",
                 option  => ($long ? "--$long" : "-$short"),
-            ) ]
+            ) ];
     }
     else {
         die [ Getopt::Alt::Exception->new(
                 help    => 1,
                 message => "Unknown option '" . ($long ? "--$long" : "-$short") . "'\n",
                 option  => ($long ? "--$long" : "-$short"),
-            ) ]
+            ) ];
     }
 }
 
