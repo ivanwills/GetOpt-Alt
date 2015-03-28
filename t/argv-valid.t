@@ -23,6 +23,7 @@ my $opt = Getopt::Alt->new(
         'hash|h=s%',
         'null|N=i?',
         'value|v=[yes|auto|no]',
+        'count|c++',
     ],
 );
 
@@ -107,5 +108,8 @@ sub argv {
         [ [ qw/ --value=yes / ] => { value   => 'yes'                } ],
         [ [ qw/ --value=auto/ ] => { value   => 'auto'               } ],
         [ [ qw/ -v=no       / ] => { value   => 'no'                 } ],
+        [ [ qw/ --count     / ] => { count   => 1                    } ],
+        [ [ qw/ -10         / ] => { count   => 10                   } ],
+        [ [ qw/--10         / ] => { count   => 10                   } ],
     );
 }

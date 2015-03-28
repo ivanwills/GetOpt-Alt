@@ -20,6 +20,7 @@ my $opt = Getopt::Alt->new(
         'integer|I=i',
         'float|f=f',
         'value|v=[yes|auto|no]',
+        'count|c++',
     ],
 );
 
