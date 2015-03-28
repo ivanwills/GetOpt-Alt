@@ -252,7 +252,11 @@ sub process {
                     die $self->sub_command ? "last\n" : "next\n";
                 }
 
-                my $opt = $self->best_option( $long, $short );
+                my ($opt, $new_value) = $self->best_option( $long, $short );
+                if (defined $new_value) {
+                    $long = $opt->name;
+                    $arg_data = $new_value;
+                }
                 $opt->value( $self->opt->{ $opt->name } );
 
                 my ($value, $used) = $opt->process( $long, $short, $arg_data, \@args );
@@ -393,11 +397,19 @@ sub best_option {
     for my $name ( $meta->get_attribute_list ) {
         my $opt = $meta->get_attribute($name);
 
-        return $opt if $long && $opt->name eq $long;
+        return ($opt, undef) if $long && $opt->name eq $long;
 
         for my $name (@{ $opt->names }) {
-            return $opt if $long && $name eq $long;
-            return $opt if $short && $name eq $short;
+            return ($opt, undef) if $long && $name eq $long;
+            return ($opt, undef) if $short && $name eq $short;
+        }
+    }
+
+    if (($long && $long =~ /^\d+$/xms) || ($short && $short =~ /^\d$/xms)) {
+        $meta = $self->opt->meta;
+        for my $name ( $meta->get_attribute_list ) {
+            my $opt = $meta->get_attribute($name);
+            return ($opt, $long || $short) if $opt->number;
         }
     }
 

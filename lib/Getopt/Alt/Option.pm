@@ -133,7 +133,8 @@ sub build_option {
             }
             elsif ($options eq '++') {
                 push @params, 'increment' => 1;
-                push @params, 'number' => 1;
+                push @params, 'number'    => 1;
+                push @params, 'type'      => 'Int';
             }
             elsif ($option eq '+') {
                 push @params, 'increment' => 1;

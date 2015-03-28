@@ -108,8 +108,7 @@ sub argv {
         [ [ qw/ --value=yes / ] => { value   => 'yes'                } ],
         [ [ qw/ --value=auto/ ] => { value   => 'auto'               } ],
         [ [ qw/ -v=no       / ] => { value   => 'no'                 } ],
-        [ [ qw/ --count     / ] => { count   => 1                    } ],
-        [ [ qw/ -10         / ] => { count   => 10                   } ],
+        [ [ qw/ --count 1   / ] => { count   => 1                    } ],
         [ [ qw/--10         / ] => { count   => 10                   } ],
     );
 }
