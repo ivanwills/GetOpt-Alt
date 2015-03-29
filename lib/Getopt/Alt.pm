@@ -238,38 +238,39 @@ sub process {
     while (my $arg = shift @args) {
         my $action = '';
         try {
-                my ($long, $short, $arg_data);
-                if ( $arg =~ /^-- (\w[^=\s]+) (?:= (.*) )?/xms ) {
-                    $long = $1;
-                    $arg_data = $2;
-                }
-                elsif ( $arg =~ /^- (\w) =? (.*)/xms ) {
-                    $short = $1;
-                    $arg_data  = $2;
-                }
-                else {
-                    push @{ $self->files }, $arg;
-                    die $self->sub_command ? "last\n" : "next\n";
-                }
+            my ($long, $short, $arg_data);
+            if ( $arg =~ /^-- (\w[^=\s]+) (?:= (.*) )?/xms ) {
+                $long = $1;
+                $arg_data = $2;
+            }
+            elsif ( $arg =~ /^- (\w) =? (.*)/xms ) {
+                $short = $1;
+                $arg_data  = $2;
+            }
+            else {
+                push @{ $self->files }, $arg;
+                die $self->sub_command ? "last\n" : "next\n";
+            }
 
-                my ($opt, $new_value) = $self->best_option( $long, $short );
-                if (defined $new_value) {
-                    $long = $opt->name;
-                    $arg_data = $new_value;
-                }
-                $opt->value( $self->opt->{ $opt->name } );
+            my ($opt, $new_value) = $self->best_option( $long, $short );
+            if (defined $new_value) {
+                $long = $opt->name;
+                $short = undef;
+                ($arg_data) = $arg =~ /^--?(\d+)$/;
+            }
+            $opt->value( $self->opt->{ $opt->name } );
 
-                my ($value, $used) = $opt->process( $long, $short, $arg_data, \@args );
-                my $opt_name = $opt->name;
-                if ( $self->opt->auto_complete && $opt_name eq 'auto_complete_list' ) {
-                    print join ' ', $self->list_options;
-                    exit 0;
-                }
-                $self->opt->{$opt->name} = $value;
+            my ($value, $used) = $opt->process( $long, $short, $arg_data, \@args );
+            my $opt_name = $opt->name;
+            if ( $self->opt->auto_complete && $opt_name eq 'auto_complete_list' ) {
+                print join ' ', $self->list_options;
+                exit 0;
+            }
+            $self->opt->{$opt->name} = $value;
 
-                if ( !$used && $short && defined $arg_data && length $arg_data ) {
-                    unshift @args, '-' . $arg_data;
-                }
+            if ( !$used && $short && defined $arg_data && length $arg_data ) {
+                unshift @args, '-' . $arg_data;
+            }
         }
         catch {
             if ( $_ eq "next\n" ) {
@@ -400,12 +401,12 @@ sub best_option {
         return ($opt, undef) if $long && $opt->name eq $long;
 
         for my $name (@{ $opt->names }) {
-            return ($opt, undef) if $long && $name eq $long;
-            return ($opt, undef) if $short && $name eq $short;
+            return ($opt, undef) if defined $long && $name eq $long;
+            return ($opt, undef) if defined $short && $name eq $short;
         }
     }
 
-    if (($long && $long =~ /^\d+$/xms) || ($short && $short =~ /^\d$/xms)) {
+    if (($long && $long =~ /^\d+$/xms) || (defined $short && $short =~ /^\d$/xms)) {
         $meta = $self->opt->meta;
         for my $name ( $meta->get_attribute_list ) {
             my $opt = $meta->get_attribute($name);
