@@ -203,21 +203,27 @@ sub process {
     if ($self->type) {
         $used = 1;
         if ( !defined $arg_data || length $arg_data == 0 ) {
-            die [ Getopt::Alt::Exception->new(
-                    message => "The option '$name' requires an " . $self->type . " argument\n",
-                    option  => $name,
-                    type    => $self->type
-                ) ]
-                if ( ! defined $args->[0]  && !$self->nullable ) || (
-                    $args->[0] && $args->[0] =~ /^-/xms && !( $self->type eq 'Int' || $self->type eq 'Num' )
-                );
+            if (
+                ( ! defined $args->[0]  && !$self->nullable )
+                || (
+                    $args->[0]
+                    && $args->[0] =~ /^-/xms
+                    && !( $self->type eq 'Int' || $self->type eq 'Num' )
+                )
+            ) {
+                die [
+                    Getopt::Alt::Exception->new(
+                        message => "The option '$name' requires an " . $self->type . " argument\n",
+                        option  => $name,
+                        type    => $self->type
+                    )
+                ];
+            }
 
             $arg_data = shift @$args;
         }
-        elsif ( $self->ref || grep { $self->type eq $_ } qw/Int Num Str/ ) {
-            if ( $arg_data && !$self->nullable ) {
-                $arg_data =~ s/^=//xms;
-            }
+        elsif ( $arg_data && !$self->nullable ) {
+            $arg_data =~ s/^=//xms;
         }
 
         my $key;
