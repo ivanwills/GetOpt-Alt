@@ -142,22 +142,28 @@ around BUILDARGS => sub {
     }
 
     if ( @params ) {
-        # construct a class of options passing
-        my $class_name = 'Getopt::Alt::Dynamic::A' . $count++;
-        my $option_class = Moose::Meta::Class->create(
-            $class_name,
-            superclasses => [ $param{options} || 'Getopt::Alt::Dynamic' ],
-        );
-
-        while ( my $option = shift @params ) {
-            build_option($option_class, $option);
-        }
-
-        $param{options} = $class_name;
+        $param{options} = _build_option_class($param{options} || 'Getopt::Alt::Dynamic', @params);
     }
 
     return $class->$orig(%param);
 };
+
+sub _build_option_class {
+    my ($base_class, @params) = @_;
+
+    # construct a class of options passing
+    my $class_name = 'Getopt::Alt::Dynamic::A' . $count++;
+    my $option_class = Moose::Meta::Class->create(
+        $class_name,
+        superclasses => [ $base_class ],
+    );
+
+    while ( my $option = shift @params ) {
+        build_option($option_class, $option);
+    }
+
+    return $class_name;
+}
 
 sub BUILD {
     my ($self) = @_;
