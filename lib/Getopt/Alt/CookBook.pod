@@ -67,18 +67,25 @@ L<Getopt::Alt> has three sub command modes:
 
 =over 4
 
-=item simple
+=item *
 
-Just stops processing at first non-option parameter (assumed to be the sub command)
+simple
 
-=item hash
+=item *
 
-A hash is passed with the keys representing the sub commands and the values are
-the sub-commands parameters.
+HASH
+
+=item *
+
+Module
 
 =back
 
 =head3 Simple
+
+Just stops processing at first non-option parameter (assumed to be the sub command).
+Any further processing of sub-commands must be made manually (eg having what ever
+processes the sub-command doing further processing).
 
     use Getopt::Alt qw/get_options/;
 
@@ -88,11 +95,33 @@ the sub-commands parameters.
     );
 
     # on the command line
-    $ command --dir=/some/where sub
+    $ command --dir=/some/where sub --not-processed
 
-    # will result in $option->{dir} eq /some/where and $cmd eq 'sub'
+    # will result in $option->{dir} eq /some/where and $cmd eq 'sub' and
+    # @ARGV having ['--not-processed']
 
 =head3 HASH
+
+A hash is passed with the keys representing the sub commands and the values are
+the sub-commands parameters.
+
+    use Getopt::Alt qw/get_options/;
+
+    my ($options, $cmd) = get_options(
+        {
+            helper => 1,
+            sub_command => {
+                sub => [
+                    'to be implemented'
+                ],
+            },
+        }
+        [ 'dir|d=s' ],
+    );
+
+=head3 Module
+
+The final form for sub-commands is that they should be picked up by other modules
 
 =head2 Auto Completion
 
