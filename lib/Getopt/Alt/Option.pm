@@ -19,7 +19,6 @@ Moose::Exporter->setup_import_methods(
     #with_meta => ['operation'],
 );
 
-
 our $VERSION = version->new('0.3.1');
 
 Moose::Util::meta_attribute_alias('Getopt::Alt::Option');
