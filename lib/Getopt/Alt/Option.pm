@@ -256,9 +256,6 @@ sub process {
     elsif ($self->increment) {
         $value = ($self->value || 0) + 1;
     }
-    elsif ($self->number) {
-        $value = $long || $short
-    }
     elsif ($self->negatable) {
         $value = $long && $long =~ /^no-/xms ? 0 : 1;
     }

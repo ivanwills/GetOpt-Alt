@@ -110,7 +110,7 @@ sub argv {
         [ [ qw/ -v=no       / ] => { value   => 'no'                 } ],
         [ [ qw/ --count 1   / ] => { count   => 1                    } ],
         [ [ qw/--10         / ] => { count   => 10                   } ],
-        [ [ qw/ -10         / ] => { count   => 10                   } ],
+        [ [ qw/ -11         / ] => { count   => 11                   } ],
         [ [ qw/ -0          / ] => { count   => 0                    } ],
     );
 }
