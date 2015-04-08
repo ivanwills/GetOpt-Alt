@@ -231,12 +231,13 @@ sub process {
             ($key, $arg_data) = split /=/xms, $arg_data, 2;
         }
 
+        $DB::single = 1;
         $value =
-              $self->nullable      && ( !defined $arg_data || $arg_data eq '' )             ? undef
+              $self->nullable      &&   !        $arg_data                                  ? undef
             : $self->type eq 'Int' && $arg_data =~ /^ -? \d+$/xms                           ? $arg_data
             : $self->type eq 'Num' && $arg_data =~ /^ -? (?: \d* (?: [.]\d+ )? | \d+ )$/xms ? $arg_data
-            : $self->type eq 'Str' && length $arg_data > 0                                  ? $arg_data
-            :                                                                                 confess "The value '$arg_data' is not of type '".$self->type."'\n";
+            : $self->type eq 'Str'                                                          ? $arg_data
+            :                                                                                 confess "Unknown type '".$self->type."'\n";
 
         if ($self->values && !grep { $value eq $_ } @{ $self->values }) {
             die [ Getopt::Alt::Exception->new(
