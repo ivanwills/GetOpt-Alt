@@ -193,7 +193,7 @@ sub BUILD {
     return;
 }
 
-sub get_options {  ## no critic
+sub get_options {
     my @args = @_;
     my $caller = caller;
 
