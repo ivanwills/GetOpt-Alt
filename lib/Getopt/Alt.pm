@@ -176,9 +176,9 @@ sub BUILD {
     });
 
     $conf = {
-        map { $_ ? %$_ : () }
+        map { %$_ }
         map { values %$_    }
-        @{ $conf || [] }
+        @{ $conf }
     };
 
     # perlcritic is confused here combining hashes is not the same as comma separated arguments
