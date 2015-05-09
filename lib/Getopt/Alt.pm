@@ -143,6 +143,14 @@ around BUILDARGS => sub {
 
     if ( @params ) {
         $param{options} = _build_option_class($param{options} || 'Getopt::Alt::Dynamic', @params);
+
+        if ($param{sub_command} && ref $param{sub_command} eq 'HASH') {
+
+            # build up all the sub command options
+            for my $sub (keys %{ $param{sub_command} }) {
+                $param{sub_command}{$sub} = _build_option_class($param{options}, $param{sub_command}{$sub});
+            }
+        }
     }
 
     return $class->$orig(%param);
