@@ -12,6 +12,7 @@ use version;
 use Carp;
 use English qw/ -no_match_vars /;
 use List::MoreUtils qw/uniq/;
+use Scalar::Util qw/blessed/;
 use Getopt::Alt::Option qw/build_option/;
 use Getopt::Alt::Exception;
 use Try::Tiny;
@@ -319,8 +320,8 @@ sub process {
         @ARGV = ( @{ $self->files }, @args );  ## no critic
     }
 
-    if ( ref $self->sub_command eq 'HASH' ) {
-        my $sub = [ @{$self->sub_command->{$self->cmd}} ];
+    if ( !blessed $self->sub_command && ref $self->sub_command eq 'HASH' ) {
+        my $sub = $self->sub_command->{$self->cmd};
         if (!$sub) {
             warn "Unknown command '$self->cmd'!\n";
             die Getopt::Alt::Exception->new( message => "Unknown command '$self->cmd'" )
@@ -328,7 +329,14 @@ sub process {
             $self->_show_help(1);
         }
 
-        if ( ref $sub eq 'ARRAY' ) {
+        if ( !ref $sub ) {
+            my $sub_obj = $sub->new();
+            local @ARGV = ();
+            $sub_obj->process(@args);
+            $self->opt( $sub_obj->opt );
+            $self->files( $sub_obj->files );
+        }
+        elsif ( ref $sub eq 'ARRAY' ) {
             # check the style
             my $options  = @$sub == 2 && ref $sub->[0] eq 'HASH' && ref $sub->[1] eq 'ARRAY' ? shift @$sub : {};
             my $opt_args = %$options ? $sub->[0] : $sub;
