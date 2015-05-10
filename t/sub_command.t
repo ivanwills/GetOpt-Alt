@@ -1,7 +1,5 @@
 #!/usr/bin/perl -w
 
-BEGIN { $ENV{TESTING} = 1 }
-
 use strict;
 use warnings;
 use List::Util qw/sum/;
@@ -17,6 +15,7 @@ sub_code();
 done_testing();
 
 sub sub_simple {
+    diag "Simple";
     @ARGV = qw/ -o thing cmd --not-processed/;
     my $opt = eval {
         get_options(
@@ -36,6 +35,7 @@ sub sub_simple {
 }
 
 sub sub_array {
+    diag "Array";
     @ARGV = qw/ -o thing cmd --processed/;
     my $opt = eval {
         Getopt::Alt->new(
@@ -59,6 +59,7 @@ sub sub_array {
 }
 
 sub sub_array_complex {
+    diag "Hash";
     my $opt = eval {
         Getopt::Alt->new(
             {
