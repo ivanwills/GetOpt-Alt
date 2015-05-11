@@ -12,7 +12,6 @@ use version;
 use Carp;
 use English qw/ -no_match_vars /;
 use List::MoreUtils qw/uniq/;
-use Scalar::Util qw/blessed/;
 use Getopt::Alt::Option qw/build_option/;
 use Getopt::Alt::Exception;
 use Try::Tiny;
@@ -145,7 +144,7 @@ around BUILDARGS => sub {
     if ( @params ) {
         $param{options} = _build_option_class($param{options} || 'Getopt::Alt::Dynamic', @params);
 
-        if ($param{sub_command} && ref $param{sub_command} eq 'HASH') {
+        if (0 && $param{sub_command} && ref $param{sub_command} eq 'HASH') {
 
             # build up all the sub command options
             for my $sub (keys %{ $param{sub_command} }) {
@@ -320,23 +319,17 @@ sub process {
         @ARGV = ( @{ $self->files }, @args );  ## no critic
     }
 
-    if ( !blessed $self->sub_command && ref $self->sub_command eq 'HASH' ) {
-        my $sub = $self->sub_command->{$self->cmd};
-        if (!$sub) {
+    if ( ref $self->sub_command eq 'HASH' ) {
+        if (!$self->sub_command->{$self->cmd}) {
             warn "Unknown command '$self->cmd'!\n";
             die Getopt::Alt::Exception->new( message => "Unknown command '$self->cmd'" )
                 if !$self->help_package;
             $self->_show_help(1);
         }
 
-        if ( !ref $sub ) {
-            my $sub_obj = $sub->new();
-            local @ARGV = ();
-            $sub_obj->process(@args);
-            $self->opt( $sub_obj->opt );
-            $self->files( $sub_obj->files );
-        }
-        elsif ( ref $sub eq 'ARRAY' ) {
+        if ( ref $self->sub_command->{$self->cmd} eq 'ARRAY' ) {
+            # make a copy of the sub command
+            my $sub = [ @{$self->sub_command->{$self->cmd}} ];
             # check the style
             my $options  = @$sub == 2 && ref $sub->[0] eq 'HASH' && ref $sub->[1] eq 'ARRAY' ? shift @$sub : {};
             my $opt_args = %$options ? $sub->[0] : $sub;
