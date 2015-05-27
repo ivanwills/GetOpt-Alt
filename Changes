@@ -1,5 +1,21 @@
 Revision history for Getopt-Alt
 
+0.3.2   2015-05-27
+        Updating for release of version 0.3.2
+        Reverting some of the code back (Ivan Wills)
+        Added some diagnostics (Ivan Wills)
+        Trying to get test working again (Ivan Wills)
+        Trying to construct sub command options (Ivan Wills)
+        Removed unneded tag (Ivan Wills)
+        Removed no critic statement that appears to no longer be required (Ivan Wills)
+        Again cleaned up unused logic (Ivan Wills)
+        Cleaned up logic statements (Ivan Wills)
+        Cleaned up some of the logic in the code (Ivan Wills)
+        Removed code that was unreachable (Ivan Wills)
+        Removed unnessesary line (Ivan Wills)
+        Factered out option class building (Ivan Wills)
+        Trying to plan out sub-command stratergy (Ivan Wills)
+
 0.3.1   2015-03-29
         Updating for release of version 0.3.1
         Added full number arg definition (Ivan Wills)

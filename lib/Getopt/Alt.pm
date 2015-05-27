@@ -28,7 +28,7 @@ Moose::Exporter->setup_import_methods(
     as_is => [qw/get_options/],
 );
 
-our $VERSION = version->new('0.3.1');
+our $VERSION = version->new('0.3.2');
 our $EXIT    = 1;
 
 has options => (
@@ -483,7 +483,7 @@ Getopt::Alt - Command line option passing with with lots of features
 
 =head1 VERSION
 
-This documentation refers to Getopt::Alt version 0.3.1.
+This documentation refers to Getopt::Alt version 0.3.2.
 
 =head1 SYNOPSIS
 
