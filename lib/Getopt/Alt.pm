@@ -363,7 +363,7 @@ sub process {
             $self->_show_help(1);
         }
         elsif ( $self->auto_complete && $self->opt->auto_complete ) {
-            if ( $ARGV[-1] =~ /^-/xms ) {
+            if ( $ARGV[-1] && $ARGV[-1] =~ /^-/xms ) {
                 print join ' ', $self->list_options;
             }
             else {
