@@ -1,5 +1,9 @@
 Revision history for Getopt-Alt
 
+0.3.3   2015-06-25
+        Updating for release of version 0.3.3
+        Fixed warning when no argument passed (Ivan Wills)
+
 0.3.2   2015-05-27
         Updating for release of version 0.3.2
         Reverting some of the code back (Ivan Wills)
