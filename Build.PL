@@ -41,7 +41,6 @@ my $builder = Module::Build->new(
         'YAML'               => 0,
     },
     add_to_cleanup     => [ 'Getopt-Alt-*' ],
-    create_makefile_pl => 'traditional',
     create_license     => 1,
     meta_merge         => {
         resources => {

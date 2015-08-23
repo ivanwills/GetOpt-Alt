@@ -13,7 +13,6 @@ lib/Getopt/Alt/Exception.pm
 lib/Getopt/Alt/Manual.pod
 lib/Getopt/Alt/Option.pm
 LICENSE
-Makefile.PL
 MANIFEST
 META.json
 META.yml
