@@ -8,14 +8,12 @@ package Getopt::Alt::Exception;
 
 use Moose;
 use version;
-use overload '""' => sub { shift->message };
+use overload '""' => sub { shift->as_string };
+
+extends 'Throwable::Error';
 
 our $VERSION = version->new('0.3.4');
 
-has message => (
-    is      => 'rw',
-    isa     => 'Str',
-);
 has help => (
     is  => 'rw',
     isa => 'Bool',
