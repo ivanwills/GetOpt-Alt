@@ -1,5 +1,11 @@
 Revision history for Getopt-Alt
 
+0.3.5   2016-01-30
+        Updating for release of version 0.3.5
+        Updated license (Ivan Wills)
+        Added new dependency (Ivan Wills)
+        Converted to using Throwable::Error (Ivan Wills)
+
 0.3.4   2015-08-23
         Updating for release of version 0.3.4
         Removed creation of makefile (Ivan Wills)
