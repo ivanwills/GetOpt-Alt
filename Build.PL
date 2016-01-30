@@ -17,6 +17,7 @@ my $builder = Module::Build->new(
         'Moose::Role'         => 0,
         'Path::Tiny'          => 0,
         'Scalar::Util'        => 0,
+        'Throwable::Error'    => 0,
         'Tie::Handle::Scalar' => 0,
         'Try::Tiny'           => 0,
         'parent'              => 0,
