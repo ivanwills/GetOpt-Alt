@@ -8,7 +8,7 @@ package Getopt::Alt::Exception;
 
 use Moose;
 use version;
-use overload '""' => sub { shift->as_string };
+use overload '""' => sub { shift->message };
 
 extends 'Throwable::Error';
 
