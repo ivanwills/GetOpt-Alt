@@ -97,3 +97,5 @@ tmp*
 temp*
 random.test
 todo
+.editorconfig
+.vtide.yml
