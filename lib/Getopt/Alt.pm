@@ -319,9 +319,14 @@ sub process {
         @ARGV = ( @{ $self->files }, @args );  ## no critic
     }
 
-    if ( ref $self->sub_command eq 'HASH' ) {
+    if ( ref $self->sub_command eq 'HASH'
+        && (
+            ! $self->auto_complete
+            || ( $self->cmd && $self->sub_command->{ $self->cmd } )
+        )
+    ) {
         if (!$self->sub_command->{$self->cmd}) {
-            warn "Unknown command '$self->cmd'!\n";
+            warn 'Unknown command "' . $self->cmd . "\"!\n";
             die Getopt::Alt::Exception->new( message => "Unknown command '$self->cmd'" )
                 if !$self->help_package;
             $self->_show_help(1);
@@ -363,20 +368,31 @@ sub process {
             $self->_show_help(1);
         }
         elsif ( $self->auto_complete && $self->opt->auto_complete ) {
-            if ( $ARGV[-1] && $ARGV[-1] =~ /^-/xms ) {
-                print join ' ', $self->list_options;
-            }
-            else {
-                # run the auto complete method
-                $self->auto_complete->($self, $self->opt->auto_complete, \@errors);
-            }
-
-            # exit here as auto complete should stop processing
-            exit 0;
+            $self->complete(\@errors);
         }
     }
 
     return $self;
+}
+
+sub complete {
+    my ($self, $errors) = @_;
+
+    if ( $self->sub_command && !$self->cmd && !$self->sub_command->{ $self->cmd } ) {
+        my $cmd = $ARGV[1];
+        my @sub_command = grep { $cmd ? /$cmd/ : 1 } sort keys %{ $self->sub_command };
+        print join ' ', @sub_command;
+    }
+    elsif ( $ARGV[-1] && $ARGV[-1] =~ /^-/xms ) {
+        print join ' ', $self->list_options;
+    }
+    else {
+        # run the auto complete method
+        $self->auto_complete->($self, $self->opt->auto_complete, $errors);
+    }
+
+    # exit here as auto complete should stop processing
+    return exit 0;
 }
 
 sub list_options {
