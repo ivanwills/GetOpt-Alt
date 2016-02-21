@@ -135,8 +135,8 @@ The final form for sub-commands is that they should be picked up by other module
 
 The C<auto_complete> parameter takes a code reference with is called when the
 script is with the C<--auto-complete> parameter (supplied by helper => 1).
-<Getopt::Alt> will try to complete any unfinished options but not their
-values that is left to for C$self-><sub_command> to process.
+L<Getopt::Alt> will try to complete any unfinished options but not their
+values that is left to for C<$self-E<gt>E<lt>sub_commandE<gt>> to process.
 
 Eg C<~/.bashrc> function for auto completion of "command"
 
