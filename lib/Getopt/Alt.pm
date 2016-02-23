@@ -331,7 +331,7 @@ sub process {
     ) {
         if (!$self->sub_command->{$self->cmd}) {
             warn 'Unknown command "' . $self->cmd . "\"!\n";
-            die Getopt::Alt::Exception->new( message => "Unknown command '$self->cmd'" )
+            die Getopt::Alt::Exception->new( message => "Unknown command '$self->cmd'", help => 1 )
                 if !$self->help_package;
             $self->_show_help(1);
         }
