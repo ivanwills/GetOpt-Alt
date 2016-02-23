@@ -65,6 +65,10 @@ has help_package => (
     is      => 'rw',
     isa     => 'Str',
 );
+has help_packages => (
+    is      => 'rw',
+    isa     => 'HashRef[Str]',
+);
 has helper => (
     is      => 'rw',
     isa     => 'Bool',
@@ -466,7 +470,16 @@ sub _show_help {
     my ($self, $verbosity, $msg) = @_;
 
     my %input;
-    if ( $self->help_package && $self->help_package ne "1" ) {
+    if ( $self->help_packages && $self->cmd ) {
+        my $package = $self->help_packages->{$self->cmd};
+        if ($package) {
+            $package =~ s{::}{/}gxms;
+            $package .= '.pm';
+            require $package;
+            %input = ( -input => $INC{$package} );
+        }
+    }
+    elsif ( $self->help_package && $self->help_package ne "1" ) {
         my $help = $self->help_package;
         if ( !-f $help ) {
             $help  .= '.pm';
