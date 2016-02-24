@@ -374,6 +374,9 @@ sub process {
         elsif ( $self->auto_complete && $self->opt->auto_complete ) {
             $self->complete(\@errors);
         }
+        elsif ( $self->sub_command && ! $self->cmd ) {
+            $self->_show_help(1);
+        }
     }
 
     return $self;
