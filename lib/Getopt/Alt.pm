@@ -798,6 +798,10 @@ Returns a list of all command line options in the current object.
 
 =head3 C<best_option ()>
 
+=head3 C<complete ()>
+
+Command line auto complete helper
+
 =head1 DIAGNOSTICS
 
 =head1 CONFIGURATION AND ENVIRONMENT
