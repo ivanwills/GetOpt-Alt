@@ -1,5 +1,16 @@
 Revision history for Getopt-Alt
 
+0.3.8   2016-03-27
+        Updating for release of version 0.3.8
+        Fixed missing documentation (Ivan Wills)
+        Updated config to auto test (Ivan Wills)
+        Added showing help for sub-ommand usage when not sub-command specified (Ivan Wills)
+        More help (Ivan Wills)
+        Added help (Ivan Wills)
+        Adding help_packages attribute to allow sub-commands their own help package (Ivan Wills)
+        Reduced min perl version (Ivan Wills)
+        Merge pull request #1 from Manwar/fix-typo-in-cookbook-pod (Ivan Wills)
+
 0.3.7   2016-02-21
         Updating for release of version 0.3.7
         Added new configs (Ivan Wills)
