@@ -1,5 +1,5 @@
 ---
-count: 4
+count: 6
 name: getopt-alt
 default:
   restart: 0
@@ -8,8 +8,16 @@ default:
     PERL5LIB: lib:$PERL5LIB
 editor:
   files:
-    eg:
-      - some-file.eg
+    base:
+      - lib/Getopt/Alt.pm
+      - lib/Getopt/Alt/Option.pm
+      - lib/Getopt/Alt/Command.pm
+    helpers:
+      - lib/Getopt/Alt/Dynamic.pm
+      - lib/Getopt/Alt/Exception.pm
+    docs:
+      - lib/Getopt/Alt/Manual.pod
+      - lib/Getopt/Alt/CookBook.pod
 terminals:
   1a:
     wait: 0
@@ -17,13 +25,14 @@ terminals:
     # re-run the command. This watch waits for changes in files in the
     # lib bin and tests directories and then runs tests
     watch:
+      - Build.PL
       - lib
       - bin
       - all-tests
     command: ./Build && ./Build testcover
-  2: []
-
-  3: []
-
-  4: []
-
+  2:
+    edit: base
+  3:
+    edit: helpers
+  4:
+    edit: docs
