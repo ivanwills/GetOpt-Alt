@@ -2,7 +2,7 @@
 count: 6
 name: getopt-alt
 default:
-  restart: 0
+  restart: 1
   wait: 1
   env:
     PERL5LIB: lib:$PERL5LIB
@@ -18,8 +18,11 @@ editor:
     docs:
       - lib/Getopt/Alt/Manual.pod
       - lib/Getopt/Alt/CookBook.pod
+    eg:
+      - eg/*
 terminals:
   1a:
+    restart: 1
     wait: 0
     # watch is a list of files (or file groups) to watch for changes and
     # re-run the command. This watch waits for changes in files in the
@@ -36,3 +39,5 @@ terminals:
     edit: helpers
   4:
     edit: docs
+  5:
+    edit: eg
