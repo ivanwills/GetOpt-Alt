@@ -73,19 +73,14 @@ has helper => (
     is      => 'rw',
     isa     => 'Bool',
 );
-has cmds => (
-    is      => 'rw',
-    isa     => 'ArrayRef[Getopt::Alt::Command]',
-    default => sub { [] },
-);
 has cmd => (
     is      => 'rw',
     isa     => 'Str',
     clearer => 'clear_cmd',
+    documentation => 'The found sub-command',
 );
 has sub_command => (
     is            => 'rw',
-    #isa           => 'Bool | HashRef[ArrayRef] | CodeRef',
     predicate     => 'has_sub_command',
     documentation => <<'DOC',
 if true (== 1) processing of args stops at first non-defined parameter, if
