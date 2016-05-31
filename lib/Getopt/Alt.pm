@@ -730,12 +730,6 @@ it's the callers package.
 
 Used when displaying --version info
 
-=item C<cmds> - ArrayRef[Getopt::Alt::Command]
-
-If the Getopt::Alt is being used as part of a package where individual
-commands have their own modules this parameter stores an instance of each
-commands. (Not yet fully implemented.
-
 =item C<options> - Str (Default Getopt::Alt::Dynamic)
 
 The parent class for generating options.
