@@ -1,5 +1,13 @@
 Revision history for Getopt-Alt
 
+0.3.9   2016-07-03
+        Updating for release of version 0.3.9
+        Removed reference to removed file (Ivan Wills)
+        Removed documentation for removed cmds (Ivan Wills)
+        Removed attribute cmds as it isn't used (Ivan Wills)
+        More edits (Ivan Wills)
+        Setting default files to edit (Ivan Wills)
+
 0.3.8   2016-03-27
         Updating for release of version 0.3.8
         Fixed missing documentation (Ivan Wills)
