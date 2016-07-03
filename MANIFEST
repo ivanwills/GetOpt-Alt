@@ -2,7 +2,6 @@ Build.PL
 Changes
 eg/auto-complete.pl
 eg/auto-complete.sh
-eg/longer.pl
 eg/simple.pl
 eg/sub-command.pl
 lib/Getopt/Alt.pm
