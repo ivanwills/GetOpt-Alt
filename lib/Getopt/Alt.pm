@@ -135,7 +135,7 @@ around BUILDARGS => sub {
             'help',
             'man',
             'version',
-            'auto_complete|auto-complete',
+            'auto_complete|auto-complete=i',
             'auto_complete_list|auto-complete-list!',
         );
     }
@@ -313,7 +313,15 @@ sub process {
         last if $action eq 'last';
     }
 
-    $self->cmd( shift @{ $self->files } ) if @{ $self->files } && $self->sub_command;
+    if ( $self->sub_command ) {
+        shift @{ $self->files } if @{ $self->files } && $self->files->[0] eq '--';
+
+        if ( !@{ $self->files } && @args ) {
+            $self->files([ @args ]);
+        }
+
+        $self->cmd( shift @{ $self->files } ) if @{ $self->files };
+    }
     if ( !$passed_args && $self->files ) {
         @ARGV = ( @{ $self->files }, @args );  ## no critic
     }
@@ -790,6 +798,18 @@ Returns a list of all command line options in the current object.
 =head3 C<complete ()>
 
 Command line auto complete helper
+
+=head2 Auto Complete
+
+For your program (say eg) you can add the following to your C<~/.bashrc>
+file to get auto-completion.
+
+    _eg() {
+        COMPREPLY=($(vtide --auto-complete ${COMP_CWORD} -- ${COMP_WORDS[@]}))
+    }
+    complete -F _eg eg
+
+B<Note>: This is different from version 0.3.9 and earlier
 
 =head1 DIAGNOSTICS
 
