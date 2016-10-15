@@ -795,6 +795,8 @@ Returns a list of all command line options in the current object.
 
 =head3 C<best_option ()>
 
+Decides on the best matching option.
+
 =head3 C<complete ()>
 
 Command line auto complete helper
