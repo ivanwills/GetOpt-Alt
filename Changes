@@ -1,5 +1,12 @@
 Revision history for Getopt-Alt
 
+0.4.0   2016-10-16
+        Updating for release of version 0.4.0
+        Added missing documentation (Ivan Wills)
+        Improving auto completion code (Ivan Wills)
+        Removed condition that can never be true (Ivan Wills)
+        Added perl 5.24 to travis build (Ivan Wills)
+
 0.3.9   2016-07-03
         Updating for release of version 0.3.9
         Removed reference to removed file (Ivan Wills)
