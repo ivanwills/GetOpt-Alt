@@ -232,12 +232,20 @@ sub process {
         }
 
         $DB::single = 1;
-        $value =
-              $self->nullable      &&   ! $arg_data                                         ? undef
-            : $self->type eq 'Int' && $arg_data =~ /^ -? \d+$/xms                           ? $arg_data
-            : $self->type eq 'Num' && $arg_data =~ /^ -? (?: \d* (?: [.]\d+ )? | \d+ )$/xms ? $arg_data
-            : $self->type eq 'Str'                                                          ? $arg_data
-            :                                                                                 confess "Unknown type '".$self->type."'\n";
+        $value = $arg_data;
+
+        if ( $self->nullable && ( ! defined $arg_data || $arg_data eq '' ) ) {
+            $value = undef;
+        }
+        elsif ( $self->type eq 'Int' ) {
+            confess "--$name '$arg_data' is not an integer!" if $arg_data !~ /^ -? \d+ $/xms;
+        }
+        elsif ( $self->type eq 'Num' ) {
+            confess "--$name '$arg_data' is not a number!" if $arg_data !~ /^ -? (?: \d* (?: [.]\d+ )? | \d+ ) $/xms;
+        }
+        elsif ( $self->type ne 'Str' ) {
+            confess "Unknown type '".$self->type."'\n";
+        }
 
         if ($self->values && !grep { $value eq $_ } @{ $self->values }) {
             die [ Getopt::Alt::Exception->new(
