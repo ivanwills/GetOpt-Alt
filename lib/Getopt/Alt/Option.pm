@@ -238,10 +238,10 @@ sub process {
             $value = undef;
         }
         elsif ( $self->type eq 'Int' ) {
-            confess "--$name '$arg_data' is not an integer!" if $arg_data !~ /^ -? \d+ $/xms;
+            confess "$name '$arg_data' is not an integer!" if $arg_data !~ /^ -? \d+ $/xms;
         }
         elsif ( $self->type eq 'Num' ) {
-            confess "--$name '$arg_data' is not a number!" if $arg_data !~ /^ -? (?: \d* (?: [.]\d+ )? | \d+ ) $/xms;
+            confess "$name '$arg_data' is not a number!" if $arg_data !~ /^ -? (?: \d* (?: [.]\d+ )? | \d+ ) $/xms;
         }
         elsif ( $self->type ne 'Str' ) {
             confess "Unknown type '".$self->type."'\n";
