@@ -233,7 +233,7 @@ sub process {
 
         $DB::single = 1;
         $value =
-              $self->nullable      &&   !        $arg_data                                  ? undef
+              $self->nullable      &&   ! $arg_data                                         ? undef
             : $self->type eq 'Int' && $arg_data =~ /^ -? \d+$/xms                           ? $arg_data
             : $self->type eq 'Num' && $arg_data =~ /^ -? (?: \d* (?: [.]\d+ )? | \d+ )$/xms ? $arg_data
             : $self->type eq 'Str'                                                          ? $arg_data
