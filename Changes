@@ -1,5 +1,11 @@
 Revision history for Getopt-Alt
 
+0.4.1   2016-10-31
+        Updating for release of version 0.4.1
+        Too many dashes (Ivan Wills)
+        Changed type testing to give better error messages (Ivan Wills)
+        Cleaned up odd spacing (Ivan Wills)
+
 0.4.0   2016-10-16
         Updating for release of version 0.4.0
         Added missing documentation (Ivan Wills)
