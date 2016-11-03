@@ -260,6 +260,10 @@ sub process {
                 $short = $1;
                 $arg_data  = $2;
             }
+            elsif ( $arg eq '--' ) {
+                push @{ $self->files }, @args;
+                die "last";
+            }
             else {
                 push @{ $self->files }, $arg;
                 die $self->sub_command ? "last\n" : "next\n";
