@@ -262,7 +262,7 @@ sub process {
             }
             elsif ( $arg eq '--' ) {
                 push @{ $self->files }, @args;
-                die "last";
+                die "last\n";
             }
             else {
                 push @{ $self->files }, $arg;
