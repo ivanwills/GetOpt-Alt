@@ -185,7 +185,7 @@ sub BUILD {
     $conf = {
         map { %$_ }
         map { values %$_    }
-        @{ $conf }
+        reverse @{ $conf }
     };
 
     # perlcritic is confused here combining hashes is not the same as comma separated arguments
