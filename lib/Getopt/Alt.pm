@@ -356,6 +356,7 @@ sub process {
                     %{ $options },  ## no critic
                     options => $self->options, # inherit this objects options
                     default => { %{ $self->opt }, %{ $options->{default} || {} } },
+                    helper  => $self->helper,
                 },
                 $opt_args
             );
