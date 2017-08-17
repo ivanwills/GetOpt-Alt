@@ -1,5 +1,5 @@
 ---
-count: 6
+count: 10
 name: getopt-alt
 default:
   restart: 1
@@ -20,6 +20,26 @@ editor:
       - lib/Getopt/Alt/CookBook.pod
     eg:
       - eg/*
+    option-tests:
+      - t/argv-invalid.t
+      - t/argv-valid.t
+      - t/options-invalid.t
+      - t/options-valid.t
+    main-tests:
+      - t/getopt-alt.t
+      - t/get_options.t
+      - t/options.t
+    feature-tests:
+      - t/auto_complete.t
+      - t/sub_command.t
+    other-tests:
+      - t/00-load.t
+      - t/boilerplate.t
+      - t/critic.t
+      - t/kwalitee.t
+      - t/pod-coverage.t
+      - t/pod.t
+      - t/spelling.t
 terminals:
   1a:
     restart: 1
@@ -41,3 +61,11 @@ terminals:
     edit: docs
   5:
     edit: eg
+  6:
+    edit: main-tests
+  7:
+    edit: main-tests
+  8:
+    edit: feature-tests
+  9:
+    edit: other-tests
