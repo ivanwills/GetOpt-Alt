@@ -11,7 +11,7 @@ use warnings;
 use version;
 use Carp;
 use English qw/ -no_match_vars /;
-use List::MoreUtils qw/uniq/;
+use List::Util qw/uniq/;
 use Getopt::Alt::Option qw/build_option/;
 use Getopt::Alt::Exception;
 use Try::Tiny;
