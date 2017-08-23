@@ -297,7 +297,8 @@ sub process {
                 # last means we have found a sub command we should see if it is an alias
                 if ($self->aliases->{$arg}) {
                     $self->files->[-1] = shift @{ $self->aliases->{$arg} };
-                    unshift @args, @{ $self->aliases->{$arg} };
+                    my @new_args = @{ $self->aliases->{$arg} };
+                    unshift @args, @new_args;
                 }
 
                 $action = 'last';
