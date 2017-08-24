@@ -6,3 +6,6 @@ Sub Commands
     * Simple - stop processing at sub command (done)
     * Hash - sub command's parametes are passed as values with keys being the sub commands (started)
     * Sub - Method is provided that checks the sub command details ...
+    * Object - Configure a way to load sub-commands from a Name Space ...
+        * How to get sub-arguments?
+        * Should there be a way to manually get the commands?
