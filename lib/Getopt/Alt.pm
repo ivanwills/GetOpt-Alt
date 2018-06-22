@@ -367,7 +367,7 @@ sub process {
             $self->files( $sub_obj->files );
         }
     }
-    elsif ( $self->sub_command =~ /^[A-Z].*::$/
+    elsif ( $self->sub_command && $self->sub_command =~ /^[A-Z].*::$/
         && (
             ! $self->auto_complete
             || ( $self->cmd && $self->sub_command->{ $self->cmd } )
