@@ -367,6 +367,15 @@ sub process {
             $self->files( $sub_obj->files );
         }
     }
+    elsif ( $self->sub_command =~ /^[A-Z].*::$/
+        && (
+            ! $self->auto_complete
+            || ( $self->cmd && $self->sub_command->{ $self->cmd } )
+        )
+    ) {
+        # object based subcommands
+        my $run = $self->sub_module_method || 'run';
+    }
 
     if ( $self->help_package ) {
         if ( $self->opt->{version} ) {
