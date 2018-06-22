@@ -24,10 +24,11 @@ sub main {
 
     my $options = Getopt::Alt->new(
         {
-            bundle      => 1,
-            help        => 1,
-            ignore_case => 0,
-            sub_command => 'SubModules::',
+            bundle            => 1,
+            help              => 1,
+            ignore_case       => 0,
+            sub_command       => 'SubModules::',
+            sub_module_method => 'run',
         },
         [
             'general|g!',
