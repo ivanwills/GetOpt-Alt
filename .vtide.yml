@@ -19,7 +19,8 @@ editor:
       - lib/Getopt/Alt/Manual.pod
       - lib/Getopt/Alt/CookBook.pod
     eg:
-      - eg/*
+      - eg/*.*
+      - eg/*/*.pm
     option-tests:
       - t/argv-invalid.t
       - t/argv-valid.t
