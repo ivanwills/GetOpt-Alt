@@ -1,7 +1,3 @@
-Mooseify
-    * Arg definitions should be treaded as has method calls to generated class (Done)
-    * hash definitions should be direct has() calls
-    * intro spection can be used to do stuff
 Sub Commands
     * Simple - stop processing at sub command (done)
     * Hash - sub command's parametes are passed as values with keys being the sub commands (started)
@@ -9,3 +5,4 @@ Sub Commands
     * Object - Configure a way to load sub-commands from a Name Space ...
         * How to get sub-arguments?
         * Should there be a way to manually get the commands?
+* tests are lacking, need to get this back to close to 100%
