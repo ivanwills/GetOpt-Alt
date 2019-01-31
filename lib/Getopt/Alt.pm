@@ -111,10 +111,20 @@ has name => (
     isa     => 'Str',
     default => sub { path($0)->basename },
 );
+has config => (
+    is      => 'rw',
+    isa     => 'HashRef',
+    predicate => 'has_config',
+);
 has conf_prefix => (
     is      => 'rw',
     isa     => 'Str',
     default => '.',
+);
+has conf_section => (
+    is      => 'rw',
+    isa     => 'HashRef[Str]',
+    predicate => 'has_conf_section',
 );
 
 my $count = 1;
@@ -190,6 +200,7 @@ sub BUILD {
 
     # perlcritic is confused here combining hashes is not the same as comma separated arguments
     $self->default({ %{$self->default}, %$conf, });  ## no critic
+    $self->config($conf);
 
     if ($conf->{aliases}) {
         for my $alias (keys %{ $conf->{aliases} }) {
@@ -243,6 +254,7 @@ sub process {
     $self->clear_cmd;
     $self->files([]);
 
+    my @args_orig = @args;
     my $class = $self->options;
     $self->opt( $class->new( %{ $self->default } ) );
     my @errors;
@@ -287,6 +299,16 @@ sub process {
 
             if ( !$used && $short && defined $arg_data && length $arg_data ) {
                 unshift @args, '-' . $arg_data;
+            }
+            if ($self->has_conf_section
+                && $self->conf_section->{param}
+                && $self->conf_section->{param} == $opt_name
+                && @args_orig
+            ) {
+                $self->opt( $class->new(%{ $self->default }, %{ $self->config->{$self->conf_section->{param}} } ) );
+                # restart the process
+                @args = @args_orig;
+                @args_orig = ();
             }
         }
         catch {
