@@ -305,7 +305,7 @@ sub process {
                 && $self->conf_section->{param} == $opt_name
                 && @args_orig
             ) {
-                $self->opt( $class->new(%{ $self->default }, %{ $self->config->{$self->conf_section->{param}} } ) );
+                $self->opt( $class->new(%{ $self->default }, %{ $self->config->{$self->conf_section->{param}}{$value} } ) );
                 # restart the process
                 @args = @args_orig;
                 @args_orig = ();
