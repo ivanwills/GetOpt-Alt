@@ -301,11 +301,11 @@ sub process {
                 unshift @args, '-' . $arg_data;
             }
             if ($self->has_conf_section
-                && $self->conf_section->{param}
-                && $self->conf_section->{param} == $opt_name
+                && $self->conf_section
+                && $self->conf_section == $opt_name
                 && @args_orig
             ) {
-                $self->opt( $class->new(%{ $self->default }, %{ $self->config->{$self->conf_section->{param}}{$value} } ) );
+                $self->opt( $class->new(%{ $self->default }, %{ $self->config->{$self->conf_section}{$value} } ) );
                 # restart the process
                 @args = @args_orig;
                 @args_orig = ();
