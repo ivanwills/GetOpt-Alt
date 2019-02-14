@@ -123,7 +123,7 @@ has conf_prefix => (
 );
 has conf_section => (
     is      => 'rw',
-    isa     => 'HashRef[Str]',
+    isa     => 'Str',
     predicate => 'has_conf_section',
 );
 
