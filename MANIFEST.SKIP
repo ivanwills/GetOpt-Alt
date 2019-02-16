@@ -99,3 +99,4 @@ random.test
 todo
 .editorconfig
 .vtide.yml
+.vtide/start.log
