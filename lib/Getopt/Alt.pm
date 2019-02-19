@@ -347,6 +347,11 @@ sub process {
             $self->files([ @args ]);
         }
 
+        if ( $self->auto_complete && $self->opt->auto_complete &&
+            path($0)->basename eq path($self->files->[0])->basename
+        ) {
+            shift @{ $self->files };
+        }
         $self->cmd( shift @{ $self->files } ) if @{ $self->files };
     }
     if ( !$passed_args && $self->files ) {
