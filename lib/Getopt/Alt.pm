@@ -151,13 +151,19 @@ around BUILDARGS => sub {
     }
 
     if ( @params ) {
-        $param{options} = _build_option_class($param{options} || 'Getopt::Alt::Dynamic', @params);
+        $param{options} = _build_option_class(
+            $param{options} || 'Getopt::Alt::Dynamic',
+            @params,
+        );
 
         if (0 && $param{sub_command} && ref $param{sub_command} eq 'HASH') {
 
             # build up all the sub command options
             for my $sub (keys %{ $param{sub_command} }) {
-                $param{sub_command}{$sub} = _build_option_class($param{options}, $param{sub_command}{$sub});
+                $param{sub_command}{$sub} = _build_option_class(
+                    $param{options},
+                    $param{sub_command}{$sub},
+                );
             }
         }
     }
@@ -188,7 +194,10 @@ sub BUILD {
     my $basename = $self->name;
     my $prefix   = $self->conf_prefix;
     my $conf = Config::Any->load_stems({
-        stems   => [ "$prefix$basename", File::HomeDir->my_home . "/$prefix$basename", "/etc/$basename" ],
+        stems   => [
+            "$prefix$basename",
+            File::HomeDir->my_home . "/$prefix$basename", "/etc/$basename",
+        ],
         use_ext => 1,
     });
 
@@ -305,7 +314,12 @@ sub process {
                 && $self->conf_section == $opt_name
                 && @args_orig
             ) {
-                $self->opt( $class->new(%{ $self->default }, %{ $self->config->{$self->conf_section}{$value} } ) );
+                $self->opt(
+                    $class->new(
+                        %{ $self->default },
+                        %{ $self->config->{$self->conf_section}{$value} },
+                    )
+                );
                 # restart the process
                 @args = @args_orig;
                 @args_orig = ();
@@ -366,8 +380,10 @@ sub process {
     ) {
         if (!$self->sub_command->{$self->cmd}) {
             warn 'Unknown command "' . $self->cmd . "\"!\n";
-            die Getopt::Alt::Exception->new( message => "Unknown command '$self->cmd'", help => 1 )
-                if !$self->help_package;
+            die Getopt::Alt::Exception->new(
+                message => "Unknown command '$self->cmd'",
+                help => 1,
+            ) if !$self->help_package;
             $self->_show_help(1, 'Unknown command "' . $self->cmd . "\"!\n");
         }
 
@@ -375,7 +391,9 @@ sub process {
             # make a copy of the sub command
             my $sub = [ @{$self->sub_command->{$self->cmd}} ];
             # check the style
-            my $options  = @$sub == 2 && ref $sub->[0] eq 'HASH' && ref $sub->[1] eq 'ARRAY' ? shift @$sub : {};
+            my $options  = @$sub == 2
+                && ref $sub->[0] eq 'HASH'
+                && ref $sub->[1] eq 'ARRAY' ? shift @$sub : {};
             my $opt_args = %$options ? $sub->[0] : $sub;
 
             # build sub command object
@@ -408,7 +426,10 @@ sub process {
         if ( $self->opt->{version} ) {
              my ($name)  = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
              my $version = defined $main::VERSION ? $main::VERSION : 'undef';
-             die Getopt::Alt::Exception->new( message => "$name Version = $version\n", help => 1);
+             die Getopt::Alt::Exception->new(
+                 message => "$name Version = $version\n",
+                 help => 1,
+             );
         }
         elsif ( $self->opt->{man} ) {
             $self->_show_help(2);
@@ -459,7 +480,8 @@ sub list_options {
         for my $name (@{ $opt->names }) {
 
             # skip auto-complete commands (they are hidden options)
-            next if grep {$name eq $_} qw/auto_complete auto-complete auto_complete_list auto-complete-list/;
+            next if grep {$name eq $_}
+                qw/auto_complete auto-complete auto_complete_list auto-complete-list/;
             push @names, $name
         }
     }
