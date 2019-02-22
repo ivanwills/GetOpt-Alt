@@ -106,6 +106,11 @@ has auto_complete => (
     isa       => 'CodeRef',
     predicate => 'has_auto_complete',
 );
+has auto_complete_shortener => (
+    is        => 'rw',
+    isa       => 'CodeRef',
+    predicate => 'has_auto_complete_shortener',
+);
 has name => (
     is      => 'rw',
     isa     => 'Str',
@@ -282,6 +287,18 @@ sub process {
                 $arg_data  = $2;
             }
             elsif ( $arg eq '--' ) {
+                if ( $self->auto_complete && $self->opt->auto_complete &&
+                    path($0)->basename eq path($args[0])->basename
+                ) {
+                    shift @args;
+                }
+
+                if ( $self->opt->auto_complete
+                    && $self->sub_command
+                    && $self->has_auto_complete_shortener
+                ) {
+                    @args = $self->auto_complete_shortener->($self, @args);
+                }
                 push @{ $self->files }, @args;
                 die "last\n";
             }
@@ -342,7 +359,7 @@ sub process {
             else {
                 $_ = $_->[0] if ref $_ eq 'ARRAY' && @$_ == 1;
 
-                if ( $self->auto_complete && $self->opt->auto_complete ) {
+                if ( $self->has_auto_complete && $self->opt->auto_complete ) {
                     push @errors, $_;
                 }
                 else {
@@ -354,72 +371,72 @@ sub process {
         last if $action eq 'last';
     }
 
-    if ( $self->sub_command ) {
+    if ( $self->has_sub_command ) {
         shift @{ $self->files } if @{ $self->files } && $self->files->[0] eq '--';
 
-        if ( !@{ $self->files } && @args ) {
+        if ( ! @{ $self->files } && @args ) {
             $self->files([ @args ]);
         }
 
-        if ( $self->auto_complete && $self->opt->auto_complete &&
-            path($0)->basename eq path($self->files->[0])->basename
-        ) {
-            shift @{ $self->files };
-        }
-        $self->cmd( shift @{ $self->files } ) if @{ $self->files };
+        $self->cmd( shift @{ $self->files } ) if ! $self->cmd && @{ $self->files };
     }
     if ( !$passed_args && $self->files ) {
         @ARGV = ( @{ $self->files }, @args );  ## no critic
     }
 
-    if ( ref $self->sub_command eq 'HASH'
-        && (
-            ! $self->auto_complete
-            || ( $self->cmd && $self->sub_command->{ $self->cmd } )
-        )
-    ) {
-        if (!$self->sub_command->{$self->cmd}) {
-            warn 'Unknown command "' . $self->cmd . "\"!\n";
-            die Getopt::Alt::Exception->new(
-                message => "Unknown command '$self->cmd'",
-                help => 1,
-            ) if !$self->help_package;
-            $self->_show_help(1, 'Unknown command "' . $self->cmd . "\"!\n");
-        }
+    if ( $self->has_sub_command ) {
+        if ( ref $self->sub_command eq 'HASH'
+            && (
+                ! $self->has_auto_complete
+                || ( $self->cmd && $self->sub_command->{ $self->cmd } )
+            )
+        ) {
+            if ( ! $self->sub_command->{$self->cmd} ) {
+                warn 'Unknown command "' . $self->cmd . "\"!\n";
+                die Getopt::Alt::Exception->new(
+                    message => "Unknown command '$self->cmd'",
+                    help => 1,
+                ) if !$self->help_package;
+                $self->_show_help(1, 'Unknown command "' . $self->cmd . "\"!\n");
+            }
 
-        if ( ref $self->sub_command->{$self->cmd} eq 'ARRAY' ) {
-            # make a copy of the sub command
-            my $sub = [ @{$self->sub_command->{$self->cmd}} ];
-            # check the style
-            my $options  = @$sub == 2
-                && ref $sub->[0] eq 'HASH'
-                && ref $sub->[1] eq 'ARRAY' ? shift @$sub : {};
-            my $opt_args = %$options ? $sub->[0] : $sub;
+            if ( ref $self->sub_command->{$self->cmd} eq 'ARRAY' ) {
+                # make a copy of the sub command
+                my $sub = [ @{$self->sub_command->{$self->cmd}} ];
+                # check the style
+                my $options  = @$sub == 2
+                    && ref $sub->[0] eq 'HASH'
+                    && ref $sub->[1] eq 'ARRAY' ? shift @$sub : {};
+                my $opt_args = %$options ? $sub->[0] : $sub;
 
-            # build sub command object
-            my $sub_obj = Getopt::Alt->new(
-                {
-                    helper  => $self->helper,
-                    %{ $options },  ## no critic
-                    options => $self->options, # inherit this objects options
-                    default => { %{ $self->opt }, %{ $options->{default} || {} } },
-                },
-                $opt_args
-            );
-            local @ARGV = ();
-            $sub_obj->process(@args);
-            $self->opt( $sub_obj->opt );
-            $self->files( $sub_obj->files );
+                # build sub command object
+                my $sub_obj = Getopt::Alt->new(
+                    {
+                        helper  => $self->helper,
+                        %{ $options },  ## no critic
+                        options => $self->options, # inherit this objects options
+                        default => { %{ $self->opt }, %{ $options->{default} || {} } },
+                    },
+                    $opt_args
+                );
+                local @ARGV = ();
+                if ( $self->opt->auto_complete ) {
+                    push @args, '--auto-complete', $self->opt->auto_complete, '--';
+                }
+                $sub_obj->process(@args);
+                $self->opt( $sub_obj->opt );
+                $self->files( $sub_obj->files );
+            }
         }
-    }
-    elsif ( $self->sub_command && $self->sub_command =~ /^[A-Z].*::$/
-        && (
-            ! $self->auto_complete
-            || ( $self->cmd && $self->sub_command->{ $self->cmd } )
-        )
-    ) {
-        # object based subcommands
-        my $run = $self->sub_module_method || 'run';
+        elsif ( $self->sub_command =~ /^[A-Z].*::$/
+            && (
+                ! $self->has_auto_complete
+                || ( $self->cmd && $self->sub_command->{ $self->cmd } )
+            )
+        ) {
+            # object based subcommands
+            my $run = $self->sub_module_method || 'run';
+        }
     }
 
     if ( $self->help_package ) {
