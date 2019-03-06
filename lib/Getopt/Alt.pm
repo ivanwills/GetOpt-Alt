@@ -328,7 +328,7 @@ sub process {
             }
             if ($self->has_conf_section
                 && $self->conf_section
-                && $self->conf_section == $opt_name
+                && $self->conf_section eq $opt_name
                 && @args_orig
             ) {
                 $self->opt(
