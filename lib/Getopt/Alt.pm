@@ -468,7 +468,7 @@ sub process {
 sub complete {
     my ($self, $errors) = @_;
 
-    if ( $self->sub_command && !$self->cmd ) {
+    if ( $self->sub_command && ref $self->sub_command && !$self->cmd ) {
         my $cmd = shift @ARGV;
         my @sub_command = grep { $cmd ? /$cmd/ : 1 } sort keys %{ $self->sub_command };
         print join ' ', @sub_command;
