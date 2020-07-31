@@ -69,6 +69,14 @@ has help_packages => (
     is      => 'rw',
     isa     => 'HashRef[Str]',
 );
+has help_pre => (
+    is      => 'rw',
+    isa     => 'CodeRef',
+);
+has help_post => (
+    is      => 'rw',
+    isa     => 'CodeRef',
+);
 has helper => (
     is      => 'rw',
     isa     => 'Bool',
@@ -577,7 +585,7 @@ sub _show_help {
     }
 
     require Tie::Handle::Scalar;
-    my $out = '';
+    my $out = $self->help_pre ? $self->help_pre() : '';
     tie *FH, 'Tie::Handle::Scalar', \$out;
     require Pod::Usage;
     Pod::Usage::pod2usage(
@@ -587,6 +595,7 @@ sub _show_help {
         -output  => \*FH,
         %input,
     );
+    $out .= $self->help_post ? $self->help_post->() : '';
     die Getopt::Alt::Exception->new( message => $out, help => 1 );
 }
 
