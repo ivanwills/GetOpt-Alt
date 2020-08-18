@@ -4,6 +4,8 @@
 
 <a href="https://travis-ci.org/ivanwills/Getopt-Alt"><img src="https://travis-ci.org/ivanwills/Getopt-Alt.png" alt="Getopt-Alt"></a>
 
+=end html
+
 =head1 Getopt-Alt
 
 This module provides a similar interface to Getopt::Long with some extra
