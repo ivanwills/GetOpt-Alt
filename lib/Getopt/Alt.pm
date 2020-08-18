@@ -605,7 +605,7 @@ __END__
 
 =head1 NAME
 
-Getopt::Alt - Command line option passing with with lots of features
+Getopt::Alt - Command line option passing with lots of features
 
 =head1 VERSION
 
