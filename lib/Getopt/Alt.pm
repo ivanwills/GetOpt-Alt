@@ -26,7 +26,7 @@ use overload (
 
 Moose::Exporter->setup_import_methods( as_is => [qw/get_options/], );
 
-our $VERSION = version->new('0.5.4');
+our $VERSION = version->new('0.5.5');
 our $EXIT    = 1;
 
 has options => (
@@ -635,7 +635,7 @@ Getopt::Alt - Command line option passing with with lots of features
 
 =head1 VERSION
 
-This documentation refers to Getopt::Alt version 0.5.4.
+This documentation refers to Getopt::Alt version 0.5.5.
 
 =head1 SYNOPSIS
 
@@ -940,7 +940,7 @@ file to get auto-completion.
     }
     complete -F _eg eg
 
-B<Note>: This is different from version 0.5.4 and earlier
+B<Note>: This is different from version 0.5.5 and earlier
 
 =head1 DIAGNOSTICS
 
