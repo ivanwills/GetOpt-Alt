@@ -10,8 +10,6 @@ use Moose;
 use version;
 use overload '""' => sub { shift->message };
 
-extends 'Throwable::Error';
-
 our $VERSION = version->new('0.5.5');
 
 has help => (
